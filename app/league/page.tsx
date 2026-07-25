@@ -62,7 +62,7 @@ export default function LeaguePage() {
 
         <div className="absolute bottom-0 left-0 h-32 w-32 -translate-x-1/2 translate-y-1/2 rounded-full border-[24px] border-white/5" />
 
-        <div className="relative mx-auto max-w-6xl px-4 py-10 sm:px-5 md:py-28">
+        <div className="relative mx-auto max-w-6xl px-4 py-8 sm:px-5 md:py-10">
           <p className="text-sm font-black uppercase tracking-[0.3em] text-[#d7f34c]">
             Irpin Tennis Leagues
           </p>
@@ -71,13 +71,13 @@ export default function LeaguePage() {
             Наші тенісні ліги
           </h1>
 
-          <p className="mt-4 max-w-3xl text-sm leading-6 text-white/70 sm:text-base md:mt-7 md:text-lg md:leading-8">
+          <p className="mt-4 hidden max-w-3xl text-sm leading-6 text-white/70 sm:text-base md:leading-8">
             Оберіть лігу відповідно до свого рівня та цілей. Кожна ліга
             допомагає знаходити рівних суперників, регулярно грати матчі та
             розвиватися разом із тенісною спільнотою.
           </p>
 
-          <div className="mt-5 flex flex-wrap gap-2 md:mt-9 md:gap-3">
+          <div className="mt-5 flex flex-wrap gap-2">
             <div className="rounded-full border border-white/15 bg-white/10 px-5 py-3 text-sm font-bold">
               3 ліги
             </div>
@@ -93,8 +93,8 @@ export default function LeaguePage() {
         </div>
       </section>
 
-      <section className="mx-auto max-w-6xl px-3 py-8 sm:px-5 md:py-20">
-        <div className="mb-6 max-w-3xl md:mb-10">
+      <section className="mx-auto max-w-6xl px-3 py-6 sm:px-5 md:py-8">
+        <div className="mb-5 max-w-3xl">
           <p className="text-sm font-black uppercase tracking-[0.2em] text-[#bb5a3c]">
             Оберіть свій формат
           </p>
@@ -103,7 +103,7 @@ export default function LeaguePage() {
             Три ліги для різних гравців
           </h2>
 
-          <p className="mt-4 text-sm leading-6 text-[#123f2d]/65 sm:text-base md:mt-5 md:text-lg md:leading-8">
+          <p className="hidden">
             Ліги створені для того, щоб матчі були рівними, цікавими та
             корисними для прогресу кожного учасника.
           </p>
@@ -115,32 +115,36 @@ export default function LeaguePage() {
               key={league.slug}
               className="group flex min-h-full flex-col overflow-hidden rounded-2xl bg-white shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-xl sm:rounded-[32px]"
             >
-              <div className={`${league.accent} p-4 sm:p-7`}>
+              <div className={`${league.accent} p-4 sm:p-5`}>
                 <div className="flex items-start justify-between gap-4">
                   <span className="text-xs font-black uppercase tracking-[0.18em] text-[#123f2d]/65">
                     Ліга {String(index + 1).padStart(2, "0")}
                   </span>
 
-                  <span className="rounded-full bg-white/70 px-4 py-2 text-xs font-black uppercase tracking-wide text-[#123f2d]">
-                    {league.rating}
+                  <span className="rounded-full bg-white/70 px-3 py-1.5 text-xs font-black uppercase tracking-wide text-[#123f2d]">
+                    {league.slug === "masters"
+                      ? "3.5+"
+                      : league.slug === "challenger"
+                        ? "3.0–3.5"
+                        : "Для дівчат"}
                   </span>
                 </div>
 
-                <p className="mt-10 text-sm font-black uppercase tracking-[0.14em] text-[#123f2d]/60">
+                <p className="mt-5 text-xs font-black uppercase tracking-[0.14em] text-[#123f2d]/60">
                   {league.label}
                 </p>
 
-                <h2 className="mt-2 text-4xl font-black uppercase text-[#123f2d]">
+                <h2 className="mt-1 text-3xl font-black uppercase text-[#123f2d]">
                   {league.name}
                 </h2>
               </div>
 
-              <div className="flex flex-1 flex-col p-7">
-                <p className="text-base leading-7 text-[#123f2d]/70">
+              <div className="flex flex-1 flex-col p-4 sm:p-5">
+                <p className="line-clamp-3 text-sm leading-6 text-[#123f2d]/70">
                   {league.description}
                 </p>
 
-                <div className="mt-6 rounded-[20px] bg-[#f6f0e5] p-5">
+                <div className="hidden">
                   <p className="text-xs font-black uppercase tracking-[0.16em] text-[#bb5a3c]">
                     Для чого ця ліга
                   </p>
@@ -150,7 +154,7 @@ export default function LeaguePage() {
                   </p>
                 </div>
 
-                <ul className="mt-6 space-y-3">
+                <ul className="hidden">
                   {league.features.map((feature) => (
                     <li
                       key={feature}
@@ -164,7 +168,7 @@ export default function LeaguePage() {
 
                 <Link
                   href={`/league/${league.slug}`}
-                  className={`mt-8 inline-flex items-center justify-between rounded-full px-6 py-4 text-sm font-black uppercase tracking-[0.08em] transition hover:scale-[1.02] ${league.button}`}
+                  className={`mt-4 inline-flex items-center justify-between rounded-full px-5 py-3 text-xs font-black uppercase tracking-[0.08em] transition hover:scale-[1.02] ${league.button}`}
                 >
                   <span>Переглянути лігу</span>
                   <span>→</span>
@@ -175,7 +179,7 @@ export default function LeaguePage() {
         </div>
       </section>
 
-      <section className="bg-[#123f2d] py-14 text-white md:py-20">
+      <section className="hidden">
         <div className="mx-auto max-w-6xl px-5">
           <div className="grid gap-10 lg:grid-cols-[0.9fr_1.1fr] lg:items-center">
             <div>
