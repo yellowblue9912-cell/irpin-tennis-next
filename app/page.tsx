@@ -173,7 +173,7 @@ export default function HomePage() {
 
       <main className="flex min-h-screen flex-col overflow-x-hidden bg-[#f4f0e5] text-[#173d2b]">
         {/* Wimbledon main section */}
-        <section className="relative flex flex-1 overflow-hidden">
+        <section className="relative overflow-hidden">
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,rgba(255,255,255,0.9),transparent_52%)]" />
 
           <div className="pointer-events-none absolute -left-28 top-8 h-80 w-80 rounded-full border border-[#173d2b]/7" />
@@ -214,7 +214,7 @@ export default function HomePage() {
             </div>
 
             {/* Main navigation grid */}
-            <div className="grid grid-cols-1 items-start gap-3 md:grid-cols-2">
+            <div className="grid grid-cols-1 items-start gap-3 md:grid-cols-2 xl:grid-cols-3">
               {mainCards.slice(0, 2).map((card) => (
                 <NavigationCard
                   key={card.href}
@@ -226,7 +226,7 @@ export default function HomePage() {
 
               {/* League card */}
               <article
-                className={`group relative overflow-hidden rounded-[20px] border p-4 transition-all duration-500 ${
+                className={`group relative overflow-hidden rounded-[20px] border p-4 transition-all duration-500 md:col-span-2 xl:col-span-1 ${
                   activeCard === "Ліги"
                     ? "-translate-y-1 border-[#6f2f91]/40 bg-[#6f2f91] shadow-[0_24px_55px_rgba(74,31,97,0.22)]"
                     : "border-[#173d2b]/10 bg-[#173d2b]"
@@ -237,8 +237,8 @@ export default function HomePage() {
               >
                 <div className="pointer-events-none absolute -right-10 -top-12 h-40 w-40 rounded-full border border-white/10" />
 
-                <div className="relative flex min-h-[124px] flex-col sm:flex-row sm:items-center sm:gap-4">
-                  <div className="mb-3 flex shrink-0 items-start justify-between gap-4 sm:mb-0 sm:w-[116px]">
+                <div className="relative flex min-h-[124px] flex-col sm:flex-row sm:items-center sm:gap-4 xl:flex-col xl:items-stretch xl:gap-0">
+                  <div className="mb-3 flex shrink-0 items-start justify-between gap-4 sm:mb-0 sm:w-[116px] xl:mb-3 xl:w-auto">
                     <div>
                       <span className="text-[10px] font-black uppercase tracking-[0.3em] text-[#dfff3f]">
                         Наші ліги
@@ -249,12 +249,12 @@ export default function HomePage() {
                       </h2>
                     </div>
 
-                    <div className="league-ball sm:hidden transition-transform duration-500 group-hover:rotate-[24deg] group-hover:scale-110">
+                    <div className="league-ball sm:hidden xl:block transition-transform duration-500 group-hover:rotate-[24deg] group-hover:scale-110">
                       <TennisBall size={38} />
                     </div>
                   </div>
 
-                  <div className="grid flex-1 grid-cols-1 gap-2 sm:grid-cols-3">
+                  <div className="grid flex-1 grid-cols-1 gap-2 sm:grid-cols-3 xl:grid-cols-1">
                     {leagues.map((league) => (
                       <Link
                         key={league.href}
