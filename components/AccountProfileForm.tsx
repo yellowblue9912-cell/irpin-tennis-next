@@ -78,7 +78,7 @@ export default function AccountProfileForm({
       phone: nullable(form.get("phone")),
       address: nullable(form.get("address")),
       birth_date: nullable(form.get("birth_date")),
-      phone_public: form.get("phone_public") === "on",
+      phone_public: form.get("phone_visibility") === "public",
       address_public: form.get("address_public") === "on",
       updated_at: new Date().toISOString(),
     };
@@ -166,10 +166,11 @@ export default function AccountProfileForm({
       <section className="rounded-[28px] bg-white p-5 shadow-sm sm:p-8">
         <h2 className="text-xl font-black">Приватність</h2>
         <p className="mt-2 text-sm leading-6 text-[#123f2d]/55">
-          Телефон та адреса приховані, доки ви самі не дозволите їх показувати.
+          Виберіть, хто зможе бачити ваш номер телефону. Адреса залишається
+          прихованою, доки ви самі не дозволите її показувати.
         </p>
         <div className="mt-5 grid gap-3 sm:grid-cols-2">
-          <Toggle name="phone_public" defaultChecked={player.phone_public} label="Показувати телефон" />
+          <PrivacyChoice isPublic={player.phone_public} />
           <Toggle name="address_public" defaultChecked={player.address_public} label="Показувати адресу" />
         </div>
       </section>
@@ -251,5 +252,37 @@ function Toggle({ name, label, defaultChecked }: { name: string; label: string; 
       <input name={name} type="checkbox" defaultChecked={defaultChecked} className="h-5 w-5 accent-[#123f2d]" />
       <span className="font-bold">{label}</span>
     </label>
+  );
+}
+
+function PrivacyChoice({ isPublic }: { isPublic: boolean }) {
+  return (
+    <fieldset className="rounded-2xl bg-[#f6f0e5] p-4">
+      <legend className="px-1 text-sm font-black uppercase tracking-wide">
+        Хто бачить телефон
+      </legend>
+      <div className="mt-2 space-y-3">
+        <label className="flex cursor-pointer items-center gap-3 font-bold">
+          <input
+            name="phone_visibility"
+            type="radio"
+            value="public"
+            defaultChecked={isPublic}
+            className="h-5 w-5 accent-[#123f2d]"
+          />
+          <span>Показувати всім</span>
+        </label>
+        <label className="flex cursor-pointer items-center gap-3 font-bold">
+          <input
+            name="phone_visibility"
+            type="radio"
+            value="registered"
+            defaultChecked={!isPublic}
+            className="h-5 w-5 accent-[#123f2d]"
+          />
+          <span>Лише зареєстрованим користувачам</span>
+        </label>
+      </div>
+    </fieldset>
   );
 }

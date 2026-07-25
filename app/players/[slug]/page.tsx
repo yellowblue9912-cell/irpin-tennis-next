@@ -105,9 +105,7 @@ export default async function PlayerProfilePage({
         </div>
       </section>
 
-      {(player.bio ||
-        player.phone_public ||
-        player.address_public) && (
+      {(player.bio || player.phone || player.address) && (
         <section className="mt-6 grid gap-4 lg:grid-cols-[1.4fr_0.6fr]">
           {player.bio && (
             <div className="rounded-[24px] bg-white p-5 shadow-sm sm:p-7">
@@ -119,18 +117,18 @@ export default async function PlayerProfilePage({
               </p>
             </div>
           )}
-          {(player.phone_public || player.address_public) && (
+          {(player.phone || player.address) && (
             <div className="rounded-[24px] bg-white p-5 shadow-sm sm:p-7">
               <p className="text-xs font-black uppercase tracking-[0.14em] text-[#ad4529]">
                 Контакти
               </p>
               <div className="mt-3 space-y-2 text-sm font-bold">
-                {player.phone_public && player.phone && (
+                {player.phone && (
                   <a className="block hover:text-[#ad4529]" href={`tel:${player.phone}`}>
                     {player.phone}
                   </a>
                 )}
-                {player.address_public && player.address && (
+                {player.address && (
                   <p>{player.address}</p>
                 )}
               </div>
