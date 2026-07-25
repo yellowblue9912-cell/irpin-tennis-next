@@ -101,11 +101,7 @@ on storage.objects for insert
 to authenticated
 with check (
   bucket_id = 'player-avatars'
-  and exists (
-    select 1 from public.players
-    where players.user_id = auth.uid()
-      and players.id::text = (storage.foldername(name))[1]
-  )
+  and auth.uid()::text = (storage.foldername(name))[1]
 );
 
 drop policy if exists "Players update their own avatar" on storage.objects;
@@ -114,19 +110,11 @@ on storage.objects for update
 to authenticated
 using (
   bucket_id = 'player-avatars'
-  and exists (
-    select 1 from public.players
-    where players.user_id = auth.uid()
-      and players.id::text = (storage.foldername(name))[1]
-  )
+  and auth.uid()::text = (storage.foldername(name))[1]
 )
 with check (
   bucket_id = 'player-avatars'
-  and exists (
-    select 1 from public.players
-    where players.user_id = auth.uid()
-      and players.id::text = (storage.foldername(name))[1]
-  )
+  and auth.uid()::text = (storage.foldername(name))[1]
 );
 
 -- After registration, link an existing player card:

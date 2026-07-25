@@ -38,8 +38,14 @@ export default function AccountProfileForm({
 
     setPending(true);
     const supabase = createClient();
+    const { data: userData } = await supabase.auth.getUser();
+    if (!userData.user) {
+      setMessage("Сесія завершилася. Увійдіть у кабінет повторно.");
+      setPending(false);
+      return;
+    }
     const extension = file.name.split(".").pop()?.toLowerCase() || "jpg";
-    const path = `${player.id}/avatar-${Date.now()}.${extension}`;
+    const path = `${userData.user.id}/avatar-${Date.now()}.${extension}`;
     const { error } = await supabase.storage
       .from("player-avatars")
       .upload(path, file, { upsert: true });
