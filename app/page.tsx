@@ -190,7 +190,7 @@ export default function HomePage() {
 
                 <div>
                   <p className="mb-1 text-[10px] font-black uppercase tracking-[0.34em] text-[#6f2f91]">
-                    Irpin · Bucha · Kyiv
+                    Ірпінь · Буча · Передмістя
                   </p>
 
                   <h1 className="max-w-4xl text-3xl font-black uppercase leading-[0.92] tracking-[-0.04em] text-[#173d2b] sm:text-4xl lg:text-[52px]">

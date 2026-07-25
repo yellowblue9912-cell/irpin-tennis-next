@@ -47,7 +47,7 @@ export default async function OpenGraphImage() {
               textTransform: "uppercase",
             }}
           >
-            Irpin · Bucha · Kyiv
+            Ірпінь · Буча · Передмістя
           </div>
           <div
             style={{
