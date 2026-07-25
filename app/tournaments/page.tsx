@@ -25,6 +25,18 @@ type TournamentPlayer = {
   tournament_id: string;
 };
 
+type ActiveLeagueSeason = {
+  id: string;
+  title: string;
+  start_date: string;
+  end_date: string;
+  is_active: boolean;
+};
+
+type LeaguePlayer = {
+  season_id: string;
+};
+
 type TournamentTab = "upcoming" | "active" | "finished";
 
 type TournamentsPageProps = {
@@ -106,6 +118,16 @@ export default async function TournamentsPage({
       .from("tournament_players")
       .select("tournament_id");
 
+  const { data: activeLeagueSeasonsData, error: leagueSeasonsError } =
+    await supabase
+      .from("league_seasons")
+      .select("id, title, start_date, end_date, is_active")
+      .eq("is_active", true)
+      .order("start_date", { ascending: false });
+
+  const { data: leaguePlayersData, error: leaguePlayersError } =
+    await supabase.from("league_players").select("season_id");
+
   if (tournamentsError) {
     console.error("Помилка завантаження турнірів:", tournamentsError);
   }
@@ -117,9 +139,26 @@ export default async function TournamentsPage({
     );
   }
 
+  if (leagueSeasonsError) {
+    console.error(
+      "Помилка завантаження активних сезонів ліги:",
+      leagueSeasonsError,
+    );
+  }
+
+  if (leaguePlayersError) {
+    console.error(
+      "Помилка завантаження учасників ліги:",
+      leaguePlayersError,
+    );
+  }
+
   const tournaments = (tournamentsData ?? []) as Tournament[];
   const tournamentPlayers =
     (tournamentPlayersData ?? []) as TournamentPlayer[];
+  const activeLeagueSeasons =
+    (activeLeagueSeasonsData ?? []) as ActiveLeagueSeason[];
+  const leaguePlayers = (leaguePlayersData ?? []) as LeaguePlayer[];
 
   const participantCounts = tournamentPlayers.reduce<
     Record<string, number>
@@ -129,6 +168,27 @@ export default async function TournamentsPage({
 
     return counts;
   }, {});
+  const leagueParticipantCounts = leaguePlayers.reduce<Record<string, number>>(
+    (counts, item) => {
+      counts[item.season_id] = (counts[item.season_id] ?? 0) + 1;
+      return counts;
+    },
+    {},
+  );
+
+  function getLeagueHref(title: string) {
+    const normalizedTitle = title.toLowerCase();
+
+    if (normalizedTitle.includes("challenger")) {
+      return "/league/challenger";
+    }
+
+    if (normalizedTitle.includes("ladies")) {
+      return "/league/ladies";
+    }
+
+    return "/league/masters";
+  }
 
   const selectedTab: TournamentTab =
     params.tab === "upcoming" || params.tab === "finished"
@@ -207,9 +267,12 @@ export default async function TournamentsPage({
         >
           {tabs.map((tab) => {
             const active = selectedTab === tab.id;
-            const count = tournaments.filter(
+            const tournamentCount = tournaments.filter(
               (tournament) => getTournamentTab(tournament) === tab.id,
             ).length;
+            const count =
+              tournamentCount +
+              (tab.id === "active" ? activeLeagueSeasons.length : 0);
 
             return (
               <Link
@@ -236,9 +299,63 @@ export default async function TournamentsPage({
           })}
         </nav>
 
-        {visibleTournaments.length > 0 ? (
+        {visibleTournaments.length > 0 ||
+        (selectedTab === "active" && activeLeagueSeasons.length > 0) ? (
           <>
           <div className="grid gap-6 md:grid-cols-2">
+            {selectedTab === "active" &&
+              activeLeagueSeasons.map((season) => (
+                <Link
+                  key={`league-${season.id}`}
+                  href={getLeagueHref(season.title)}
+                  className="group rounded-[30px] border-2 border-[#d7f34c] bg-[#123f2d] p-7 text-white shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-xl"
+                >
+                  <div className="flex flex-wrap items-start justify-between gap-4">
+                    <span className="rounded-full bg-[#d7f34c] px-4 py-2 text-xs font-black uppercase tracking-wide text-[#123f2d]">
+                      Активна ліга
+                    </span>
+                    <span className="text-sm font-bold text-white/60">
+                      {formatTournamentDate(season.start_date)} —{" "}
+                      {formatTournamentDate(season.end_date)}
+                    </span>
+                  </div>
+
+                  <p className="mt-7 text-xs font-black uppercase tracking-[0.2em] text-[#d7f34c]">
+                    Тенісна ліга
+                  </p>
+                  <h2 className="mt-2 text-3xl font-black uppercase">
+                    {season.title}
+                  </h2>
+
+                  <div className="mt-6 grid grid-cols-2 gap-4">
+                    <div className="rounded-[18px] bg-white/10 p-4">
+                      <p className="text-xs font-black uppercase tracking-wide text-white/50">
+                        Учасників
+                      </p>
+                      <strong className="mt-2 block text-lg">
+                        {leagueParticipantCounts[season.id] ?? 0}
+                      </strong>
+                    </div>
+                    <div className="rounded-[18px] bg-white/10 p-4">
+                      <p className="text-xs font-black uppercase tracking-wide text-white/50">
+                        Формат
+                      </p>
+                      <strong className="mt-2 block text-lg">
+                        Кожен з кожним
+                      </strong>
+                    </div>
+                  </div>
+
+                  <div className="mt-7 flex items-center justify-between border-t border-white/15 pt-5">
+                    <span className="font-black">
+                      Переглянути таблицю та матчі
+                    </span>
+                    <span className="text-2xl transition group-hover:translate-x-1">
+                      →
+                    </span>
+                  </div>
+                </Link>
+              ))}
             {visibleTournaments.map((tournament) => (
               <Link
                 key={tournament.id}
