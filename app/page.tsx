@@ -171,9 +171,9 @@ export default function HomePage() {
     <>
       <LivingCursorBall />
 
-      <main className="flex min-h-screen flex-col overflow-x-hidden bg-[#f4f0e5] text-[#173d2b]">
+      <main className="flex min-h-[calc(100vh-92px)] flex-col overflow-x-hidden bg-[#f4f0e5] text-[#173d2b]">
         {/* Wimbledon main section */}
-        <section className="relative overflow-hidden">
+        <section className="relative flex-1 overflow-hidden">
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,rgba(255,255,255,0.9),transparent_52%)]" />
 
           <div className="pointer-events-none absolute -left-28 top-8 h-80 w-80 rounded-full border border-[#173d2b]/7" />
@@ -214,7 +214,7 @@ export default function HomePage() {
             </div>
 
             {/* Main navigation grid */}
-            <div className="grid grid-cols-1 items-start gap-3 md:grid-cols-2 xl:grid-cols-3">
+            <div className="grid grid-cols-1 items-stretch gap-3 md:grid-cols-2 xl:grid-cols-3">
               {mainCards.slice(0, 2).map((card) => (
                 <NavigationCard
                   key={card.href}
@@ -226,7 +226,7 @@ export default function HomePage() {
 
               {/* League card */}
               <article
-                className={`group relative overflow-hidden rounded-[20px] border p-4 transition-all duration-500 md:col-span-2 xl:col-span-1 ${
+                className={`group relative min-h-[296px] overflow-hidden rounded-[20px] border p-4 transition-all duration-500 md:col-span-2 xl:col-span-1 ${
                   activeCard === "Ліги"
                     ? "-translate-y-1 border-[#6f2f91]/40 bg-[#6f2f91] shadow-[0_24px_55px_rgba(74,31,97,0.22)]"
                     : "border-[#173d2b]/10 bg-[#173d2b]"
@@ -237,8 +237,8 @@ export default function HomePage() {
               >
                 <div className="pointer-events-none absolute -right-10 -top-12 h-40 w-40 rounded-full border border-white/10" />
 
-                <div className="relative flex min-h-[124px] flex-col sm:flex-row sm:items-center sm:gap-4 xl:flex-col xl:items-stretch xl:gap-0">
-                  <div className="mb-3 flex shrink-0 items-start justify-between gap-4 sm:mb-0 sm:w-[116px] xl:mb-3 xl:w-auto">
+                <div className="relative flex min-h-[264px] flex-col justify-center sm:flex-row sm:items-center sm:gap-4 xl:flex-col xl:items-stretch xl:gap-0">
+                  <div className="mb-3 flex shrink-0 items-start justify-center gap-4 text-center sm:mb-0 sm:w-[116px] xl:mb-3 xl:w-auto">
                     <div>
                       <span className="text-[10px] font-black uppercase tracking-[0.3em] text-[#dfff3f]">
                         Наші ліги
@@ -249,9 +249,6 @@ export default function HomePage() {
                       </h2>
                     </div>
 
-                    <div className="league-ball sm:hidden xl:block transition-transform duration-500 group-hover:rotate-[24deg] group-hover:scale-110">
-                      <TennisBall size={38} />
-                    </div>
                   </div>
 
                   <div className="grid flex-1 grid-cols-1 gap-2 sm:grid-cols-3 xl:grid-cols-1">
@@ -259,10 +256,10 @@ export default function HomePage() {
                       <Link
                         key={league.href}
                         href={league.href}
-                        className="group/league flex items-center justify-between rounded-xl border border-white/10 bg-white/[0.07] px-3.5 py-2.5 transition hover:border-[#dfff3f]/50 hover:bg-[#dfff3f]"
+                        className="group/league grid grid-cols-[1fr_auto] items-center rounded-xl border border-white/10 bg-white/[0.07] px-3.5 py-2.5 text-center transition hover:border-[#dfff3f]/50 hover:bg-[#dfff3f]"
                         data-ball-target
                       >
-                        <div>
+                        <div className="pl-5">
                           <div className="text-sm font-black uppercase text-white transition group-hover/league:text-[#173d2b]">
                             {league.name}
                           </div>
@@ -459,11 +456,6 @@ export default function HomePage() {
           }
         }
 
-        @media (min-width: 1280px) and (min-height: 900px) {
-          main {
-            height: 100vh;
-          }
-        }
       `}</style>
     </>
   );
@@ -498,7 +490,7 @@ function NavigationCard({
   return (
     <Link
       href={card.href}
-      className={`group relative min-h-[124px] overflow-hidden rounded-[20px] border p-4 transition-all duration-500 ${
+      className={`group relative min-h-[296px] overflow-hidden rounded-[20px] border p-4 transition-all duration-500 ${
         isActive
           ? `-translate-y-1 border-transparent ${
               activeBackgrounds[card.accent]
@@ -515,8 +507,8 @@ function NavigationCard({
         }`}
       />
 
-      <div className="relative flex h-full flex-col justify-between">
-        <div className="flex items-start justify-end">
+      <div className="relative flex min-h-[262px] flex-col justify-center text-center">
+        <div className="absolute right-0 top-0 flex items-start justify-end">
           <span
             className={`flex h-9 w-9 items-center justify-center rounded-full border text-lg transition-all duration-300 group-hover:rotate-[-12deg] ${
               isActive
@@ -528,7 +520,7 @@ function NavigationCard({
           </span>
         </div>
 
-        <div>
+        <div className="px-8">
           <h2
             className={`text-xl font-black uppercase tracking-[-0.04em] transition sm:text-2xl ${
               isActive ? "text-white" : "text-[#173d2b]"
