@@ -100,7 +100,7 @@ export default async function TournamentPage({
 
   return (
     <main className="min-h-screen bg-zinc-950 text-white">
-      <div className="mx-auto max-w-6xl px-4 py-10 sm:px-6 lg:px-8">
+      <div className="mx-auto max-w-6xl px-3 py-5 sm:px-6 sm:py-10 lg:px-8">
         <Link
           href="/tournaments"
           className="mb-6 inline-flex text-sm text-zinc-400 transition hover:text-white"
@@ -113,7 +113,7 @@ export default async function TournamentPage({
             Завершений турнір
           </p>
 
-          <h1 className="text-3xl font-black sm:text-5xl">
+          <h1 className="text-2xl font-black sm:text-5xl">
             {tournament.title}
           </h1>
 
@@ -155,7 +155,7 @@ export default async function TournamentPage({
 
           <div className="overflow-hidden rounded-3xl border border-zinc-800 bg-zinc-900">
             <div className="overflow-x-auto">
-              <table className="w-full min-w-[760px] text-left">
+              <table className="w-full min-w-[640px] text-left sm:min-w-[760px]">
                 <thead className="bg-zinc-800/80 text-xs uppercase tracking-wider text-zinc-400">
                   <tr>
                     <th className="px-5 py-4">Місце</th>

@@ -31,7 +31,7 @@ export default function Header() {
 
   return (
     <header className="sticky top-0 z-50 border-b border-[#efe3d3]/20 bg-[#bb5a3c] text-[#fff8ee] shadow-[0_8px_30px_rgba(18,63,45,0.18)]">
-      <div className="mx-auto flex h-[92px] max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
+      <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-3 sm:h-20 sm:px-6 lg:h-[92px] lg:px-8">
         <Link
           href="/"
           aria-label="IRPIN TENNIS — головна сторінка"
@@ -43,7 +43,7 @@ export default function Header() {
             width={140}
             height={140}
             priority
-            className="h-[112px] w-[112px] shrink-0 object-contain drop-shadow-[0_7px_12px_rgba(18,63,45,0.25)] transition duration-300 group-hover:scale-105 sm:h-[124px] sm:w-[124px]"
+            className="h-[72px] w-[72px] shrink-0 object-contain drop-shadow-[0_7px_12px_rgba(18,63,45,0.25)] transition duration-300 group-hover:scale-105 sm:h-[96px] sm:w-[96px] lg:h-[124px] lg:w-[124px]"
           />
 
           <div className="hidden leading-none sm:block">
@@ -113,7 +113,7 @@ export default function Header() {
           aria-label={menuOpen ? "Закрити меню" : "Відкрити меню"}
           aria-expanded={menuOpen}
           onClick={() => setMenuOpen((current) => !current)}
-          className="flex h-12 w-12 items-center justify-center rounded-full bg-[#123f2d] shadow-md transition hover:bg-[#0d3224] lg:hidden"
+          className="flex h-11 w-11 items-center justify-center rounded-full bg-[#123f2d] shadow-md transition hover:bg-[#0d3224] lg:hidden"
         >
           <span className="relative block h-5 w-6">
             <span

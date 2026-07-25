@@ -116,12 +116,12 @@ export default async function TournamentsPage() {
       <section className="relative overflow-hidden bg-[#123f2d] text-white">
         <div className="absolute -right-32 -top-32 h-96 w-96 rounded-full border-[45px] border-[#d7f34c]/10" />
 
-        <div className="relative mx-auto max-w-6xl px-5 py-20 md:py-28">
+        <div className="relative mx-auto max-w-6xl px-4 py-10 sm:px-5 md:py-28">
           <p className="text-sm font-black uppercase tracking-[0.3em] text-[#d7f34c]">
             Irpin Tennis Tournaments
           </p>
 
-          <h1 className="mt-5 max-w-4xl text-4xl font-black uppercase leading-[0.95] md:text-7xl">
+          <h1 className="mt-4 max-w-4xl text-3xl font-black uppercase leading-[0.95] sm:text-4xl md:mt-5 md:text-7xl">
             Історія турнірів
           </h1>
 
@@ -139,7 +139,7 @@ export default async function TournamentsPage() {
         </div>
       </section>
 
-      <section className="mx-auto max-w-6xl px-5 py-14 md:py-20">
+      <section className="mx-auto max-w-6xl px-3 py-8 sm:px-5 md:py-20">
         {tournaments.length > 0 ? (
           <div className="grid gap-6 md:grid-cols-2">
             {tournaments.map((tournament) => (

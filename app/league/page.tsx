@@ -62,22 +62,22 @@ export default function LeaguePage() {
 
         <div className="absolute bottom-0 left-0 h-32 w-32 -translate-x-1/2 translate-y-1/2 rounded-full border-[24px] border-white/5" />
 
-        <div className="relative mx-auto max-w-6xl px-5 py-20 md:py-28">
+        <div className="relative mx-auto max-w-6xl px-4 py-10 sm:px-5 md:py-28">
           <p className="text-sm font-black uppercase tracking-[0.3em] text-[#d7f34c]">
             Irpin Tennis Leagues
           </p>
 
-          <h1 className="mt-5 max-w-4xl text-4xl font-black uppercase leading-[0.95] md:text-7xl">
+          <h1 className="mt-4 max-w-4xl text-3xl font-black uppercase leading-[0.95] sm:text-4xl md:mt-5 md:text-7xl">
             Наші тенісні ліги
           </h1>
 
-          <p className="mt-7 max-w-3xl text-lg leading-8 text-white/70">
+          <p className="mt-4 max-w-3xl text-sm leading-6 text-white/70 sm:text-base md:mt-7 md:text-lg md:leading-8">
             Оберіть лігу відповідно до свого рівня та цілей. Кожна ліга
             допомагає знаходити рівних суперників, регулярно грати матчі та
             розвиватися разом із тенісною спільнотою.
           </p>
 
-          <div className="mt-9 flex flex-wrap gap-3">
+          <div className="mt-5 flex flex-wrap gap-2 md:mt-9 md:gap-3">
             <div className="rounded-full border border-white/15 bg-white/10 px-5 py-3 text-sm font-bold">
               3 ліги
             </div>
@@ -93,29 +93,29 @@ export default function LeaguePage() {
         </div>
       </section>
 
-      <section className="mx-auto max-w-6xl px-5 py-14 md:py-20">
-        <div className="mb-10 max-w-3xl">
+      <section className="mx-auto max-w-6xl px-3 py-8 sm:px-5 md:py-20">
+        <div className="mb-6 max-w-3xl md:mb-10">
           <p className="text-sm font-black uppercase tracking-[0.2em] text-[#bb5a3c]">
             Оберіть свій формат
           </p>
 
-          <h2 className="mt-3 text-3xl font-black uppercase md:text-5xl">
+          <h2 className="mt-3 text-2xl font-black uppercase sm:text-3xl md:text-5xl">
             Три ліги для різних гравців
           </h2>
 
-          <p className="mt-5 text-lg leading-8 text-[#123f2d]/65">
+          <p className="mt-4 text-sm leading-6 text-[#123f2d]/65 sm:text-base md:mt-5 md:text-lg md:leading-8">
             Ліги створені для того, щоб матчі були рівними, цікавими та
             корисними для прогресу кожного учасника.
           </p>
         </div>
 
-        <div className="grid gap-6 lg:grid-cols-3">
+        <div className="grid gap-3 sm:gap-6 lg:grid-cols-3">
           {leagues.map((league, index) => (
             <article
               key={league.slug}
-              className="group flex min-h-full flex-col overflow-hidden rounded-[32px] bg-white shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-xl"
+              className="group flex min-h-full flex-col overflow-hidden rounded-2xl bg-white shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-xl sm:rounded-[32px]"
             >
-              <div className={`${league.accent} p-7`}>
+              <div className={`${league.accent} p-4 sm:p-7`}>
                 <div className="flex items-start justify-between gap-4">
                   <span className="text-xs font-black uppercase tracking-[0.18em] text-[#123f2d]/65">
                     Ліга {String(index + 1).padStart(2, "0")}

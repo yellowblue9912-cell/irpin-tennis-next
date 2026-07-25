@@ -25,7 +25,7 @@ export default async function PlayerProfilePage({
   const { player, stats, tournaments, matches, achievements } = profile;
 
   return (
-    <main className="mx-auto w-full max-w-7xl px-5 py-10 md:px-8">
+    <main className="mx-auto w-full max-w-7xl px-3 py-5 sm:px-5 sm:py-8 md:px-8 md:py-10">
       <Link
         href="/players"
         className="text-sm font-bold text-[#123f2d]/60 transition hover:text-[#123f2d]"
@@ -45,7 +45,7 @@ export default async function PlayerProfilePage({
               Player Profile
             </p>
 
-            <h1 className="mt-3 text-4xl font-black uppercase md:text-6xl">
+            <h1 className="mt-3 text-3xl font-black uppercase sm:text-4xl md:text-6xl">
               {player.name}
             </h1>
 
@@ -227,7 +227,7 @@ function PlayerAvatar({
   }
 
   return (
-    <div className="flex h-32 w-32 items-center justify-center rounded-[24px] bg-[#c6f13d] text-4xl font-black text-[#123f2d] sm:h-44 sm:w-44 sm:rounded-[28px] sm:text-5xl">
+    <div className="flex h-24 w-24 items-center justify-center rounded-2xl bg-[#c6f13d] text-3xl font-black text-[#123f2d] sm:h-44 sm:w-44 sm:rounded-[28px] sm:text-5xl">
       {initials}
     </div>
   );

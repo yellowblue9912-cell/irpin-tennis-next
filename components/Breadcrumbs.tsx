@@ -33,7 +33,7 @@ export default function Breadcrumbs() {
 
   return (
     <div className="border-b border-[#123f2d]/10 bg-white">
-      <div className="mx-auto flex max-w-7xl items-center gap-2 px-6 py-3 text-sm">
+      <div className="mx-auto flex max-w-7xl items-center gap-2 overflow-x-auto px-4 py-2 text-xs sm:px-6 sm:py-3 sm:text-sm">
         <Link
           href="/"
           className="font-semibold text-[#123f2d] hover:text-[#ad4529]"

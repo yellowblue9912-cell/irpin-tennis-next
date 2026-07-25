@@ -41,8 +41,8 @@ export default function PlayersSearch({ players }: { players: Player[] }) {
   }, [searchQuery, sortedPlayers]);
 
   return (
-    <section className="mx-auto max-w-6xl px-5 py-10 md:py-14">
-      <div className="mb-7 rounded-[26px] bg-white p-5 shadow-sm md:p-6">
+    <section className="mx-auto max-w-6xl px-3 py-5 sm:px-5 md:py-10">
+      <div className="mb-4 rounded-2xl bg-white p-4 shadow-sm md:mb-7 md:rounded-[26px] md:p-6">
         <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
           <div className="flex-1">
             <label
@@ -74,7 +74,7 @@ export default function PlayersSearch({ players }: { players: Player[] }) {
                 onChange={(event) => setSearchQuery(event.target.value)}
                 placeholder="Введіть ім’я або прізвище"
                 autoComplete="off"
-                className="h-14 w-full rounded-2xl border border-[#123f2d]/10 bg-[#f6f0e5] pl-12 pr-12 text-base font-bold text-[#123f2d] outline-none transition placeholder:font-medium placeholder:text-[#123f2d]/35 focus:border-[#bb5a3c] focus:ring-4 focus:ring-[#bb5a3c]/10"
+                className="h-12 w-full rounded-xl border border-[#123f2d]/10 bg-[#f6f0e5] pl-12 pr-12 text-sm font-bold text-[#123f2d] outline-none transition placeholder:font-medium placeholder:text-[#123f2d]/35 focus:border-[#bb5a3c] focus:ring-4 focus:ring-[#bb5a3c]/10 md:h-14 md:rounded-2xl md:text-base"
               />
 
               {searchQuery && (
@@ -100,7 +100,7 @@ export default function PlayersSearch({ players }: { players: Player[] }) {
       </div>
 
       {filteredPlayers.length > 0 ? (
-        <div className="grid gap-4">
+        <div className="grid gap-2.5 md:gap-4">
           {filteredPlayers.map((player) => {
             const globalPosition =
               sortedPlayers.findIndex(

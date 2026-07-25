@@ -395,8 +395,8 @@ export default async function LeaguePage({ params }: PageProps) {
 
   return (
     <main className="min-h-screen bg-slate-50">
-      <div className="mx-auto w-full max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
-        <div className="mb-6">
+      <div className="mx-auto w-full max-w-7xl px-3 py-4 sm:px-6 sm:py-8 lg:px-8">
+        <div className="mb-4 sm:mb-6">
           <Link
             href="/league"
             className="inline-flex items-center gap-2 text-sm font-semibold text-slate-500 transition hover:text-slate-900"
@@ -406,8 +406,8 @@ export default async function LeaguePage({ params }: PageProps) {
           </Link>
         </div>
 
-        <section className="overflow-hidden rounded-3xl bg-slate-950 text-white shadow-xl">
-          <div className="relative px-6 py-8 sm:px-10 sm:py-10">
+        <section className="overflow-hidden rounded-2xl bg-slate-950 text-white shadow-xl sm:rounded-3xl">
+          <div className="relative px-4 py-5 sm:px-10 sm:py-10">
             <div className="absolute right-0 top-0 h-52 w-52 rounded-full bg-emerald-400/10 blur-3xl" />
             <div className="absolute bottom-0 left-1/3 h-40 w-40 rounded-full bg-blue-400/10 blur-3xl" />
 
@@ -429,7 +429,7 @@ export default async function LeaguePage({ params }: PageProps) {
                 )}
               </div>
 
-              <h1 className="text-4xl font-black tracking-tight sm:text-5xl">
+              <h1 className="text-3xl font-black tracking-tight sm:text-5xl">
                 {configuration.pageTitle}
               </h1>
 
@@ -438,7 +438,7 @@ export default async function LeaguePage({ params }: PageProps) {
                   "Тенісна ліга у форматі кожен грає з кожним."}
               </p>
 
-              <div className="mt-7 grid gap-3 sm:grid-cols-3">
+              <div className="mt-5 grid grid-cols-2 gap-2 sm:mt-7 sm:grid-cols-3 sm:gap-3">
                 <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
                   <p className="text-xs font-semibold uppercase tracking-wider text-slate-400">
                     Тривалість сезону
@@ -525,8 +525,11 @@ export default async function LeaguePage({ params }: PageProps) {
               </div>
             ) : (
               <>
-                <div className="hidden overflow-x-auto md:block">
-                  <table className="w-full min-w-[850px] border-collapse">
+                <p className="px-4 pb-2 text-xs font-semibold text-slate-500 md:hidden">
+                  Гортайте таблицю вбік, щоб побачити всі показники →
+                </p>
+                <div className="overflow-x-auto">
+                  <table className="w-full min-w-[650px] border-collapse md:min-w-[850px]">
                     <thead>
                       <tr className="border-b border-slate-200 bg-slate-50 text-left text-xs font-bold uppercase tracking-wider text-slate-500">
                         <th className="w-20 px-5 py-4 text-center">
@@ -635,7 +638,7 @@ export default async function LeaguePage({ params }: PageProps) {
                   </table>
                 </div>
 
-                <div className="divide-y divide-slate-100 md:hidden">
+                <div className="hidden">
                   {standings.map((row, index) => {
                     const position = index + 1;
 
