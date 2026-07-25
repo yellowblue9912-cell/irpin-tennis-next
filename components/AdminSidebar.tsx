@@ -70,6 +70,11 @@ export default function AdminSidebar() {
         </nav>
 
         <div className="mt-auto hidden pt-10 lg:block">
+          <form action="/api/admin/logout" method="post" className="mb-3">
+            <button className="w-full rounded-2xl border border-white/15 px-4 py-3 text-sm font-black text-white/70 transition hover:bg-white/10 hover:text-white">
+              Вийти з адмін-панелі
+            </button>
+          </form>
           <Link
             href="/"
             className="flex items-center justify-center rounded-2xl border border-white/15 px-4 py-3 text-sm font-black text-white/70 transition hover:bg-white/10 hover:text-white"
