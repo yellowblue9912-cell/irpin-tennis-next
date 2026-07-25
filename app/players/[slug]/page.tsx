@@ -2,6 +2,7 @@ import Link from "next/link";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
+import PlayerFeedback from "../../../components/PlayerFeedback";
 import {
   getPlayerProfile,
   type ProfileMatch,
@@ -254,6 +255,7 @@ export default async function PlayerProfilePage({
           </div>
         </div>
       </section>
+      <PlayerFeedback targetPlayerId={player.id} />
     </main>
   );
 }
