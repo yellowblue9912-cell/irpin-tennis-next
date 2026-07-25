@@ -3,6 +3,7 @@ import "./globals.css";
 
 import Header from "../components/Header";
 import Breadcrumbs from "../components/Breadcrumbs";
+import StructuredData from "../components/StructuredData";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://www.irpintennis.com"),
@@ -18,6 +19,12 @@ export const metadata: Metadata = {
     locale: "uk_UA",
     type: "website",
   },
+  twitter: {
+    card: "summary_large_image",
+    title: "Irpin Tennis",
+    description:
+      "Гравці, турніри, ліги, корти й тренери тенісної спільноти.",
+  },
 };
 
 export default function RootLayout({
@@ -28,6 +35,7 @@ export default function RootLayout({
   return (
     <html lang="uk">
       <body className="min-h-screen bg-slate-50 text-[#123f2d] antialiased">
+        <StructuredData />
         <Header />
         <Breadcrumbs />
         <main>{children}</main>
