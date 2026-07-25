@@ -213,6 +213,51 @@ function buildSets(match: LeagueMatchFromDatabase) {
   );
 }
 
+function getSeasonTimeProgress(startDate: string, endDate: string) {
+  const dayMs = 24 * 60 * 60 * 1000;
+  const start = Date.parse(`${startDate}T00:00:00Z`);
+  const end = Date.parse(`${endDate}T00:00:00Z`);
+  const now = new Date();
+  const today = Date.UTC(
+    now.getUTCFullYear(),
+    now.getUTCMonth(),
+    now.getUTCDate(),
+  );
+
+  if (!Number.isFinite(start) || !Number.isFinite(end) || end <= start) {
+    return { percentage: 0, label: "Дати сезону не вказані" };
+  }
+
+  if (today < start) {
+    const days = Math.ceil((start - today) / dayMs);
+    return {
+      percentage: 0,
+      label: `До початку: ${days} ${dayWord(days)}`,
+    };
+  }
+
+  if (today >= end) {
+    return { percentage: 100, label: "Сезон завершено" };
+  }
+
+  const percentage = Math.round(((today - start) / (end - start)) * 100);
+  const days = Math.ceil((end - today) / dayMs);
+
+  return {
+    percentage,
+    label: `До завершення: ${days} ${dayWord(days)}`,
+  };
+}
+
+function dayWord(days: number) {
+  const lastTwo = days % 100;
+  const last = days % 10;
+  if (lastTwo >= 11 && lastTwo <= 14) return "днів";
+  if (last === 1) return "день";
+  if (last >= 2 && last <= 4) return "дні";
+  return "днів";
+}
+
 export default async function LeaguePage({ params }: PageProps) {
   const { slug } = await params;
 
@@ -417,10 +462,10 @@ export default async function LeaguePage({ params }: PageProps) {
       ? (standings.length * (standings.length - 1)) / 2
       : 0;
 
-  const progress =
-    totalPossibleMatches > 0
-      ? Math.round((totalMatches / totalPossibleMatches) * 100)
-      : 0;
+  const seasonProgress = getSeasonTimeProgress(
+    season.start_date,
+    season.end_date,
+  );
 
   return (
     <main className="min-h-screen bg-slate-50">
@@ -505,15 +550,15 @@ export default async function LeaguePage({ params }: PageProps) {
 
               <div className="mt-6">
                 <div className="mb-2 flex items-center justify-between text-xs font-semibold text-slate-400">
-                  <span>Прогрес сезону</span>
-                  <span>{progress}%</span>
+                  <span>{seasonProgress.label}</span>
+                  <span>{seasonProgress.percentage}%</span>
                 </div>
 
                 <div className="h-2 overflow-hidden rounded-full bg-white/10">
                   <div
                     className="h-full rounded-full bg-emerald-400 transition-all"
                     style={{
-                      width: `${Math.min(progress, 100)}%`,
+                      width: `${seasonProgress.percentage}%`,
                     }}
                   />
                 </div>
