@@ -214,7 +214,7 @@ export default function HomePage() {
             </div>
 
             {/* Main navigation grid */}
-            <div className="grid flex-1 grid-cols-1 gap-3 md:grid-cols-2 xl:grid-cols-3">
+            <div className="grid grid-cols-1 gap-3 md:grid-cols-2 xl:grid-cols-3">
               {mainCards.slice(0, 2).map((card) => (
                 <NavigationCard
                   key={card.href}
@@ -226,7 +226,7 @@ export default function HomePage() {
 
               {/* League card */}
               <article
-                className={`group relative overflow-hidden rounded-[22px] border p-4 transition-all duration-500 md:col-span-2 xl:col-span-1 ${
+                className={`group relative overflow-hidden rounded-[22px] border p-4 transition-all duration-500 md:col-span-2 xl:col-span-3 ${
                   activeCard === "Ліги"
                     ? "-translate-y-1 border-[#6f2f91]/40 bg-[#6f2f91] shadow-[0_24px_55px_rgba(74,31,97,0.22)]"
                     : "border-[#173d2b]/10 bg-[#173d2b]"
@@ -254,7 +254,7 @@ export default function HomePage() {
                     </div>
                   </div>
 
-                  <div className="grid flex-1 grid-cols-1 gap-2 sm:grid-cols-3 xl:grid-cols-1">
+                  <div className="grid flex-1 grid-cols-1 gap-2 sm:grid-cols-3">
                     {leagues.map((league) => (
                       <Link
                         key={league.href}
