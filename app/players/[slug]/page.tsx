@@ -221,7 +221,7 @@ function PlayerAvatar({
       <img
         src={photoUrl}
         alt={name}
-        className="h-32 w-32 rounded-[24px] object-cover sm:h-44 sm:w-44 sm:rounded-[28px]"
+        className="h-32 w-32 rounded-[24px] bg-white/10 object-contain sm:h-44 sm:w-44 sm:rounded-[28px]"
       />
     );
   }

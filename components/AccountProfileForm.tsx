@@ -206,7 +206,11 @@ function nullable(value: FormDataEntryValue | null) {
 
 function Avatar({ name, photoUrl }: { name: string; photoUrl: string | null }) {
   return photoUrl ? (
-    <img src={photoUrl} alt="" className="h-28 w-28 rounded-3xl object-cover" />
+    <img
+      src={photoUrl}
+      alt=""
+      className="h-28 w-28 rounded-3xl bg-[#eef3e8] object-contain"
+    />
   ) : (
     <div className="flex h-28 w-28 items-center justify-center rounded-3xl bg-[#c6f13d] text-4xl font-black">
       {name.slice(0, 1).toUpperCase()}

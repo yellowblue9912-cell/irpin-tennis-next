@@ -27,14 +27,14 @@ export default function PlayerCard({ player, position }: Props) {
         {getPosition(position)}
       </div>
 
-      <div className="relative h-20 w-20 overflow-hidden rounded-full border-4 border-[#d7f34c] bg-[#123f2d]">
+      <div className="relative h-20 w-20 overflow-hidden rounded-2xl border-4 border-[#d7f34c] bg-[#eef3e8]">
         {player.photo_url ? (
           <Image
             src={player.photo_url}
             alt={player.name}
             fill
             sizes="80px"
-            className="object-cover"
+            className="object-contain p-0.5"
           />
         ) : (
           <div className="flex h-full w-full items-center justify-center text-3xl font-black text-white">
