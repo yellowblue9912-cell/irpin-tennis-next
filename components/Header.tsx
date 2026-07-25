@@ -11,6 +11,7 @@ const menuItems = [
   { label: "Турніри", href: "/tournaments" },
   { label: "Ліга", href: "/league" },
   { label: "Корти", href: "/courts" },
+  { label: "Тренери", href: "/coaches" },
   { label: "Рейтинг", href: "/rating" },
 ];
 
@@ -67,7 +68,7 @@ export default function Header() {
                   key={item.href}
                   href={item.href}
                   onClick={() => setMenuOpen(false)}
-                  className={`group relative px-4 py-8 text-sm font-black uppercase tracking-[0.07em] transition duration-200 ${
+                  className={`group relative px-3 py-8 text-sm font-black uppercase tracking-[0.07em] transition duration-200 ${
                     active
                       ? "text-white"
                       : "text-[#fff8ee]/80 hover:text-[#dce84c]"
@@ -76,7 +77,7 @@ export default function Header() {
                   {item.label}
 
                   <span
-                    className={`absolute bottom-5 left-4 right-4 h-[3px] origin-left rounded-full bg-[#123f2d] transition-transform duration-300 ${
+                      className={`absolute bottom-5 left-3 right-3 h-[3px] origin-left rounded-full bg-[#123f2d] transition-transform duration-300 ${
                       active
                         ? "scale-x-100"
                         : "scale-x-0 group-hover:scale-x-100"

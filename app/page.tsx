@@ -33,9 +33,9 @@ const mainCards = [
     accent: "blue",
   },
   {
-    title: "Галерея",
-    description: "Фото з матчів і турнірів",
-    href: "/gallery",
+    title: "Тренери",
+    description: "Тренування для дітей і дорослих",
+    href: "/coaches",
     number: "05",
     accent: "australian",
   },
@@ -332,11 +332,11 @@ export default function HomePage() {
               </a>
 
               <Link
-                href="/gallery"
+                href="/coaches"
                 className="transition hover:text-[#dfff3f]"
                 data-ball-target
               >
-                Галерея
+                Тренери
               </Link>
 
               <Link
