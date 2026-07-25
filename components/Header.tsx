@@ -171,7 +171,7 @@ export default function Header() {
             <Link
               href="/account"
               onClick={() => setMenuOpen(false)}
-              className="flex items-center justify-between rounded-2xl bg-[#dce84c] px-5 py-4 text-base font-black uppercase tracking-[0.07em] text-[#123f2d]"
+              className="flex items-center justify-between rounded-2xl border border-white/20 bg-[#f7efe3] px-5 py-4 text-base font-black uppercase tracking-[0.07em] text-[#123f2d] shadow-sm transition hover:bg-white"
             >
               <span>Особистий кабінет</span>
               <span>→</span>
