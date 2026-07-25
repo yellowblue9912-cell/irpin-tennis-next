@@ -214,7 +214,7 @@ export default function HomePage() {
             </div>
 
             {/* Main navigation grid */}
-            <div className="grid grid-cols-1 gap-3 md:grid-cols-2 xl:grid-cols-3">
+            <div className="grid grid-cols-1 items-start gap-3 md:grid-cols-2">
               {mainCards.slice(0, 2).map((card) => (
                 <NavigationCard
                   key={card.href}
@@ -226,7 +226,7 @@ export default function HomePage() {
 
               {/* League card */}
               <article
-                className={`group relative overflow-hidden rounded-[22px] border p-4 transition-all duration-500 md:col-span-2 xl:col-span-3 ${
+                className={`group relative overflow-hidden rounded-[20px] border p-4 transition-all duration-500 ${
                   activeCard === "Ліги"
                     ? "-translate-y-1 border-[#6f2f91]/40 bg-[#6f2f91] shadow-[0_24px_55px_rgba(74,31,97,0.22)]"
                     : "border-[#173d2b]/10 bg-[#173d2b]"
@@ -237,8 +237,8 @@ export default function HomePage() {
               >
                 <div className="pointer-events-none absolute -right-10 -top-12 h-40 w-40 rounded-full border border-white/10" />
 
-                <div className="relative flex h-full min-h-[142px] flex-col">
-                  <div className="mb-3 flex items-start justify-between gap-4">
+                <div className="relative flex min-h-[124px] flex-col sm:flex-row sm:items-center sm:gap-4">
+                  <div className="mb-3 flex shrink-0 items-start justify-between gap-4 sm:mb-0 sm:w-[116px]">
                     <div>
                       <span className="text-[10px] font-black uppercase tracking-[0.3em] text-[#dfff3f]">
                         Наші ліги
@@ -249,7 +249,7 @@ export default function HomePage() {
                       </h2>
                     </div>
 
-                    <div className="league-ball transition-transform duration-500 group-hover:rotate-[24deg] group-hover:scale-110">
+                    <div className="league-ball sm:hidden transition-transform duration-500 group-hover:rotate-[24deg] group-hover:scale-110">
                       <TennisBall size={38} />
                     </div>
                   </div>
@@ -498,7 +498,7 @@ function NavigationCard({
   return (
     <Link
       href={card.href}
-      className={`group relative min-h-[142px] overflow-hidden rounded-[22px] border p-4 transition-all duration-500 ${
+      className={`group relative min-h-[124px] overflow-hidden rounded-[20px] border p-4 transition-all duration-500 ${
         isActive
           ? `-translate-y-1 border-transparent ${
               activeBackgrounds[card.accent]
