@@ -39,6 +39,8 @@ const bundledPlayerPhotos: Record<string, string> = {
   "vitalii-voitenko": "/players/vitalii-voitenko.webp",
   "olia-aleksieieva": "/players/olia-aleksieieva.webp",
   "yurii-klymenko": "/players/yurii-klymenko.webp",
+  "vitalii-zavadskyi": "/players/vitalii-zavadskyi.webp",
+  "vlad-tsvitsinskyi": "/players/vlad-tsvitsinskyi.webp",
 };
 
 export function getPlayerPhoto(
