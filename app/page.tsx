@@ -314,7 +314,7 @@ export default function HomePage() {
 
             <div className="flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-xs font-bold text-white/65">
               <a
-                href="https://t.me/+9RoKqlUk7VE3NTFi"
+                href="/community"
                 target="_blank"
                 rel="noreferrer"
                 className="transition hover:text-[#dfff3f]"

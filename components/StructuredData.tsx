@@ -11,7 +11,6 @@ const structuredData = {
         "Тенісна спільнота Ірпеня, Бучі та Києва: гравці, турніри, ліги, корти й тренери.",
       areaServed: ["Ірпінь", "Буча", "Київ"],
       sport: "Tennis",
-      sameAs: ["https://t.me/+9RoKqlUk7VE3NTFi"],
     },
     {
       "@type": "WebSite",

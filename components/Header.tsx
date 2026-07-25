@@ -15,7 +15,7 @@ const menuItems = [
 ];
 
 // Встав сюди справжнє посилання на Telegram
-const telegramUrl = "https://t.me/+9RoKqlUk7VE3NTFi";
+const telegramUrl = "/community";
 
 export default function Header() {
   const pathname = usePathname();
