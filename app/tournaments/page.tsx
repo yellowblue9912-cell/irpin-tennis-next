@@ -235,23 +235,23 @@ export default async function TournamentsPage({
   return (
     <main className="min-h-screen bg-[#f6f0e5] text-[#123f2d]">
       <section className="relative overflow-hidden bg-[#123f2d] text-white">
-        <div className="absolute -right-32 -top-32 h-96 w-96 rounded-full border-[45px] border-[#d7f34c]/10" />
+        <div className="absolute -right-16 -top-20 h-52 w-52 rounded-full border-[26px] border-[#d7f34c]/10" />
 
-        <div className="relative mx-auto max-w-6xl px-4 py-9 sm:px-5 md:py-16">
-          <p className="text-sm font-black uppercase tracking-[0.3em] text-[#d7f34c]">
+        <div className="relative mx-auto max-w-7xl px-4 py-5 sm:px-5 sm:py-7 md:py-8">
+          <p className="text-[10px] font-black uppercase tracking-[0.25em] text-[#d7f34c] sm:text-xs">
             Irpin Tennis Tournaments
           </p>
 
-          <h1 className="mt-3 max-w-4xl text-3xl font-black uppercase leading-[0.95] sm:text-4xl md:mt-4 md:text-5xl">
+          <h1 className="mt-2 max-w-4xl text-2xl font-black uppercase leading-none sm:text-3xl md:text-4xl">
             Історія турнірів
           </h1>
 
-          <p className="mt-5 max-w-2xl text-base leading-7 text-white/70">
+          <p className="mt-3 hidden max-w-2xl text-sm leading-6 text-white/70 sm:block">
             Архів проведених турнірів ліги з результатами,
             призерами та статистикою учасників.
           </p>
 
-          <div className="mt-6 inline-flex rounded-full border border-white/15 bg-white/10 px-4 py-2 text-sm font-bold">
+          <div className="mt-3 inline-flex rounded-full border border-white/15 bg-white/10 px-3 py-1.5 text-xs font-bold sm:mt-4">
             Проведено турнірів:
             <span className="ml-2 text-[#d7f34c]">
               {tournaments.length}
