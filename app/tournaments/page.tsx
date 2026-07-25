@@ -309,19 +309,19 @@ export default async function TournamentsPage({
                 <Link
                   key={`league-${season.id}`}
                   href={getLeagueHref(season.title)}
-                  className="group rounded-[24px] border-2 border-[#d7f34c] bg-[#123f2d] p-5 text-white shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-xl sm:p-6"
+                  className="group rounded-[24px] border-2 border-[#c9e53f] bg-[#eef8c9] p-5 text-[#123f2d] shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-xl sm:p-6"
                 >
                   <div className="flex flex-wrap items-start justify-between gap-4">
                     <span className="rounded-full bg-[#d7f34c] px-4 py-2 text-xs font-black uppercase tracking-wide text-[#123f2d]">
                       Активна ліга
                     </span>
-                    <span className="text-sm font-bold text-white/60">
+                    <span className="text-sm font-bold text-[#123f2d]/60">
                       {formatTournamentDate(season.start_date)} —{" "}
                       {formatTournamentDate(season.end_date)}
                     </span>
                   </div>
 
-                  <p className="mt-5 text-[11px] font-black uppercase tracking-[0.2em] text-[#d7f34c]">
+                  <p className="mt-5 text-[11px] font-black uppercase tracking-[0.2em] text-[#ad4529]">
                     Тенісна ліга
                   </p>
                   <h2 className="mt-1.5 text-2xl font-black uppercase leading-tight">
@@ -329,16 +329,16 @@ export default async function TournamentsPage({
                   </h2>
 
                   <div className="mt-4 grid grid-cols-2 gap-2">
-                    <div className="rounded-2xl bg-white/10 p-3">
-                      <p className="text-[10px] font-black uppercase tracking-wide text-white/50">
+                    <div className="rounded-2xl bg-white/75 p-3">
+                      <p className="text-[10px] font-black uppercase tracking-wide text-[#123f2d]/50">
                         Учасників
                       </p>
                       <strong className="mt-1 block text-base">
                         {leagueParticipantCounts[season.id] ?? 0}
                       </strong>
                     </div>
-                    <div className="rounded-2xl bg-white/10 p-3">
-                      <p className="text-[10px] font-black uppercase tracking-wide text-white/50">
+                    <div className="rounded-2xl bg-white/75 p-3">
+                      <p className="text-[10px] font-black uppercase tracking-wide text-[#123f2d]/50">
                         Формат
                       </p>
                       <strong className="mt-1 block text-base">
@@ -347,7 +347,7 @@ export default async function TournamentsPage({
                     </div>
                   </div>
 
-                  <div className="mt-5 flex items-center justify-between border-t border-white/15 pt-4">
+                  <div className="mt-5 flex items-center justify-between border-t border-[#123f2d]/15 pt-4">
                     <span className="text-sm font-black">
                       Переглянути таблицю та матчі
                     </span>
