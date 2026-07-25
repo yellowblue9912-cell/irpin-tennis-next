@@ -1,19 +1,11 @@
 import Image from "next/image";
 import Link from "next/link";
-import type { Player } from "@/app/data/players";
+import type { Player } from "@/types/player";
 
 type Props = {
   player: Player;
   position: number;
 };
-
-function getLevelLabel(rating: number) {
-  if (rating >= 4.5) return "Елітний";
-  if (rating >= 4.0) return "Просунутий";
-  if (rating >= 3.5) return "Сильний аматор";
-  if (rating >= 3.25) return "Середній";
-  return "Аматор";
-}
 
 function getPosition(position: number) {
   if (position === 1) return "🥇";
@@ -25,7 +17,6 @@ function getPosition(position: number) {
 
 export default function PlayerCard({ player, position }: Props) {
   const firstLetter = player.name.charAt(0).toUpperCase();
-  const achievementsCount = player.achievements?.length ?? 0;
 
   return (
     <Link
@@ -37,9 +28,9 @@ export default function PlayerCard({ player, position }: Props) {
       </div>
 
       <div className="relative h-20 w-20 overflow-hidden rounded-full border-4 border-[#d7f34c] bg-[#123f2d]">
-        {player.photo ? (
+        {player.photo_url ? (
           <Image
-            src={player.photo}
+            src={player.photo_url}
             alt={player.name}
             fill
             sizes="80px"
@@ -58,12 +49,8 @@ export default function PlayerCard({ player, position }: Props) {
         </h2>
 
         <div className="mt-2 flex flex-wrap gap-2">
-          <span className="rounded-full bg-[#123f2d] px-3 py-1 text-xs font-black uppercase tracking-wide text-white">
-            {getLevelLabel(player.rating)}
-          </span>
-
           <span className="rounded-full bg-[#f6f0e5] px-3 py-1 text-xs font-bold text-[#123f2d]/60">
-            🏆 {achievementsCount} досягнень
+            Переглянути статистику й досягнення
           </span>
         </div>
       </div>

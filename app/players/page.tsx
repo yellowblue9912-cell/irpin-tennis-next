@@ -1,8 +1,11 @@
 import Footer from "@/components/Footer";
 import PlayersSearch from "@/components/PlayersSearch";
-import { players } from "@/app/data/players";
+import { getPlayers } from "@/lib/players/getPlayers";
 
-export default function PlayersPage() {
+export const dynamic = "force-dynamic";
+
+export default async function PlayersPage() {
+  const players = await getPlayers();
   const sortedPlayers = [...players].sort(
     (a, b) => b.rating - a.rating,
   );
@@ -43,7 +46,7 @@ export default function PlayersPage() {
         </div>
       </section>
 
-      <PlayersSearch />
+      <PlayersSearch players={players} />
 
       <Footer />
     </main>

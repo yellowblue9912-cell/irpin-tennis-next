@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from "react";
 import PlayerCard from "@/components/PlayerCard";
-import { players } from "@/app/data/players";
+import type { Player } from "@/types/player";
 
 function normalizeText(value: string) {
   return value
@@ -11,12 +11,12 @@ function normalizeText(value: string) {
     .trim();
 }
 
-export default function PlayersSearch() {
+export default function PlayersSearch({ players }: { players: Player[] }) {
   const [searchQuery, setSearchQuery] = useState("");
 
   const sortedPlayers = useMemo(
     () => [...players].sort((a, b) => b.rating - a.rating),
-    [],
+    [players],
   );
 
   const filteredPlayers = useMemo(() => {
