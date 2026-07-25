@@ -148,9 +148,10 @@ export default function Header() {
                   key={item.href}
                   href={item.href}
                   onClick={() => setMenuOpen(false)}
+                  style={active ? { color: "#123f2d" } : undefined}
                   className={`flex items-center justify-between rounded-2xl px-5 py-4 text-base font-black uppercase tracking-[0.07em] transition ${
                     active
-                      ? "bg-[#f7efe3] text-[#123f2d]"
+                      ? "bg-[#c6f13d]"
                       : "bg-white/5 text-white hover:bg-white/10"
                   }`}
                 >
@@ -170,7 +171,8 @@ export default function Header() {
             <Link
               href="/account"
               onClick={() => setMenuOpen(false)}
-              className="flex items-center justify-between rounded-2xl border border-white/20 bg-[#f7efe3] px-5 py-4 text-base font-black uppercase tracking-[0.07em] text-[#123f2d] shadow-sm transition hover:bg-white"
+              style={{ color: "#123f2d" }}
+              className="flex items-center justify-between rounded-2xl border-2 border-[#dce84c] bg-[#c6f13d] px-5 py-4 text-base font-black uppercase tracking-[0.07em] shadow-[0_8px_24px_rgba(198,241,61,0.22)] transition hover:bg-[#d9ff5a]"
             >
               <span>Особистий кабінет</span>
               <span>→</span>
