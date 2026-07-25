@@ -490,7 +490,7 @@ function NavigationCard({
   return (
     <Link
       href={card.href}
-      className={`group relative min-h-[296px] overflow-hidden rounded-[20px] border p-4 transition-all duration-500 ${
+      className={`group relative min-h-[116px] overflow-hidden rounded-[20px] border p-4 transition-all duration-500 sm:min-h-[132px] xl:min-h-[296px] ${
         isActive
           ? `-translate-y-1 border-transparent ${
               activeBackgrounds[card.accent]
@@ -507,7 +507,7 @@ function NavigationCard({
         }`}
       />
 
-      <div className="relative flex min-h-[262px] flex-col justify-center text-center">
+      <div className="relative flex min-h-[82px] flex-col justify-center text-center sm:min-h-[98px] xl:min-h-[262px]">
         <div className="absolute right-0 top-0 flex items-start justify-end">
           <span
             className={`flex h-9 w-9 items-center justify-center rounded-full border text-lg transition-all duration-300 group-hover:rotate-[-12deg] ${
