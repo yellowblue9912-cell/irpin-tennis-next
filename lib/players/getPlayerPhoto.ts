@@ -37,3 +37,12 @@ export function getPlayerPhoto(
 ) {
   return uploadedPhoto || bundledPlayerPhotos[slug] || null;
 }
+
+const correctedPlayerNames: Record<string, string> = {
+  "dmytro-khmel": "Дмитро Хміль",
+  "oleksandr-usov": "Діма Усов",
+};
+
+export function getPlayerName(slug: string, storedName: string) {
+  return correctedPlayerNames[slug] || storedName;
+}

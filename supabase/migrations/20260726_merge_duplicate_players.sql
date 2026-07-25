@@ -91,3 +91,11 @@ begin
   end loop;
 end
 $$;
+
+update public.players
+set name = 'Дмитро Хміль'
+where id = 'be64c0c5-816b-42bd-be85-29adc3102ca7';
+
+update public.players
+set name = 'Діма Усов'
+where id = 'adf36413-555e-4fe1-94af-ea68622f1986';

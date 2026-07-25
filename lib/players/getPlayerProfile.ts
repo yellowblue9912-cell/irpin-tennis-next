@@ -1,5 +1,5 @@
 import { createClient } from "../supabase/server";
-import { getPlayerPhoto } from "./getPlayerPhoto";
+import { getPlayerName, getPlayerPhoto } from "./getPlayerPhoto";
 
 export type ProfilePlayer = {
   id: string;
@@ -169,6 +169,7 @@ export async function getPlayerProfile(
 
   const player = {
     ...playerData,
+    name: getPlayerName(playerData.slug, playerData.name),
     photo_url: getPlayerPhoto(playerData.slug, playerData.photo_url),
     phone: publicContacts?.phone ?? null,
     address: publicContacts?.address ?? null,
