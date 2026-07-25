@@ -169,6 +169,10 @@ export default function LeaguePage() {
                 <Link
                   href={`/league/${league.slug}`}
                   className={`mt-4 inline-flex items-center justify-between rounded-full px-5 py-3 text-xs font-black uppercase tracking-[0.08em] transition hover:scale-[1.02] ${league.button}`}
+                  style={{
+                    color:
+                      league.slug === "masters" ? "#123f2d" : "#ffffff",
+                  }}
                 >
                   <span>Переглянути лігу</span>
                   <span>→</span>
