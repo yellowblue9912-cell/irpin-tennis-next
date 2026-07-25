@@ -183,7 +183,9 @@ export default async function CourtPage({
             <img
               src={court.image}
               alt={court.name}
-              className="absolute inset-0 h-full w-full object-cover"
+              className={`absolute inset-0 h-full w-full ${
+                slug === "terrakort" ? "object-contain" : "object-cover"
+              }`}
             />
 
             <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/10 to-transparent" />
