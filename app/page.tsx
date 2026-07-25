@@ -55,7 +55,7 @@ const leagues = [
   {
     name: "Ladies",
     href: "/league/ladies",
-    label: "Жіноча ліга",
+    label: "Ліга для дівчат",
   },
 ];
 
