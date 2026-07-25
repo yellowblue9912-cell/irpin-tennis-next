@@ -6,7 +6,6 @@ import { usePathname } from "next/navigation";
 import { useState } from "react";
 
 const menuItems = [
-  { label: "Головна", href: "/" },
   { label: "Гравці", href: "/players" },
   { label: "Турніри", href: "/tournaments" },
   { label: "Ліга", href: "/league" },
