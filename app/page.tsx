@@ -8,35 +8,30 @@ const mainCards = [
     title: "Гравці",
     description: "Учасники тенісної спільноти",
     href: "/players",
-    number: "01",
     accent: "green",
   },
   {
     title: "Турніри",
     description: "Турніри та результати",
     href: "/tournaments",
-    number: "02",
     accent: "terracotta",
   },
   {
     title: "Рейтинг",
     description: "Актуальний рейтинг гравців",
     href: "/rating",
-    number: "03",
     accent: "purple",
   },
   {
     title: "Корти",
     description: "Тенісні корти Ірпеня та Бучі",
     href: "/courts",
-    number: "04",
     accent: "blue",
   },
   {
     title: "Тренери",
     description: "Тренування для дітей і дорослих",
     href: "/coaches",
-    number: "05",
     accent: "australian",
   },
 ];
@@ -231,7 +226,7 @@ export default function HomePage() {
 
               {/* League card */}
               <article
-                className={`group relative overflow-hidden rounded-[24px] border p-5 transition-all duration-500 md:col-span-2 xl:col-span-1 ${
+                className={`group relative overflow-hidden rounded-[22px] border p-4 transition-all duration-500 md:col-span-2 xl:col-span-1 ${
                   activeCard === "Ліги"
                     ? "-translate-y-1 border-[#6f2f91]/40 bg-[#6f2f91] shadow-[0_24px_55px_rgba(74,31,97,0.22)]"
                     : "border-[#173d2b]/10 bg-[#173d2b]"
@@ -242,20 +237,20 @@ export default function HomePage() {
               >
                 <div className="pointer-events-none absolute -right-10 -top-12 h-40 w-40 rounded-full border border-white/10" />
 
-                <div className="relative flex h-full min-h-[168px] flex-col">
-                  <div className="mb-4 flex items-start justify-between gap-4">
+                <div className="relative flex h-full min-h-[142px] flex-col">
+                  <div className="mb-3 flex items-start justify-between gap-4">
                     <div>
                       <span className="text-[10px] font-black uppercase tracking-[0.3em] text-[#dfff3f]">
-                        03 · Наші ліги
+                        Наші ліги
                       </span>
 
-                      <h2 className="mt-1 text-2xl font-black uppercase tracking-[-0.04em] text-white">
+                      <h2 className="mt-1 text-xl font-black uppercase tracking-[-0.04em] text-white">
                         Ліги
                       </h2>
                     </div>
 
                     <div className="league-ball transition-transform duration-500 group-hover:rotate-[24deg] group-hover:scale-110">
-                      <TennisBall size={44} />
+                      <TennisBall size={38} />
                     </div>
                   </div>
 
@@ -479,7 +474,6 @@ type NavigationCardProps = {
     title: string;
     description: string;
     href: string;
-    number: string;
     accent: string;
   };
   activeCard: string | null;
@@ -504,7 +498,7 @@ function NavigationCard({
   return (
     <Link
       href={card.href}
-      className={`group relative min-h-[168px] overflow-hidden rounded-[24px] border p-5 transition-all duration-500 ${
+      className={`group relative min-h-[142px] overflow-hidden rounded-[22px] border p-4 transition-all duration-500 ${
         isActive
           ? `-translate-y-1 border-transparent ${
               activeBackgrounds[card.accent]
@@ -522,15 +516,7 @@ function NavigationCard({
       />
 
       <div className="relative flex h-full flex-col justify-between">
-        <div className="flex items-start justify-between">
-          <span
-            className={`text-[10px] font-black uppercase tracking-[0.3em] transition ${
-              isActive ? "text-[#dfff3f]" : "text-[#173d2b]/40"
-            }`}
-          >
-            {card.number}
-          </span>
-
+        <div className="flex items-start justify-end">
           <span
             className={`flex h-9 w-9 items-center justify-center rounded-full border text-lg transition-all duration-300 group-hover:rotate-[-12deg] ${
               isActive
@@ -544,7 +530,7 @@ function NavigationCard({
 
         <div>
           <h2
-            className={`text-2xl font-black uppercase tracking-[-0.04em] transition ${
+            className={`text-xl font-black uppercase tracking-[-0.04em] transition sm:text-2xl ${
               isActive ? "text-white" : "text-[#173d2b]"
             }`}
           >
