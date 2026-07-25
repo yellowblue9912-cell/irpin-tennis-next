@@ -33,32 +33,32 @@ export default async function PlayerProfilePage({
         ← Повернутися до гравців
       </Link>
 
-      <section className="mt-6 overflow-hidden rounded-[32px] bg-[#123f2d] text-white">
-        <div className="grid gap-8 p-5 sm:p-7 md:grid-cols-[180px_1fr] md:p-10">
+      <section className="mt-4 overflow-hidden rounded-2xl bg-[#123f2d] text-white sm:mt-6 sm:rounded-[32px]">
+        <div className="grid grid-cols-[80px_minmax(0,1fr)] items-center gap-3 p-4 sm:grid-cols-[140px_1fr] sm:gap-6 sm:p-7 md:grid-cols-[180px_1fr] md:p-10">
           <PlayerAvatar
             name={player.name}
             photoUrl={player.photo_url}
           />
 
           <div className="flex flex-col justify-center">
-            <p className="text-sm font-black uppercase tracking-[0.18em] text-white/50">
+            <p className="hidden text-sm font-black uppercase tracking-[0.18em] text-white/50 sm:block">
               Player Profile
             </p>
 
-            <h1 className="mt-3 text-3xl font-black uppercase sm:text-4xl md:text-6xl">
+            <h1 className="text-xl font-black uppercase leading-tight sm:mt-3 sm:text-4xl md:text-6xl">
               {player.name}
             </h1>
 
-            <div className="mt-5 flex flex-wrap gap-3">
-              <span className="rounded-full bg-white px-4 py-2 font-black text-[#123f2d]">
+            <div className="mt-2 flex flex-wrap gap-1.5 sm:mt-5 sm:gap-3">
+              <span className="rounded-full bg-white px-2.5 py-1 text-xs font-black text-[#123f2d] sm:px-4 sm:py-2 sm:text-base">
                 Рейтинг {Number(player.rating).toFixed(2)}
               </span>
 
-              <span className="rounded-full border border-white/15 px-4 py-2 font-bold text-white/75">
+              <span className="hidden rounded-full border border-white/15 px-4 py-2 font-bold text-white/75 sm:inline">
                 {player.city || "Місто не вказано"}
               </span>
 
-              <span className="rounded-full border border-white/15 px-4 py-2 font-bold text-white/75">
+              <span className="rounded-full border border-white/15 px-2.5 py-1 text-[10px] font-bold text-white/75 sm:px-4 sm:py-2 sm:text-base">
                 {player.is_active ? "Активний гравець" : "Неактивний"}
               </span>
             </div>
@@ -100,7 +100,7 @@ export default async function PlayerProfilePage({
         </section>
       )}
 
-      <section className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-7">
+      <section className="mt-4 grid grid-cols-2 overflow-hidden rounded-2xl border border-[#123f2d]/10 bg-white sm:mt-6 sm:grid-cols-4 xl:grid-cols-7">
         <StatCard label="Турніри та ліги" value={stats.tournaments} />
         <StatCard label="Матчі" value={stats.matches} />
         <StatCard label="Перемоги" value={stats.wins} />
@@ -110,7 +110,7 @@ export default async function PlayerProfilePage({
         <StatCard label="Подіуми" value={stats.podiums} />
       </section>
 
-      <section className="mt-8 rounded-[28px] bg-white p-5 shadow-sm sm:p-8">
+      <section className="mt-5 rounded-2xl bg-white p-4 shadow-sm sm:mt-8 sm:rounded-[28px] sm:p-8">
         <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
           <div>
             <p className="text-sm font-black uppercase tracking-[0.16em] text-[#ad4529]">
@@ -159,7 +159,12 @@ export default async function PlayerProfilePage({
             </p>
           </div>
 
-          <div className="mt-6 space-y-4">
+          <details className="mt-5 rounded-2xl bg-[#f6f0e5] p-4">
+            <summary className="cursor-pointer list-none font-black text-[#123f2d]">
+              Переглянути всі турніри та ліги ({tournaments.length})
+              <span className="float-right">⌄</span>
+            </summary>
+            <div className="mt-4 space-y-3">
             {tournaments.map((tournament) => (
               <TournamentCard
                 key={tournament.id}
@@ -170,7 +175,8 @@ export default async function PlayerProfilePage({
             {tournaments.length === 0 && (
               <EmptyState text="У гравця ще немає турнірів або ліг." />
             )}
-          </div>
+            </div>
+          </details>
         </div>
 
         <div className="rounded-[28px] bg-white p-6 shadow-sm md:p-8">
@@ -185,7 +191,7 @@ export default async function PlayerProfilePage({
           </div>
 
           <div className="mt-6 space-y-3">
-            {matches.map((match) => (
+            {matches.slice(0, 5).map((match) => (
               <MatchCard
                 key={match.id}
                 match={match}
@@ -194,6 +200,19 @@ export default async function PlayerProfilePage({
 
             {matches.length === 0 && (
               <EmptyState text="У гравця ще немає завершених матчів." />
+            )}
+
+            {matches.length > 5 && (
+              <details className="rounded-2xl bg-[#f6f0e5] p-4">
+                <summary className="cursor-pointer list-none text-center text-sm font-black uppercase text-[#123f2d]">
+                  Показати більше матчів ({matches.length - 5})
+                </summary>
+                <div className="mt-4 space-y-3">
+                  {matches.slice(5).map((match) => (
+                    <MatchCard key={match.id} match={match} />
+                  ))}
+                </div>
+              </details>
             )}
           </div>
         </div>
@@ -221,13 +240,13 @@ function PlayerAvatar({
       <img
         src={photoUrl}
         alt={name}
-        className="h-32 w-32 rounded-[24px] bg-white/10 object-contain sm:h-44 sm:w-44 sm:rounded-[28px]"
+        className="h-20 w-20 rounded-xl bg-white/10 object-cover sm:h-36 sm:w-36 sm:rounded-[24px] md:h-44 md:w-44"
       />
     );
   }
 
   return (
-    <div className="flex h-24 w-24 items-center justify-center rounded-2xl bg-[#c6f13d] text-3xl font-black text-[#123f2d] sm:h-44 sm:w-44 sm:rounded-[28px] sm:text-5xl">
+    <div className="flex h-20 w-20 items-center justify-center rounded-xl bg-[#c6f13d] text-2xl font-black text-[#123f2d] sm:h-36 sm:w-36 sm:rounded-[24px] sm:text-4xl md:h-44 md:w-44">
       {initials}
     </div>
   );
@@ -241,12 +260,12 @@ function StatCard({
   value: string | number;
 }) {
   return (
-    <div className="rounded-[24px] bg-white p-5 shadow-sm">
+    <div className="border-b border-r border-[#123f2d]/10 p-3 sm:p-4">
       <p className="text-xs font-black uppercase tracking-[0.12em] text-[#123f2d]/45">
         {label}
       </p>
 
-      <p className="mt-3 text-3xl font-black text-[#123f2d]">
+      <p className="mt-1 text-xl font-black text-[#123f2d] sm:text-2xl">
         {value}
       </p>
     </div>
