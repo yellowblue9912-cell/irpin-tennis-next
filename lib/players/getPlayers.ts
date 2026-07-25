@@ -1,5 +1,6 @@
 import { createClient } from "../supabase/server";
 import type { Player } from "../../types/player";
+import { getPlayerPhoto } from "./getPlayerPhoto";
 
 export async function getPlayers(): Promise<Player[]> {
   const supabase = await createClient();
@@ -27,5 +28,8 @@ export async function getPlayers(): Promise<Player[]> {
     return [];
   }
 
-  return (data ?? []) as Player[];
+  return ((data ?? []) as Player[]).map((player) => ({
+    ...player,
+    photo_url: getPlayerPhoto(player.slug, player.photo_url),
+  }));
 }
