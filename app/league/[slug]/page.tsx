@@ -554,42 +554,42 @@ export default async function LeaguePage({ params }: PageProps) {
               </div>
             ) : (
               <>
-                <p className="px-4 pb-2 text-xs font-semibold text-slate-500 md:hidden">
-                  Гортайте таблицю вбік, щоб побачити всі показники →
+                <p className="border-b border-slate-100 px-3 py-2 text-[11px] font-semibold text-slate-500 md:hidden">
+                  М — матчі · В — перемоги · П — поразки
                 </p>
                 <div className="overflow-x-auto">
-                  <table className="w-full min-w-[650px] border-collapse md:min-w-[850px]">
+                  <table className="w-full table-fixed border-collapse md:min-w-[850px] md:table-auto">
                     <thead>
                       <tr className="border-b border-slate-200 bg-slate-50 text-left text-xs font-bold uppercase tracking-wider text-slate-500">
-                        <th className="w-20 px-5 py-4 text-center">
+                        <th className="w-11 px-1.5 py-3 text-center sm:w-16 sm:px-3 md:w-20 md:px-5 md:py-4">
                           Місце
                         </th>
 
-                        <th className="px-5 py-4">
+                        <th className="w-auto px-1.5 py-3 sm:px-3 md:px-5 md:py-4">
                           Гравець
                         </th>
 
-                        <th className="px-3 py-4 text-center">
+                        <th className="w-8 px-0.5 py-3 text-center sm:w-10 sm:px-1 md:px-3 md:py-4">
                           М
                         </th>
 
-                        <th className="px-3 py-4 text-center">
+                        <th className="w-8 px-0.5 py-3 text-center sm:w-10 sm:px-1 md:px-3 md:py-4">
                           В
                         </th>
 
-                        <th className="px-3 py-4 text-center">
+                        <th className="w-8 px-0.5 py-3 text-center sm:w-10 sm:px-1 md:px-3 md:py-4">
                           П
                         </th>
 
-                        <th className="px-3 py-4 text-center">
+                        <th className="hidden px-3 py-4 text-center md:table-cell">
                           Сети
                         </th>
 
-                        <th className="px-3 py-4 text-center">
+                        <th className="hidden px-3 py-4 text-center md:table-cell">
                           Гейми
                         </th>
 
-                        <th className="px-5 py-4 text-center">
+                        <th className="w-12 px-1 py-3 text-center sm:w-16 sm:px-2 md:px-5 md:py-4">
                           Бали
                         </th>
                       </tr>
@@ -604,9 +604,9 @@ export default async function LeaguePage({ params }: PageProps) {
                             key={row.id}
                             className="border-b border-slate-100 transition last:border-b-0 hover:bg-slate-50"
                           >
-                            <td className="px-5 py-4 text-center">
+                            <td className="px-1.5 py-3 text-center sm:px-3 md:px-5 md:py-4">
                               <span
-                                className={`inline-flex h-9 min-w-9 items-center justify-center rounded-full px-2 text-sm font-black ${getPositionClass(
+                                className={`inline-flex h-7 min-w-7 items-center justify-center rounded-full px-1 text-xs font-black sm:h-8 sm:min-w-8 md:h-9 md:min-w-9 md:px-2 md:text-sm ${getPositionClass(
                                   position,
                                 )}`}
                               >
@@ -614,29 +614,29 @@ export default async function LeaguePage({ params }: PageProps) {
                               </span>
                             </td>
 
-                            <td className="px-5 py-4">
+                            <td className="min-w-0 px-1.5 py-3 sm:px-3 md:px-5 md:py-4">
                               <Link
                                 href={`/players/${row.player.slug}`}
-                                className="font-bold text-slate-900 transition hover:text-emerald-700"
+                                className="block truncate text-xs font-bold leading-tight text-slate-900 transition hover:text-emerald-700 sm:text-sm md:text-base"
                               >
                                 {row.player.name}
                               </Link>
                             </td>
 
-                            <td className="px-3 py-4 text-center font-semibold text-slate-700">
+                            <td className="px-0.5 py-3 text-center text-xs font-semibold text-slate-700 sm:px-1 sm:text-sm md:px-3 md:py-4 md:text-base">
                               {row.matches_played}
                             </td>
 
-                            <td className="px-3 py-4 text-center font-semibold text-emerald-700">
+                            <td className="px-0.5 py-3 text-center text-xs font-semibold text-emerald-700 sm:px-1 sm:text-sm md:px-3 md:py-4 md:text-base">
                               {row.wins}
                             </td>
 
-                            <td className="px-3 py-4 text-center font-semibold text-red-600">
+                            <td className="px-0.5 py-3 text-center text-xs font-semibold text-red-600 sm:px-1 sm:text-sm md:px-3 md:py-4 md:text-base">
                               {row.losses}
                             </td>
 
                             <td
-                              className={`px-3 py-4 text-center ${getDifferenceClass(
+                              className={`hidden px-3 py-4 text-center md:table-cell ${getDifferenceClass(
                                 row.sets_difference,
                               )}`}
                             >
@@ -646,7 +646,7 @@ export default async function LeaguePage({ params }: PageProps) {
                             </td>
 
                             <td
-                              className={`px-3 py-4 text-center ${getDifferenceClass(
+                              className={`hidden px-3 py-4 text-center md:table-cell ${getDifferenceClass(
                                 row.games_difference,
                               )}`}
                             >
@@ -655,8 +655,8 @@ export default async function LeaguePage({ params }: PageProps) {
                               )}
                             </td>
 
-                            <td className="px-5 py-4 text-center">
-                              <span className="inline-flex min-w-11 items-center justify-center rounded-xl bg-slate-950 px-3 py-2 text-sm font-black text-white">
+                            <td className="px-1 py-3 text-center sm:px-2 md:px-5 md:py-4">
+                              <span className="inline-flex min-w-8 items-center justify-center rounded-lg bg-slate-950 px-1.5 py-1.5 text-xs font-black text-white sm:min-w-10 sm:px-2 sm:text-sm md:min-w-11 md:rounded-xl md:px-3 md:py-2">
                                 {row.points}
                               </span>
                             </td>
