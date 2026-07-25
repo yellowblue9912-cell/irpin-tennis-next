@@ -1,8 +1,16 @@
+import type { Metadata } from "next";
 import Footer from "@/components/Footer";
 import PlayersSearch from "@/components/PlayersSearch";
 import { getPlayers } from "@/lib/players/getPlayers";
 
 export const dynamic = "force-dynamic";
+
+export const metadata: Metadata = {
+  title: "Гравці та рейтинг тенісистів | Irpin Tennis",
+  description:
+    "Профілі тенісистів Ірпеня, Бучі та Києва: рейтинг, статистика матчів, перемоги, турніри й досягнення.",
+  alternates: { canonical: "/players" },
+};
 
 export default async function PlayersPage() {
   const players = await getPlayers();

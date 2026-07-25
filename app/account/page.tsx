@@ -1,8 +1,16 @@
+import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import AccountProfileForm, {
   type EditablePlayerProfile,
 } from "../../components/AccountProfileForm";
 import { createClient } from "../../lib/supabase/server";
+
+export const metadata: Metadata = {
+  title: "Особистий кабінет гравця | Irpin Tennis",
+  description:
+    "Керуйте профілем Irpin Tennis: фото, інформація про себе, контакти, приватність і публічна картка гравця.",
+  robots: { index: false, follow: false },
+};
 
 export default async function AccountPage() {
   const supabase = await createClient();

@@ -1,5 +1,6 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
+import type { Metadata } from "next";
 import { createClient } from "@/lib/supabase/server";
 
 type PageProps = {
@@ -84,6 +85,34 @@ const leagueConfiguration: Record<
     shortTitle: "Ladies",
   },
 };
+
+export async function generateMetadata({
+  params,
+}: PageProps): Promise<Metadata> {
+  const { slug } = await params;
+  const configuration = leagueConfiguration[slug];
+
+  if (!configuration) {
+    return {
+      title: "Тенісна ліга | Irpin Tennis",
+      robots: { index: false, follow: false },
+    };
+  }
+
+  const description = `${configuration.seasonTitle}: турнірна таблиця, учасники, зіграні матчі, результати та прогрес активного сезону Irpin Tennis.`;
+
+  return {
+    title: `${configuration.seasonTitle} — таблиця і матчі | Irpin Tennis`,
+    description,
+    alternates: { canonical: `/league/${slug}` },
+    openGraph: {
+      title: configuration.seasonTitle,
+      description,
+      url: `/league/${slug}`,
+      type: "website",
+    },
+  };
+}
 
 function normalizePlayer(
   player: Player | Player[] | null | undefined,

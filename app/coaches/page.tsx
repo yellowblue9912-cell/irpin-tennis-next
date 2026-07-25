@@ -1,4 +1,12 @@
 import Image from "next/image";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Тренери з тенісу в Ірпені та Бучі | Irpin Tennis",
+  description:
+    "Тренери з тенісу для дітей, початківців і досвідчених гравців: ціни, формати занять, корти, телефони та Telegram.",
+  alternates: { canonical: "/coaches" },
+};
 
 type Coach = {
   name: string;

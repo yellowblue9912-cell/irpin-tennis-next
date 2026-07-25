@@ -1,4 +1,12 @@
 import Link from "next/link";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Тенісні ліги в Ірпені | Irpin Tennis",
+  description:
+    "Masters, Challenger і ліга для дівчат: активні сезони, учасники, турнірні таблиці, матчі та результати.",
+  alternates: { canonical: "/league" },
+};
 
 const leagues = [
   {

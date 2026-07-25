@@ -1,5 +1,7 @@
 import Link from "next/link";
+import type { Metadata } from "next";
 import { notFound } from "next/navigation";
+import { createClient } from "@/lib/supabase/server";
 import {
   getPlayerProfile,
   type ProfileMatch,
@@ -11,6 +13,43 @@ type PlayerProfilePageProps = {
     slug: string;
   }>;
 };
+
+export async function generateMetadata({
+  params,
+}: PlayerProfilePageProps): Promise<Metadata> {
+  const { slug } = await params;
+  const supabase = await createClient();
+  const { data: player } = await supabase
+    .from("players")
+    .select("name, city, rating")
+    .eq("slug", slug)
+    .maybeSingle();
+
+  if (!player) {
+    return {
+      title: "Профіль гравця | Irpin Tennis",
+      robots: { index: false, follow: false },
+    };
+  }
+
+  const description = `${player.name} — профіль гравця Irpin Tennis${
+    player.rating ? `, рейтинг ${player.rating}` : ""
+  }. Статистика матчів, перемоги, турніри та досягнення${
+    player.city ? ` у місті ${player.city}` : ""
+  }.`;
+
+  return {
+    title: `${player.name} — профіль тенісиста | Irpin Tennis`,
+    description,
+    alternates: { canonical: `/players/${slug}` },
+    openGraph: {
+      title: `${player.name} | Irpin Tennis`,
+      description,
+      url: `/players/${slug}`,
+      type: "profile",
+    },
+  };
+}
 
 export default async function PlayerProfilePage({
   params,

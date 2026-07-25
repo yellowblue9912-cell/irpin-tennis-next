@@ -5,9 +5,19 @@ import Header from "../components/Header";
 import Breadcrumbs from "../components/Breadcrumbs";
 
 export const metadata: Metadata = {
-  title: "IRPIN TENNIS",
+  metadataBase: new URL("https://www.irpintennis.com"),
+  title: "Теніс в Ірпені, Бучі та Києві | Irpin Tennis",
   description:
-    "Тенісна спільнота Ірпеня: гравці, турніри, ліги, корти та рейтингова система.",
+    "Тенісна спільнота Ірпеня, Бучі та Києва: гравці, турніри, активні ліги, корти, тренери та результати матчів.",
+  openGraph: {
+    title: "Теніс в Ірпені, Бучі та Києві | Irpin Tennis",
+    description:
+      "Гравці, турніри, ліги, корти й тренери тенісної спільноти Irpin Tennis.",
+    url: "/",
+    siteName: "Irpin Tennis",
+    locale: "uk_UA",
+    type: "website",
+  },
 };
 
 export default function RootLayout({

@@ -1,4 +1,12 @@
 import Link from "next/link";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Рейтингова система тенісистів | Irpin Tennis",
+  description:
+    "Опис тенісних рівнів від 3.0 до 4.75: навички, стабільність, тактика та принципи визначення рейтингу гравця.",
+  alternates: { canonical: "/rating" },
+};
 
 const ratingLevels = [
   {

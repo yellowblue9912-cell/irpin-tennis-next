@@ -1,6 +1,14 @@
+import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import AuthForm from "../../components/AuthForm";
 import { createClient } from "../../lib/supabase/server";
+
+export const metadata: Metadata = {
+  title: "Вхід і реєстрація гравця | Irpin Tennis",
+  description:
+    "Увійдіть або створіть акаунт гравця Irpin Tennis, щоб редагувати профіль і керувати контактною інформацією.",
+  robots: { index: false, follow: false },
+};
 
 export default async function LoginPage() {
   const supabase = await createClient();
