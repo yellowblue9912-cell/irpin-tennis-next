@@ -1,4 +1,3 @@
-import Image from "next/image";
 import Link from "next/link";
 import type { Player } from "@/types/player";
 
@@ -29,12 +28,10 @@ export default function PlayerCard({ player, position }: Props) {
 
       <div className="relative h-20 w-20 overflow-hidden rounded-2xl border-4 border-[#d7f34c] bg-[#eef3e8]">
         {player.photo_url ? (
-          <Image
+          <img
             src={player.photo_url}
             alt={player.name}
-            fill
-            sizes="80px"
-            className="object-contain p-0.5"
+            className="h-full w-full object-contain p-0.5"
           />
         ) : (
           <div className="flex h-full w-full items-center justify-center text-3xl font-black text-white">
