@@ -82,6 +82,7 @@ function formatTournamentFormat(format: string | null) {
     group: "Груповий етап",
     groups: "Груповий етап",
     group_stage: "Груповий етап",
+    groups_playoff: "Групи + плей-оф",
     playoff: "Плей-оф",
     knockout: "Плей-оф",
     round_robin: "Кожен з кожним",
