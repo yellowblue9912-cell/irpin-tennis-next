@@ -29,6 +29,12 @@ const bundledPlayerPhotos: Record<string, string> = {
   "oleksandr-kavylyn": "/players/oleksandr-kavylyn.webp",
   "oleksandr-kavylin": "/players/oleksandr-kavylyn.webp",
   "dima-shuvalov": "/players/dima-shuvalov.webp",
+  "aryna-solodenko": "/players/aryna-solodenko.webp",
+  "tatiana-liubeshkina": "/players/tatiana-liubeshkina.webp",
+  "olia-kulishenko": "/players/olia-kulishenko.webp",
+  "liudmyla-brodetska": "/players/liudmyla-brodetska.webp",
+  "sasha-rudnytskyi": "/players/sasha-rudnytskyi.webp",
+  "roman-avramenko": "/players/roman-avramenko.webp",
 };
 
 export function getPlayerPhoto(
