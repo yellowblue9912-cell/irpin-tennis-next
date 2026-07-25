@@ -1,5 +1,9 @@
 -- Public profiles show age calculated by the website, but never expose addresses.
-create or replace view public.public_player_contacts
+begin;
+
+drop view if exists public.public_player_contacts;
+
+create view public.public_player_contacts
 with (security_invoker = false)
 as
 select
@@ -13,3 +17,5 @@ select
 from public.player_private_profiles;
 
 grant select on public.public_player_contacts to anon, authenticated;
+
+commit;
