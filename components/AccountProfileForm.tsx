@@ -117,8 +117,8 @@ export default function AccountProfileForm({
   }
 
   return (
-    <form onSubmit={save} className="space-y-6">
-      <section className="rounded-[28px] bg-white p-5 shadow-sm sm:p-8">
+    <form onSubmit={save} className="space-y-4 sm:space-y-6">
+      <section className="rounded-[22px] border border-[#123f2d]/15 bg-white p-4 shadow-[0_8px_28px_rgba(18,63,45,0.10)] sm:rounded-[28px] sm:p-8">
         <div className="flex flex-col gap-5 sm:flex-row sm:items-center">
           <Avatar name={player.name} photoUrl={photoUrl} />
           <div>
@@ -139,7 +139,7 @@ export default function AccountProfileForm({
         </div>
       </section>
 
-      <section className="rounded-[28px] bg-white p-5 shadow-sm sm:p-8">
+      <section className="rounded-[22px] border border-[#123f2d]/15 bg-white p-4 shadow-[0_8px_28px_rgba(18,63,45,0.10)] sm:rounded-[28px] sm:p-8">
         <h2 className="text-xl font-black">Основна інформація</h2>
         <div className="mt-6 grid gap-5 sm:grid-cols-2">
           <Field label="Ім’я та прізвище" name="name" defaultValue={player.name} required />
@@ -158,12 +158,12 @@ export default function AccountProfileForm({
             maxLength={600}
             rows={6}
             placeholder="Розкажіть про свій тенісний шлях, стиль гри або цілі."
-            className="w-full resize-y rounded-2xl border border-[#123f2d]/15 bg-[#f6f0e5] px-4 py-3 outline-none focus:border-[#123f2d]"
+            className="w-full resize-y rounded-xl border-2 border-[#123f2d]/30 bg-[#f1eadc] px-4 py-3 text-base text-[#123f2d] shadow-inner outline-none placeholder:text-[#123f2d]/45 focus:border-[#123f2d] focus:bg-white sm:rounded-2xl"
           />
         </label>
       </section>
 
-      <section className="rounded-[28px] bg-white p-5 shadow-sm sm:p-8">
+      <section className="rounded-[22px] border border-[#123f2d]/15 bg-white p-4 shadow-[0_8px_28px_rgba(18,63,45,0.10)] sm:rounded-[28px] sm:p-8">
         <h2 className="text-xl font-black">Приватність</h2>
         <p className="mt-2 text-sm leading-6 text-[#123f2d]/55">
           Виберіть, хто зможе бачити ваш номер телефону. Адреса залишається
@@ -240,7 +240,7 @@ function Field({
         type={type}
         defaultValue={defaultValue}
         required={required}
-        className="w-full rounded-2xl border border-[#123f2d]/15 bg-[#f6f0e5] px-4 py-3 outline-none focus:border-[#123f2d]"
+        className="min-h-12 w-full rounded-xl border-2 border-[#123f2d]/30 bg-[#f1eadc] px-4 py-3 text-base text-[#123f2d] shadow-inner outline-none focus:border-[#123f2d] focus:bg-white sm:rounded-2xl"
       />
     </label>
   );
@@ -248,7 +248,7 @@ function Field({
 
 function Toggle({ name, label, defaultChecked }: { name: string; label: string; defaultChecked: boolean }) {
   return (
-    <label className="flex cursor-pointer items-center gap-3 rounded-2xl bg-[#f6f0e5] p-4">
+    <label className="flex cursor-pointer items-center gap-3 rounded-xl border-2 border-[#123f2d]/20 bg-[#f1eadc] p-4 sm:rounded-2xl">
       <input name={name} type="checkbox" defaultChecked={defaultChecked} className="h-5 w-5 accent-[#123f2d]" />
       <span className="font-bold">{label}</span>
     </label>
@@ -257,7 +257,7 @@ function Toggle({ name, label, defaultChecked }: { name: string; label: string; 
 
 function PrivacyChoice({ isPublic }: { isPublic: boolean }) {
   return (
-    <fieldset className="rounded-2xl bg-[#f6f0e5] p-4">
+    <fieldset className="rounded-xl border-2 border-[#123f2d]/20 bg-[#f1eadc] p-4 sm:rounded-2xl">
       <legend className="px-1 text-sm font-black uppercase tracking-wide">
         Хто бачить телефон
       </legend>

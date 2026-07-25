@@ -32,7 +32,7 @@ export default async function AccountPage() {
     : { data: null };
 
   return (
-    <main className="mx-auto w-full max-w-5xl px-4 py-8 sm:px-6 md:py-12">
+    <main className="mx-auto min-h-[calc(100vh-64px)] w-full max-w-5xl bg-[#f4efe4] px-3 py-5 text-[#123f2d] sm:px-6 sm:py-8 md:py-12">
       <div className="flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
         <div>
           <p className="text-sm font-black uppercase tracking-[0.18em] text-[#ad4529]">
