@@ -63,6 +63,7 @@ export default async function PlayerProfilePage({
   }
 
   const { player, stats, tournaments, matches, achievements } = profile;
+  const age = getAge(player.birth_date);
 
   return (
     <main className="mx-auto w-full max-w-7xl px-3 py-5 sm:px-5 sm:py-8 md:px-8 md:py-10">
@@ -101,12 +102,17 @@ export default async function PlayerProfilePage({
               <span className="rounded-full border border-white/15 px-2.5 py-1 text-[10px] font-bold text-white/75 sm:px-4 sm:py-2 sm:text-base">
                 {player.is_active ? "Активний гравець" : "Неактивний"}
               </span>
+              {age !== null && (
+                <span className="rounded-full border border-white/15 px-2.5 py-1 text-[10px] font-bold text-white/75 sm:px-4 sm:py-2 sm:text-base">
+                  {age} {ageWord(age)}
+                </span>
+              )}
             </div>
           </div>
         </div>
       </section>
 
-      {(player.bio || player.phone || player.address) && (
+      {(player.bio || player.phone) && (
         <section className="mt-6 grid gap-4 lg:grid-cols-[1.4fr_0.6fr]">
           {player.bio && (
             <div className="rounded-[24px] bg-white p-5 shadow-sm sm:p-7">
@@ -118,7 +124,7 @@ export default async function PlayerProfilePage({
               </p>
             </div>
           )}
-          {(player.phone || player.address) && (
+          {player.phone && (
             <div className="rounded-[24px] bg-white p-5 shadow-sm sm:p-7">
               <p className="text-xs font-black uppercase tracking-[0.14em] text-[#ad4529]">
                 Контакти
@@ -128,9 +134,6 @@ export default async function PlayerProfilePage({
                   <a className="block hover:text-[#ad4529]" href={`tel:${player.phone}`}>
                     {player.phone}
                   </a>
-                )}
-                {player.address && (
-                  <p>{player.address}</p>
                 )}
               </div>
             </div>
@@ -518,4 +521,28 @@ function formatScore(match: ProfileMatch) {
         `${playerScore}:${opponentScore}`,
     )
     .join(" ");
+}
+
+function getAge(birthDate: string | null) {
+  if (!birthDate) return null;
+  const [year, month, day] = birthDate.split("-").map(Number);
+  if (!year || !month || !day) return null;
+  const today = new Date();
+  let age = today.getFullYear() - year;
+  if (
+    today.getMonth() + 1 < month ||
+    (today.getMonth() + 1 === month && today.getDate() < day)
+  ) {
+    age -= 1;
+  }
+  return age >= 0 ? age : null;
+}
+
+function ageWord(age: number) {
+  const lastTwo = age % 100;
+  const last = age % 10;
+  if (lastTwo >= 11 && lastTwo <= 14) return "років";
+  if (last === 1) return "рік";
+  if (last >= 2 && last <= 4) return "роки";
+  return "років";
 }

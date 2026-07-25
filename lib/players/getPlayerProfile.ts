@@ -10,10 +10,8 @@ export type ProfilePlayer = {
   city: string | null;
   bio: string | null;
   phone: string | null;
-  address: string | null;
-  birth_date: null;
+  birth_date: string | null;
   phone_public: boolean;
-  address_public: boolean;
   is_active: boolean;
 };
 
@@ -163,7 +161,7 @@ export async function getPlayerProfile(
 
   const { data: publicContacts } = await supabase
     .from("public_player_contacts")
-    .select("phone, address, phone_public, address_public")
+    .select("phone, birth_date, phone_public")
     .eq("player_id", playerData.id)
     .maybeSingle();
 
@@ -172,10 +170,8 @@ export async function getPlayerProfile(
     name: getPlayerName(playerData.slug, playerData.name),
     photo_url: getPlayerPhoto(playerData.slug, playerData.photo_url),
     phone: publicContacts?.phone ?? null,
-    address: publicContacts?.address ?? null,
-    birth_date: null,
+    birth_date: publicContacts?.birth_date ?? null,
     phone_public: publicContacts?.phone_public ?? false,
-    address_public: publicContacts?.address_public ?? false,
   } as ProfilePlayer;
 
   const [

@@ -26,7 +26,7 @@ export default async function AccountPage() {
   const { data: privateProfile } = player
     ? await supabase
         .from("player_private_profiles")
-        .select("phone, address, birth_date, phone_public, address_public")
+        .select("phone, birth_date, phone_public")
         .eq("player_id", player.id)
         .maybeSingle()
     : { data: null };
@@ -57,10 +57,8 @@ export default async function AccountPage() {
               {
                 ...player,
                 phone: privateProfile?.phone ?? null,
-                address: privateProfile?.address ?? null,
                 birth_date: privateProfile?.birth_date ?? null,
                 phone_public: privateProfile?.phone_public ?? false,
-                address_public: privateProfile?.address_public ?? false,
               } as EditablePlayerProfile
             }
           />

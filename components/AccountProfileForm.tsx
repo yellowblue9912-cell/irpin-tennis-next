@@ -12,10 +12,8 @@ export type EditablePlayerProfile = {
   bio: string | null;
   city: string | null;
   phone: string | null;
-  address: string | null;
   birth_date: string | null;
   phone_public: boolean;
-  address_public: boolean;
 };
 
 export default function AccountProfileForm({
@@ -76,10 +74,8 @@ export default function AccountProfileForm({
     const privatePayload = {
       player_id: player.id,
       phone: nullable(form.get("phone")),
-      address: nullable(form.get("address")),
       birth_date: nullable(form.get("birth_date")),
       phone_public: form.get("phone_visibility") === "public",
-      address_public: form.get("address_public") === "on",
       updated_at: new Date().toISOString(),
     };
 
@@ -147,9 +143,6 @@ export default function AccountProfileForm({
           <Field label="Дата народження" name="birth_date" type="date" defaultValue={player.birth_date ?? ""} />
           <Field label="Номер телефону" name="phone" type="tel" defaultValue={player.phone ?? ""} />
         </div>
-        <div className="mt-5">
-          <Field label="Адреса" name="address" defaultValue={player.address ?? ""} />
-        </div>
         <label className="mt-5 block">
           <span className="mb-2 block text-sm font-black uppercase tracking-wide">Про себе</span>
           <textarea
@@ -166,12 +159,10 @@ export default function AccountProfileForm({
       <section className="rounded-[22px] border border-[#123f2d]/15 bg-white p-4 shadow-[0_8px_28px_rgba(18,63,45,0.10)] sm:rounded-[28px] sm:p-8">
         <h2 className="text-xl font-black">Приватність</h2>
         <p className="mt-2 text-sm leading-6 text-[#123f2d]/55">
-          Виберіть, хто зможе бачити ваш номер телефону. Адреса залишається
-          прихованою, доки ви самі не дозволите її показувати.
+          Виберіть, хто зможе бачити ваш номер телефону.
         </p>
-        <div className="mt-5 grid gap-3 sm:grid-cols-2">
+        <div className="mt-5">
           <PrivacyChoice isPublic={player.phone_public} />
-          <Toggle name="address_public" defaultChecked={player.address_public} label="Показувати адресу" />
         </div>
       </section>
 

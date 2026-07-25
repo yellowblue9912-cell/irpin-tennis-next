@@ -3,8 +3,12 @@ create table if not exists public.player_comments (
   target_player_id uuid not null references public.players(id) on delete cascade,
   author_player_id uuid not null references public.players(id) on delete cascade,
   body text not null check (char_length(trim(body)) between 1 and 500),
+  is_anonymous boolean not null default false,
   created_at timestamptz not null default now()
 );
+
+alter table public.player_comments
+  add column if not exists is_anonymous boolean not null default false;
 
 create index if not exists player_comments_target_created_idx
   on public.player_comments (target_player_id, created_at desc);
@@ -34,6 +38,25 @@ create policy "Players can delete own comments"
 on public.player_comments for delete
 to authenticated
 using (
+  exists (
+    select 1 from public.players
+    where players.id = author_player_id
+      and players.user_id = auth.uid()
+  )
+);
+
+drop policy if exists "Players can update own comments" on public.player_comments;
+create policy "Players can update own comments"
+on public.player_comments for update
+to authenticated
+using (
+  exists (
+    select 1 from public.players
+    where players.id = author_player_id
+      and players.user_id = auth.uid()
+  )
+)
+with check (
   exists (
     select 1 from public.players
     where players.id = author_player_id
