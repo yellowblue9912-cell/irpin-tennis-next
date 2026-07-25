@@ -16,6 +16,7 @@ type Court = {
   description: string;
   schedule: string | null;
   courts: string[];
+  amenities?: string[];
   prices: {
     title: string;
     price: string;
@@ -39,6 +40,7 @@ const courts: Record<string, Court> = {
       "Відкритий ґрунтовий тенісний корт в Ірпені. Доступне вечірнє освітлення.",
     schedule: null,
     courts: ["1 відкритий корт"],
+    amenities: ["Туалет", "Тенісна пушка"],
     prices: [
       {
         title: "Оренда корту",
@@ -74,6 +76,7 @@ const courts: Record<string, Court> = {
       "Тенісний комплекс Terrakort із критим та відкритим ґрунтовими кортами.",
     schedule: null,
     courts: ["1 критий корт", "1 відкритий корт"],
+    amenities: ["Душ", "Туалет"],
     prices: [
       {
         title: "Критий корт",
@@ -105,6 +108,7 @@ const courts: Record<string, Court> = {
       "Тенісний комплекс у Бучі з відкритими та критими ґрунтовими кортами.",
     schedule: "Щодня, 07:00–21:00",
     courts: ["Відкриті корти", "Криті корти"],
+    amenities: ["Душ", "Туалет"],
     prices: [
       {
         title: "Відкритий корт",
@@ -136,6 +140,7 @@ const courts: Record<string, Court> = {
       "Відкритий ґрунтовий тенісний корт в Ірпені. Доступне вечірнє освітлення.",
     schedule: null,
     courts: ["1 відкритий корт"],
+    amenities: ["Душ", "Туалет"],
     prices: [
       {
         title: "Оренда корту",
@@ -166,6 +171,7 @@ const courts: Record<string, Court> = {
       "Три відкриті ґрунтові тенісні корти в Пущі-Водиці.",
     schedule: null,
     courts: ["3 відкриті корти"],
+    amenities: ["Душ", "Туалет"],
     prices: [
       {
         title: "Оренда корту",
@@ -302,6 +308,30 @@ export default async function CourtPage({
                 />
               ))}
             </div>
+
+            {court.amenities && court.amenities.length > 0 && (
+              <div className="mt-8">
+                <h3 className="text-lg font-black uppercase text-[#123f2d]">
+                  Зручності
+                </h3>
+
+                <div className="mt-3 flex flex-wrap gap-2">
+                  {court.amenities.map((amenity) => (
+                    <span
+                      key={amenity}
+                      className="rounded-full bg-[#edf3ee] px-4 py-2 text-sm font-black text-[#123f2d]"
+                    >
+                      {amenity === "Душ"
+                        ? "🚿 "
+                        : amenity === "Туалет"
+                          ? "🚻 "
+                          : "🎾 "}
+                      {amenity}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            )}
 
             <div className="mt-8">
               <h3 className="text-lg font-black uppercase text-[#123f2d]">
