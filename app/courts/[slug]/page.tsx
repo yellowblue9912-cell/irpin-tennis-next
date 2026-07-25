@@ -156,6 +156,58 @@ const courts: Record<string, Court> = {
     mapUrl:
       "https://www.google.com/maps/search/?api=1&query=10-та+лінія+Ірпінь",
   },
+  "pushcha-vodytsia": {
+    name: "Пуща-Водиця",
+    address: "вул. Квітки Цісик, 54",
+    city: "Київ",
+    surface: "Ґрунт",
+    image: "/pushcha-vodytsia-court.jpg",
+    description:
+      "Три відкриті ґрунтові тенісні корти в Пущі-Водиці.",
+    schedule: null,
+    courts: ["3 відкриті корти"],
+    prices: [
+      {
+        title: "Оренда корту",
+        price: "500 грн / година",
+      },
+    ],
+    phones: [
+      {
+        label: "+380 95 874 53 18",
+        href: "tel:+380958745318",
+      },
+    ],
+    bookingUrl: null,
+    mapUrl:
+      "https://www.google.com/maps/search/?api=1&query=Київ+вулиця+Квітки+Цісик+54",
+  },
+  "diussh-irpin": {
+    name: "ДЮСШ Ірпінь",
+    address: "вул. Троїцька, 40",
+    city: "Ірпінь",
+    surface: "Уточнюйте під час бронювання",
+    image: "/diussh-irpin-court.jpg",
+    description:
+      "Відкритий тенісний корт ДЮСШ у центрі Ірпеня.",
+    schedule: null,
+    courts: ["Відкритий корт"],
+    prices: [
+      {
+        title: "Оренда корту",
+        price: "400 грн / година",
+      },
+    ],
+    phones: [
+      {
+        label: "+380 96 301 58 37",
+        href: "tel:+380963015837",
+      },
+    ],
+    bookingUrl: null,
+    mapUrl:
+      "https://www.google.com/maps/search/?api=1&query=Ірпінь+вулиця+Троїцька+40",
+  },
 };
 
 export default async function CourtPage({

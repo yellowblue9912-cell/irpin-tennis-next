@@ -31,15 +31,36 @@ const courts = [
     courtsCount: "Тенісний комплекс",
     image: "/campa-bucha.jpg",
   },
-{
-  name: "Лювс",
-  slug: "luvs",
-  address: "10-та лінія, Ірпінь",
-  city: "Ірпінь",
-  surface: "Ґрунт",
-  type: "Відкритий",
-  image: "/luvs-court.jpg",
-}
+  {
+    name: "Лювс",
+    slug: "luvs",
+    address: "10-та лінія, Ірпінь",
+    city: "Ірпінь",
+    surface: "Ґрунт",
+    type: "Відкритий",
+    courtsCount: "1 корт",
+    image: "/luvs-court.jpg",
+  },
+  {
+    name: "Пуща-Водиця",
+    slug: "pushcha-vodytsia",
+    address: "вул. Квітки Цісик, 54",
+    city: "Київ",
+    surface: "Ґрунт",
+    type: "Відкриті корти",
+    courtsCount: "3 корти",
+    image: "/pushcha-vodytsia-court.jpg",
+  },
+  {
+    name: "ДЮСШ Ірпінь",
+    slug: "diussh-irpin",
+    address: "вул. Троїцька, 40",
+    city: "Ірпінь",
+    surface: "Уточнюйте",
+    type: "Відкритий корт",
+    courtsCount: "Тенісний корт",
+    image: "/diussh-irpin-court.jpg",
+  },
 ];
 
 export default function CourtsPage() {
