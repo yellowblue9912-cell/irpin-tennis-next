@@ -281,8 +281,8 @@ export default async function TournamentsPage({
                 href={`/tournaments?tab=${tab.id}`}
                 className={`rounded-2xl px-2 py-3 text-center text-xs font-black uppercase tracking-wide transition sm:px-5 sm:text-sm ${
                   active
-                    ? "bg-[#123f2d] text-white shadow-md"
-                    : "text-[#123f2d]/65 hover:bg-[#f6f0e5]"
+                    ? "border border-[#123f2d]/15 bg-white text-[#123f2d] shadow-md"
+                    : "border border-transparent text-[#123f2d]/65 hover:bg-[#f6f0e5]"
                 }`}
               >
                 {tab.label}
@@ -309,7 +309,7 @@ export default async function TournamentsPage({
                 <Link
                   key={`league-${season.id}`}
                   href={getLeagueHref(season.title)}
-                  className="group rounded-[24px] border-2 border-[#c9e53f] bg-[#eef8c9] p-5 text-[#123f2d] shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-xl sm:p-6"
+                  className="group rounded-[24px] border border-[#123f2d]/15 bg-white p-5 text-[#123f2d] shadow-sm transition duration-300 hover:-translate-y-1 hover:border-[#c9e53f] hover:shadow-xl sm:p-6"
                 >
                   <div className="flex flex-wrap items-start justify-between gap-4">
                     <span className="rounded-full bg-[#d7f34c] px-4 py-2 text-xs font-black uppercase tracking-wide text-[#123f2d]">
@@ -329,7 +329,7 @@ export default async function TournamentsPage({
                   </h2>
 
                   <div className="mt-4 grid grid-cols-2 gap-2">
-                    <div className="rounded-2xl bg-white/75 p-3">
+                    <div className="rounded-2xl bg-[#f6f0e5] p-3">
                       <p className="text-[10px] font-black uppercase tracking-wide text-[#123f2d]/50">
                         Учасників
                       </p>
@@ -337,7 +337,7 @@ export default async function TournamentsPage({
                         {leagueParticipantCounts[season.id] ?? 0}
                       </strong>
                     </div>
-                    <div className="rounded-2xl bg-white/75 p-3">
+                    <div className="rounded-2xl bg-[#f6f0e5] p-3">
                       <p className="text-[10px] font-black uppercase tracking-wide text-[#123f2d]/50">
                         Формат
                       </p>
