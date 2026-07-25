@@ -22,7 +22,7 @@ export default async function PlayerProfilePage({
     notFound();
   }
 
-  const { player, stats, tournaments, matches } = profile;
+  const { player, stats, tournaments, matches, achievements } = profile;
 
   return (
     <main className="mx-auto w-full max-w-7xl px-5 py-10 md:px-8">
@@ -34,7 +34,7 @@ export default async function PlayerProfilePage({
       </Link>
 
       <section className="mt-6 overflow-hidden rounded-[32px] bg-[#123f2d] text-white">
-        <div className="grid gap-8 p-7 md:grid-cols-[180px_1fr] md:p-10">
+        <div className="grid gap-8 p-5 sm:p-7 md:grid-cols-[180px_1fr] md:p-10">
           <PlayerAvatar
             name={player.name}
             photoUrl={player.photo_url}
@@ -66,6 +66,40 @@ export default async function PlayerProfilePage({
         </div>
       </section>
 
+      {(player.bio ||
+        player.phone_public ||
+        player.address_public) && (
+        <section className="mt-6 grid gap-4 lg:grid-cols-[1.4fr_0.6fr]">
+          {player.bio && (
+            <div className="rounded-[24px] bg-white p-5 shadow-sm sm:p-7">
+              <p className="text-xs font-black uppercase tracking-[0.14em] text-[#ad4529]">
+                Про гравця
+              </p>
+              <p className="mt-3 whitespace-pre-line leading-7 text-[#123f2d]/70">
+                {player.bio}
+              </p>
+            </div>
+          )}
+          {(player.phone_public || player.address_public) && (
+            <div className="rounded-[24px] bg-white p-5 shadow-sm sm:p-7">
+              <p className="text-xs font-black uppercase tracking-[0.14em] text-[#ad4529]">
+                Контакти
+              </p>
+              <div className="mt-3 space-y-2 text-sm font-bold">
+                {player.phone_public && player.phone && (
+                  <a className="block hover:text-[#ad4529]" href={`tel:${player.phone}`}>
+                    {player.phone}
+                  </a>
+                )}
+                {player.address_public && player.address && (
+                  <p>{player.address}</p>
+                )}
+              </div>
+            </div>
+          )}
+        </section>
+      )}
+
       <section className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-7">
         <StatCard label="Турніри та ліги" value={stats.tournaments} />
         <StatCard label="Матчі" value={stats.matches} />
@@ -74,6 +108,43 @@ export default async function PlayerProfilePage({
         <StatCard label="Win Rate" value={`${stats.winRate}%`} />
         <StatCard label="Титули" value={stats.titles} />
         <StatCard label="Подіуми" value={stats.podiums} />
+      </section>
+
+      <section className="mt-8 rounded-[28px] bg-white p-5 shadow-sm sm:p-8">
+        <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
+          <div>
+            <p className="text-sm font-black uppercase tracking-[0.16em] text-[#ad4529]">
+              Відзнаки
+            </p>
+            <h2 className="mt-2 text-2xl font-black uppercase">Досягнення</h2>
+          </div>
+          <p className="text-sm text-[#123f2d]/50">
+            Розраховуються автоматично за результатами.
+          </p>
+        </div>
+
+        {achievements.length > 0 ? (
+          <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {achievements.map((achievement) => (
+              <article
+                key={achievement.id}
+                className="flex gap-4 rounded-2xl bg-[#f6f0e5] p-5"
+              >
+                <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-white text-2xl">
+                  {achievement.icon}
+                </span>
+                <div>
+                  <h3 className="font-black">{achievement.title}</h3>
+                  <p className="mt-1 text-sm leading-5 text-[#123f2d]/55">
+                    {achievement.description}
+                  </p>
+                </div>
+              </article>
+            ))}
+          </div>
+        ) : (
+          <EmptyState text="Досягнення з’являться після перших офіційних матчів." />
+        )}
       </section>
 
       <section className="mt-8 grid gap-8 xl:grid-cols-[1fr_1.15fr]">
@@ -150,13 +221,13 @@ function PlayerAvatar({
       <img
         src={photoUrl}
         alt={name}
-        className="h-44 w-44 rounded-[28px] object-cover"
+        className="h-32 w-32 rounded-[24px] object-cover sm:h-44 sm:w-44 sm:rounded-[28px]"
       />
     );
   }
 
   return (
-    <div className="flex h-44 w-44 items-center justify-center rounded-[28px] bg-[#c6f13d] text-5xl font-black text-[#123f2d]">
+    <div className="flex h-32 w-32 items-center justify-center rounded-[24px] bg-[#c6f13d] text-4xl font-black text-[#123f2d] sm:h-44 sm:w-44 sm:rounded-[28px] sm:text-5xl">
       {initials}
     </div>
   );

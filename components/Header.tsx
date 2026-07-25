@@ -3,7 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 const menuItems = [
   { label: "Головна", href: "/" },
@@ -28,10 +28,6 @@ export default function Header() {
 
     return pathname.startsWith(href);
   }
-
-  useEffect(() => {
-    setMenuOpen(false);
-  }, [pathname]);
 
   return (
     <header className="sticky top-0 z-50 border-b border-[#efe3d3]/20 bg-[#bb5a3c] text-[#fff8ee] shadow-[0_8px_30px_rgba(18,63,45,0.18)]">
@@ -70,6 +66,7 @@ export default function Header() {
                 <Link
                   key={item.href}
                   href={item.href}
+                  onClick={() => setMenuOpen(false)}
                   className={`group relative px-4 py-8 text-sm font-black uppercase tracking-[0.07em] transition duration-200 ${
                     active
                       ? "text-white"
@@ -91,6 +88,13 @@ export default function Header() {
           </nav>
 
           <div className="h-8 w-px bg-white/25" />
+
+          <Link
+            href="/account"
+            className="rounded-full border border-white/30 px-5 py-3 text-sm font-black uppercase tracking-[0.06em] text-white transition hover:bg-white/10"
+          >
+            Кабінет
+          </Link>
 
           <a
             href={telegramUrl}
@@ -143,6 +147,7 @@ export default function Header() {
                 <Link
                   key={item.href}
                   href={item.href}
+                  onClick={() => setMenuOpen(false)}
                   className={`flex items-center justify-between rounded-2xl px-5 py-4 text-base font-black uppercase tracking-[0.07em] transition ${
                     active
                       ? "bg-[#f7efe3] text-[#123f2d]"
@@ -161,6 +166,15 @@ export default function Header() {
                 </Link>
               );
             })}
+
+            <Link
+              href="/account"
+              onClick={() => setMenuOpen(false)}
+              className="flex items-center justify-between rounded-2xl bg-[#dce84c] px-5 py-4 text-base font-black uppercase tracking-[0.07em] text-[#123f2d]"
+            >
+              <span>Особистий кабінет</span>
+              <span>→</span>
+            </Link>
 
             <a
               href={telegramUrl}

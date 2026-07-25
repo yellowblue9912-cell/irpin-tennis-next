@@ -7,7 +7,20 @@ export type ProfilePlayer = {
   rating: number;
   photo_url: string | null;
   city: string | null;
+  bio: string | null;
+  phone: string | null;
+  address: string | null;
+  birth_date: null;
+  phone_public: boolean;
+  address_public: boolean;
   is_active: boolean;
+};
+
+export type ProfileAchievement = {
+  id: string;
+  icon: string;
+  title: string;
+  description: string;
 };
 
 export type ProfileTournament = {
@@ -48,6 +61,7 @@ export type PlayerProfileData = {
   player: ProfilePlayer;
   tournaments: ProfileTournament[];
   matches: ProfileMatch[];
+  achievements: ProfileAchievement[];
   stats: {
     tournaments: number;
     matches: number;
@@ -137,7 +151,7 @@ export async function getPlayerProfile(
 
   const { data: playerData, error: playerError } = await supabase
     .from("players")
-    .select("id, name, slug, rating, photo_url, city, is_active")
+    .select("id, name, slug, rating, photo_url, city, bio, is_active")
     .eq("slug", slug)
     .single();
 
@@ -146,7 +160,20 @@ export async function getPlayerProfile(
     return null;
   }
 
-  const player = playerData as ProfilePlayer;
+  const { data: publicContacts } = await supabase
+    .from("public_player_contacts")
+    .select("phone, address, phone_public, address_public")
+    .eq("player_id", playerData.id)
+    .maybeSingle();
+
+  const player = {
+    ...playerData,
+    phone: publicContacts?.phone ?? null,
+    address: publicContacts?.address ?? null,
+    birth_date: null,
+    phone_public: publicContacts?.phone_public ?? false,
+    address_public: publicContacts?.address_public ?? false,
+  } as ProfilePlayer;
 
   const [
     { data: placementsData, error: placementsError },
@@ -606,10 +633,64 @@ export async function getPlayerProfile(
       tournament.place <= 3,
   ).length;
 
+  const achievements: ProfileAchievement[] = [];
+
+  if (profileMatches.length > 0) {
+    achievements.push({
+      id: "first-match",
+      icon: "🎾",
+      title: "Перший матч",
+      description: "Зіграно перший офіційний матч у спільноті.",
+    });
+  }
+  if (wins > 0) {
+    achievements.push({
+      id: "first-win",
+      icon: "⚡",
+      title: "Перша перемога",
+      description: "Здобуто першу перемогу в офіційному матчі.",
+    });
+  }
+  [10, 25, 50, 100].forEach((milestone) => {
+    if (wins >= milestone) {
+      achievements.push({
+        id: `wins-${milestone}`,
+        icon: "🏅",
+        title: `${milestone} перемог`,
+        description: `Досягнуто позначки у ${milestone} перемог.`,
+      });
+    }
+  });
+  if (titles > 0) {
+    achievements.push({
+      id: "tournament-champion",
+      icon: "🏆",
+      title: "Чемпіон турніру",
+      description: titles === 1 ? "Виграно перший турнір." : `Виграно турнірів: ${titles}.`,
+    });
+  }
+  if (podiums >= 3) {
+    achievements.push({
+      id: "three-podiums",
+      icon: "🥉",
+      title: "Стабільний призер",
+      description: "Три або більше фінішів на подіумі.",
+    });
+  }
+  if (profileMatches.length >= 50) {
+    achievements.push({
+      id: "matches-50",
+      icon: "🔥",
+      title: "50 матчів",
+      description: "Зіграно 50 офіційних матчів.",
+    });
+  }
+
   return {
     player,
     tournaments,
     matches: profileMatches,
+    achievements,
     stats: {
       tournaments: tournaments.length,
       matches: profileMatches.length,

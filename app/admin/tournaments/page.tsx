@@ -39,7 +39,7 @@ export default async function TournamentsPage() {
           </thead>
 
           <tbody>
-            {tournaments.map((tournament: any) => {
+            {tournaments.map((tournament) => {
               const formattedDate = new Intl.DateTimeFormat("uk-UA", {
                 day: "2-digit",
                 month: "2-digit",

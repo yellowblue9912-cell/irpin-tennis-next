@@ -12,8 +12,15 @@ export async function createClient() {
         getAll() {
           return cookieStore.getAll();
         },
-        setAll() {
-          // Поки нічого не робимо
+        setAll(cookiesToSet) {
+          try {
+            cookiesToSet.forEach(({ name, value, options }) => {
+              cookieStore.set(name, value, options);
+            });
+          } catch {
+            // Server Components can read cookies but cannot always write them.
+            // Auth mutations and the callback run in writable request contexts.
+          }
         },
       },
     }

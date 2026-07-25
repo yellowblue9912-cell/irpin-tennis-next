@@ -27,7 +27,7 @@ export default async function PlayersPage() {
         <table className="w-full">
           <thead className="bg-gray-100">
             <tr>
-              <th className="p-5 text-left">Ім'я</th>
+              <th className="p-5 text-left">Ім&apos;я</th>
               <th className="p-5 text-left">Рейтинг</th>
               <th className="p-5 text-left">Статус</th>
               <th className="p-5 text-right">Дії</th>
@@ -35,7 +35,7 @@ export default async function PlayersPage() {
           </thead>
 
           <tbody>
-            {players.map((player: any) => (
+            {players.map((player) => (
               <tr key={player.id} className="border-t">
                 <td className="p-5 font-medium">
                   {player.name}
