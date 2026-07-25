@@ -37,26 +37,24 @@ export default function AccountProfileForm({
     }
 
     setPending(true);
-    const supabase = createClient();
-    const { data: userData } = await supabase.auth.getUser();
-    if (!userData.user) {
-      setMessage("Сесія завершилася. Увійдіть у кабінет повторно.");
-      setPending(false);
-      return;
-    }
-    const extension = file.name.split(".").pop()?.toLowerCase() || "jpg";
-    const path = `${userData.user.id}/avatar-${Date.now()}.${extension}`;
-    const { error } = await supabase.storage
-      .from("player-avatars")
-      .upload(path, file, { upsert: true });
+    setMessage("Завантажуємо фото…");
+    const formData = new FormData();
+    formData.set("photo", file);
+    const response = await fetch("/api/account/avatar", {
+      method: "POST",
+      body: formData,
+    });
+    const result = (await response.json()) as {
+      photoUrl?: string;
+      error?: string;
+    };
 
-    if (error) {
-      setMessage(`Не вдалося завантажити фото: ${error.message}`);
+    if (!response.ok || !result.photoUrl) {
+      setMessage(
+        `Не вдалося завантажити фото: ${result.error ?? "невідома помилка"}`,
+      );
     } else {
-      const { data } = supabase.storage
-        .from("player-avatars")
-        .getPublicUrl(path);
-      setPhotoUrl(data.publicUrl);
+      setPhotoUrl(result.photoUrl);
       setMessage("Фото завантажено. Натисніть «Зберегти профіль».");
     }
     setPending(false);
