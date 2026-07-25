@@ -63,10 +63,19 @@ export default async function AccountPage() {
             </div>
             <h2 className="mt-5 text-2xl font-black">Акаунт створено</h2>
             <p className="mt-3 max-w-2xl leading-7 text-[#123f2d]/60">
-              Ваш акаунт ще не прив’язаний до картки гравця. Повідомте
-              адміністратору email, з яким ви зареєструвалися. Це захищає
-              профілі від привласнення іншими користувачами.
+              Ваш акаунт ще не прив’язаний до картки гравця. Надішліть
+              адміністратору email, з яким ви зареєструвалися. Ми створимо
+              нову картку гравця або прив’яжемо акаунт до вашої картки, якщо
+              вона вже є на сайті.
             </p>
+            <a
+              href="https://t.me/prybalski"
+              target="_blank"
+              rel="noreferrer"
+              className="mt-5 inline-flex rounded-full bg-[#229ed9] px-5 py-3 text-sm font-black text-white"
+            >
+              Надіслати email у Telegram — @prybalski
+            </a>
           </section>
         )}
       </div>
