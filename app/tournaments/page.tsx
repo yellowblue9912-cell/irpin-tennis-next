@@ -1,6 +1,13 @@
 import Link from "next/link";
+import type { Metadata } from "next";
 import Footer from "@/components/Footer";
 import { createClient } from "@/lib/supabase/server";
+
+export const metadata: Metadata = {
+  title: "Тенісні турніри в Ірпені | Irpin Tennis",
+  description:
+    "Майбутні, активні та завершені тенісні турніри Irpin Tennis: дати, учасники, формати, результати й статистика.",
+};
 
 type Tournament = {
   id: string;
@@ -16,6 +23,15 @@ type Tournament = {
 
 type TournamentPlayer = {
   tournament_id: string;
+};
+
+type TournamentTab = "upcoming" | "active" | "finished";
+
+type TournamentsPageProps = {
+  searchParams: Promise<{
+    tab?: string;
+    show?: string;
+  }>;
 };
 
 function formatTournamentDate(date: string) {
@@ -63,7 +79,10 @@ function formatTournamentFormat(format: string | null) {
   return formats[format.toLowerCase()] ?? format;
 }
 
-export default async function TournamentsPage() {
+export default async function TournamentsPage({
+  searchParams,
+}: TournamentsPageProps) {
+  const params = await searchParams;
   const supabase = await createClient();
 
   const { data: tournamentsData, error: tournamentsError } =
@@ -111,6 +130,48 @@ export default async function TournamentsPage() {
     return counts;
   }, {});
 
+  const selectedTab: TournamentTab =
+    params.tab === "upcoming" || params.tab === "finished"
+      ? params.tab
+      : "active";
+  const showAll = params.show === "all";
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+
+  function getTournamentTab(tournament: Tournament): TournamentTab {
+    const status = tournament.status?.toLowerCase().trim() ?? "";
+    const title = tournament.title.toLowerCase();
+
+    if (
+      ["active", "live", "ongoing", "in_progress"].includes(status) ||
+      title.includes("тенісна ліга")
+    ) {
+      return "active";
+    }
+
+    if (["finished", "completed", "closed"].includes(status)) {
+      return "finished";
+    }
+
+    const tournamentDate = new Date(
+      `${tournament.tournament_date}T12:00:00`,
+    );
+
+    return tournamentDate >= today ? "upcoming" : "finished";
+  }
+
+  const tabs: Array<{ id: TournamentTab; label: string }> = [
+    { id: "upcoming", label: "Майбутні" },
+    { id: "active", label: "Активні" },
+    { id: "finished", label: "Завершені" },
+  ];
+  const filteredTournaments = tournaments.filter(
+    (tournament) => getTournamentTab(tournament) === selectedTab,
+  );
+  const visibleTournaments = showAll
+    ? filteredTournaments
+    : filteredTournaments.slice(0, 5);
+
   return (
     <main className="min-h-screen bg-[#f6f0e5] text-[#123f2d]">
       <section className="relative overflow-hidden bg-[#123f2d] text-white">
@@ -140,9 +201,45 @@ export default async function TournamentsPage() {
       </section>
 
       <section className="mx-auto max-w-6xl px-3 py-8 sm:px-5 md:py-20">
-        {tournaments.length > 0 ? (
+        <nav
+          aria-label="Категорії турнірів"
+          className="mb-7 grid grid-cols-3 gap-2 rounded-[22px] bg-white p-2 shadow-sm sm:mb-10 sm:gap-3"
+        >
+          {tabs.map((tab) => {
+            const active = selectedTab === tab.id;
+            const count = tournaments.filter(
+              (tournament) => getTournamentTab(tournament) === tab.id,
+            ).length;
+
+            return (
+              <Link
+                key={tab.id}
+                href={`/tournaments?tab=${tab.id}`}
+                className={`rounded-2xl px-2 py-3 text-center text-xs font-black uppercase tracking-wide transition sm:px-5 sm:text-sm ${
+                  active
+                    ? "bg-[#123f2d] text-white shadow-md"
+                    : "text-[#123f2d]/65 hover:bg-[#f6f0e5]"
+                }`}
+              >
+                {tab.label}
+                <span
+                  className={`ml-1.5 rounded-full px-1.5 py-0.5 text-[10px] sm:ml-2 ${
+                    active
+                      ? "bg-[#d7f34c] text-[#123f2d]"
+                      : "bg-[#f6f0e5]"
+                  }`}
+                >
+                  {count}
+                </span>
+              </Link>
+            );
+          })}
+        </nav>
+
+        {visibleTournaments.length > 0 ? (
+          <>
           <div className="grid gap-6 md:grid-cols-2">
-            {tournaments.map((tournament) => (
+            {visibleTournaments.map((tournament) => (
               <Link
                 key={tournament.id}
                 href={`/tournaments/${tournament.slug}`}
@@ -223,15 +320,25 @@ export default async function TournamentsPage() {
               </Link>
             ))}
           </div>
+          {!showAll && filteredTournaments.length > 5 && (
+            <div className="mt-8 text-center">
+              <Link
+                href={`/tournaments?tab=${selectedTab}&show=all`}
+                className="inline-flex rounded-full bg-[#123f2d] px-7 py-3 font-black uppercase tracking-wide text-white transition hover:bg-[#ad4529]"
+              >
+                Показати всі ({filteredTournaments.length})
+              </Link>
+            </div>
+          )}
+          </>
         ) : (
           <div className="rounded-[30px] bg-white p-10 text-center shadow-sm">
             <h2 className="text-2xl font-black">
-              Турніри не знайдено
+              У цьому розділі поки немає турнірів
             </h2>
 
             <p className="mt-3 text-[#123f2d]/60">
-              Перевір підключення до Supabase або дані в таблиці
-              tournaments.
+              Оберіть іншу вкладку, щоб переглянути доступні турніри.
             </p>
           </div>
         )}

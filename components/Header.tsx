@@ -58,7 +58,7 @@ export default function Header() {
           </div>
         </Link>
 
-        <div className="hidden items-center gap-5 lg:flex">
+        <div className="hidden items-center gap-5 xl:flex">
           <nav className="flex items-center gap-1">
             {menuItems.map((item) => {
               const active = isActive(item.href);
@@ -114,7 +114,7 @@ export default function Header() {
           aria-label={menuOpen ? "Закрити меню" : "Відкрити меню"}
           aria-expanded={menuOpen}
           onClick={() => setMenuOpen((current) => !current)}
-          className="flex h-11 w-11 items-center justify-center rounded-full bg-[#123f2d] shadow-md transition hover:bg-[#0d3224] lg:hidden"
+          className="flex h-11 w-11 items-center justify-center rounded-full bg-[#123f2d] shadow-md transition hover:bg-[#0d3224] xl:hidden"
         >
           <span className="relative block h-5 w-6">
             <span
@@ -139,7 +139,7 @@ export default function Header() {
       </div>
 
       {menuOpen && (
-        <div className="border-t border-white/15 bg-[#123f2d] lg:hidden">
+        <div className="border-t border-white/15 bg-[#123f2d] xl:hidden">
           <nav className="mx-auto grid max-w-7xl gap-2 px-4 py-5 sm:px-6">
             {menuItems.map((item) => {
               const active = isActive(item.href);
