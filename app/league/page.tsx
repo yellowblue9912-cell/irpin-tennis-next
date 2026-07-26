@@ -173,9 +173,10 @@ export default function LeaguePage() {
                 <Link
                   href={`/league/${league.slug}`}
                   className="mt-4 inline-flex items-center justify-between rounded-full bg-[#123f2d] px-5 py-3 text-xs font-black uppercase tracking-[0.08em] text-white transition hover:scale-[1.02] hover:bg-[#1b5a41]"
+                  style={{ color: "#ffffff" }}
                 >
-                  <span>Переглянути лігу</span>
-                  <span>→</span>
+                  <span style={{ color: "#ffffff" }}>Переглянути лігу</span>
+                  <span style={{ color: "#ffffff" }}>→</span>
                 </Link>
               </div>
             </article>
