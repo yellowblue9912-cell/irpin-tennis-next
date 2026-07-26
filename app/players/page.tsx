@@ -14,9 +14,6 @@ export const metadata: Metadata = {
 
 export default async function PlayersPage() {
   const players = await getPlayers();
-  const sortedPlayers = [...players].sort(
-    (a, b) => b.rating - a.rating,
-  );
 
   return (
     <main className="min-h-screen bg-[#f6f0e5] text-[#123f2d]">
@@ -32,24 +29,17 @@ export default async function PlayersPage() {
             Рейтинг гравців
           </h1>
 
-          <p className="mt-3 max-w-2xl text-sm text-white/65 md:mt-5 md:text-lg">
-            Рейтинг учасників тенісної спільноти Ірпеня, Бучі та передмістя.
-          </p>
-
-          <div className="mt-5 flex flex-wrap gap-2 md:mt-8 md:gap-3">
-            <div className="rounded-full border border-white/15 bg-white/10 px-5 py-3 text-sm font-bold">
-              Гравців:
-              <span className="ml-2 text-[#d7f34c]">
-                {sortedPlayers.length}
-              </span>
-            </div>
-
-            <div className="rounded-full border border-white/15 bg-white/10 px-5 py-3 text-sm font-bold">
-              Найвищий рейтинг:
-              <span className="ml-2 text-[#d7f34c]">
-                {sortedPlayers[0]?.rating.toFixed(2)}
-              </span>
-            </div>
+          <div className="mt-4 max-w-3xl md:mt-6">
+            <p className="text-sm leading-6 text-white/70 md:text-base">
+              Рейтинг автоматично розраховується за останні 30 офіційних
+              матчів. Враховуються сила суперника та підсумковий рахунок.
+            </p>
+            <a
+              href="/rating"
+              className="mt-2 inline-block text-sm font-black text-[#d7f34c] transition hover:text-white"
+            >
+              Як працює рейтинг →
+            </a>
           </div>
         </div>
       </section>
