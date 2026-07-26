@@ -449,7 +449,8 @@ export default async function TournamentsPage({
             <div className="mt-8 text-center">
               <Link
                 href={`/tournaments?tab=${selectedTab}&show=all`}
-                className="inline-flex rounded-full bg-[#123f2d] px-7 py-3 font-black uppercase tracking-wide text-white transition hover:bg-[#ad4529]"
+                className="inline-flex min-h-12 items-center justify-center rounded-full border-2 border-[#123f2d] bg-white px-7 py-3 text-sm font-black uppercase tracking-wide text-[#123f2d] shadow-sm transition hover:bg-[#123f2d] hover:text-white"
+                style={{ color: "#123f2d", backgroundColor: "#ffffff" }}
               >
                 Показати всі ({filteredTournaments.length})
               </Link>
