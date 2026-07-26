@@ -3,6 +3,11 @@ export type TournamentPhoto = {
   alt: string;
 };
 
+export type TournamentVideo = {
+  src: string;
+  label: string;
+};
+
 const tournamentPhotos: Record<string, TournamentPhoto[]> = {
   "irpin-tennis-2026-05-16": [
     {
@@ -42,10 +47,21 @@ const tournamentPhotos: Record<string, TournamentPhoto[]> = {
   ],
 };
 
+const tournamentVideos: Record<string, TournamentVideo> = {
+  "irpin-tennis-tournament-1-2026-05-11": {
+    src: "/tournaments/irpin-tennis-tournament-1-2026-05-11/highlights.mp4",
+    label: "Відео з турніру IRPIN TENNIS №1, 11 травня 2026 року",
+  },
+};
+
 export function getTournamentPhotos(slug: string) {
   return tournamentPhotos[slug] ?? [];
 }
 
 export function getTournamentCover(slug: string) {
   return getTournamentPhotos(slug)[0] ?? null;
+}
+
+export function getTournamentVideo(slug: string) {
+  return tournamentVideos[slug] ?? null;
 }

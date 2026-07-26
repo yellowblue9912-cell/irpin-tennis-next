@@ -2,7 +2,10 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
 import { createClient } from "@/lib/supabase/server";
-import { getTournamentPhotos } from "@/lib/tournaments/photos";
+import {
+  getTournamentPhotos,
+  getTournamentVideo,
+} from "@/lib/tournaments/photos";
 
 type TournamentPageProps = {
   params: Promise<{
@@ -100,6 +103,7 @@ export default async function TournamentPage({
     year: "numeric",
   }).format(new Date(tournament.tournament_date));
   const tournamentPhotos = getTournamentPhotos(tournament.slug);
+  const tournamentVideo = getTournamentVideo(tournament.slug);
 
   return (
     <main className="min-h-screen bg-zinc-950 text-white">
@@ -178,6 +182,30 @@ export default async function TournamentPage({
                   </div>
                 </figure>
               ))}
+            </div>
+          </section>
+        )}
+
+        {tournamentVideo && (
+          <section className="mt-6">
+            <div className="mb-4">
+              <p className="text-sm font-semibold uppercase tracking-[0.2em] text-lime-400">
+                Атмосфера турніру
+              </p>
+              <h2 className="mt-2 text-2xl font-black sm:text-3xl">
+                Відео з турніру
+              </h2>
+            </div>
+
+            <div className="overflow-hidden rounded-3xl border border-zinc-800 bg-black">
+              <video
+                src={tournamentVideo.src}
+                aria-label={tournamentVideo.label}
+                controls
+                playsInline
+                preload="metadata"
+                className="max-h-[75vh] w-full bg-black object-contain"
+              />
             </div>
           </section>
         )}
