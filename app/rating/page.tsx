@@ -279,7 +279,7 @@ export default function RatingPage() {
 
             <Link
               href="/players"
-              className="inline-flex items-center justify-center rounded-2xl bg-[#123f2d] px-6 py-4 font-black text-white transition hover:bg-[#0d3123]"
+              className="inline-flex items-center justify-center rounded-2xl border-2 border-[#123f2d] bg-[#c6f13d] px-6 py-4 font-black text-[#123f2d] shadow-sm transition hover:bg-white"
             >
               Переглянути гравців →
             </Link>
