@@ -7,6 +7,15 @@ export type PlayerHighlight = {
 };
 
 const highlightsByPlayer: Record<string, PlayerHighlight[]> = {
+  "serhii-mateich": [
+    {
+      id: "serhii-mateich-highlight-1",
+      type: "video",
+      src: "/highlights/serhii-mateich-1.mp4",
+      title: "Відео за участі Сергія Матеїча",
+      description: "Сергій грає у жовтій футболці.",
+    },
+  ],
   "roman-avramenko": [
     {
       id: "roman-avramenko-highlight-1",
