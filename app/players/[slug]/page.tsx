@@ -156,7 +156,7 @@ export default async function PlayerProfilePage({
         <StatCard label="Поразки" value={stats.losses} />
         <StatCard label="Win Rate" value={`${stats.winRate}%`} />
         <StatCard label="Титули" value={stats.titles} />
-        <StatCard label="Подіуми" value={stats.podiums} />
+        <StatCard label="Призові місця" value={stats.podiums} />
       </section>
 
       {highlights.length > 0 && (
