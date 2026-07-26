@@ -1,7 +1,9 @@
 import Link from "next/link";
+import Image from "next/image";
 import type { Metadata } from "next";
 import Footer from "@/components/Footer";
 import { createClient } from "@/lib/supabase/server";
+import { getTournamentCover } from "@/lib/tournaments/photos";
 
 export const metadata: Metadata = {
   title: "Тенісні турніри в Ірпені | Irpin Tennis",
@@ -363,6 +365,18 @@ export default async function TournamentsPage({
                 href={`/tournaments/${tournament.slug}`}
                 className="group rounded-[24px] bg-white p-5 shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-xl sm:p-6"
               >
+                {getTournamentCover(tournament.slug) && (
+                  <div className="relative mb-5 aspect-[16/10] overflow-hidden rounded-2xl bg-[#f6f0e5]">
+                    <Image
+                      src={getTournamentCover(tournament.slug)!.src}
+                      alt={getTournamentCover(tournament.slug)!.alt}
+                      fill
+                      sizes="(max-width: 768px) 100vw, 33vw"
+                      className="object-cover"
+                    />
+                  </div>
+                )}
+
                 <div className="flex flex-wrap items-start justify-between gap-4">
                   <span className="rounded-full bg-[#d7f34c] px-4 py-2 text-xs font-black uppercase tracking-wide">
                     {tournament.status === "finished"

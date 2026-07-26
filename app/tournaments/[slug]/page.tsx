@@ -1,6 +1,8 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
+import Image from "next/image";
 import { createClient } from "@/lib/supabase/server";
+import { getTournamentPhotos } from "@/lib/tournaments/photos";
 
 type TournamentPageProps = {
   params: Promise<{
@@ -97,6 +99,7 @@ export default async function TournamentPage({
     month: "long",
     year: "numeric",
   }).format(new Date(tournament.tournament_date));
+  const tournamentPhotos = getTournamentPhotos(tournament.slug);
 
   return (
     <main className="min-h-screen bg-zinc-950 text-white">
@@ -142,6 +145,42 @@ export default async function TournamentPage({
             </p>
           )}
         </section>
+
+        {tournamentPhotos.length > 0 && (
+          <section className="mt-6">
+            <div className="mb-4">
+              <p className="text-sm font-semibold uppercase tracking-[0.2em] text-lime-400">
+                Атмосфера турніру
+              </p>
+              <h2 className="mt-2 text-2xl font-black sm:text-3xl">
+                Фото з турніру
+              </h2>
+            </div>
+
+            <div className="grid gap-3 sm:grid-cols-2">
+              {tournamentPhotos.map((photo, index) => (
+                <figure
+                  key={photo.src}
+                  className={`relative overflow-hidden rounded-3xl border border-zinc-800 bg-zinc-900 ${
+                    index === 0 && tournamentPhotos.length % 2 === 1
+                      ? "sm:col-span-2"
+                      : ""
+                  }`}
+                >
+                  <div className="relative aspect-[4/3]">
+                    <Image
+                      src={photo.src}
+                      alt={photo.alt}
+                      fill
+                      sizes="(max-width: 640px) 100vw, 50vw"
+                      className="object-cover"
+                    />
+                  </div>
+                </figure>
+              ))}
+            </div>
+          </section>
+        )}
 
         <section className="mt-10">
           <div className="mb-5 flex items-end justify-between gap-4">
