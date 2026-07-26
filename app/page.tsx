@@ -308,6 +308,21 @@ export default function HomePage() {
                 легше знаходити суперників, брати участь у змаганнях,
                 знайомитися та розвивати теніс у нашому регіоні.
               </p>
+
+              <div className="mt-5 flex flex-col items-start gap-3 rounded-2xl border border-[#173d2b]/10 bg-[#f4f0e5] p-4 sm:flex-row sm:items-center sm:justify-between">
+                <p className="text-sm font-bold leading-6 text-[#173d2b]/75">
+                  Маєте пропозиції, побажання чи ідеї для розвитку проєкту?
+                  Напишіть адміністратору.
+                </p>
+                <a
+                  href="https://t.me/prybalski"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="inline-flex shrink-0 items-center justify-center rounded-full bg-[#229ed9] px-5 py-3 text-xs font-black uppercase tracking-[0.08em] text-white transition hover:bg-[#188dcc]"
+                >
+                  Telegram · @prybalski
+                </a>
+              </div>
             </div>
 
             <div className="grid gap-2.5 sm:grid-cols-3 lg:grid-cols-1">
