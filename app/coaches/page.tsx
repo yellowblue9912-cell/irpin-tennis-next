@@ -19,6 +19,7 @@ type Coach = {
   prices: string[];
   courts: string;
   imagePosition?: string;
+  imageFit?: "cover" | "contain";
 };
 
 const coaches: Coach[] = [
@@ -72,6 +73,7 @@ const coaches: Coach[] = [
     ],
     prices: ["Ціна залежить від кількості тренувань"],
     courts: "Усі корти",
+    imageFit: "contain",
   },
   {
     name: "Діма Санченко",
@@ -168,7 +170,11 @@ export default function CoachesPage() {
                   alt={`Тренер ${coach.name}`}
                   fill
                   sizes="(max-width: 640px) 112px, 50vw"
-                  className={`object-cover ${coach.imagePosition ?? "object-center"}`}
+                  className={`${
+                    coach.imageFit === "contain"
+                      ? "object-contain bg-[#f6f0e5] p-4 sm:p-8"
+                      : "object-cover"
+                  } ${coach.imagePosition ?? "object-center"}`}
                 />
               </div>
 
