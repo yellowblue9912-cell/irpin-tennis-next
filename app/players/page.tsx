@@ -8,7 +8,7 @@ export const dynamic = "force-dynamic";
 export const metadata: Metadata = {
   title: "Гравці та рейтинг тенісистів | Irpin Tennis",
   description:
-    "Профілі тенісистів Ірпеня, Бучі та Києва: рейтинг, статистика матчів, перемоги, турніри й досягнення.",
+    "Профілі тенісистів Ірпеня, Бучі та передмістя: рейтинг, статистика матчів, перемоги, турніри й досягнення.",
   alternates: { canonical: "/players" },
 };
 
@@ -33,7 +33,7 @@ export default async function PlayersPage() {
           </h1>
 
           <p className="mt-3 max-w-2xl text-sm text-white/65 md:mt-5 md:text-lg">
-            Рейтинг учасників тенісної спільноти Ірпеня, Бучі та Києва.
+            Рейтинг учасників тенісної спільноти Ірпеня, Бучі та передмістя.
           </p>
 
           <div className="mt-5 flex flex-wrap gap-2 md:mt-8 md:gap-3">

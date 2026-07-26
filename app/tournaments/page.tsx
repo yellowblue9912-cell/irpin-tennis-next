@@ -249,12 +249,12 @@ export default async function TournamentsPage({
           </p>
 
           <h1 className="mt-2 max-w-4xl text-2xl font-black uppercase leading-none sm:text-3xl md:text-4xl">
-            Історія турнірів
+            Турніри
           </h1>
 
           <p className="mt-3 hidden max-w-2xl text-sm leading-6 text-white/70 sm:block">
-            Архів проведених турнірів ліги з результатами,
-            призерами та статистикою учасників.
+            Майбутні й активні події, а також історія проведених турнірів із
+            результатами, призерами та статистикою учасників.
           </p>
 
           <div className="mt-3 inline-flex rounded-full border border-white/15 bg-white/10 px-3 py-1.5 text-xs font-bold sm:mt-4">
@@ -304,6 +304,17 @@ export default async function TournamentsPage({
             );
           })}
         </nav>
+
+        {selectedTab === "finished" && (
+          <div className="mb-5 sm:mb-7">
+            <h2 className="text-xl font-black uppercase sm:text-2xl">
+              Історія турнірів
+            </h2>
+            <p className="mt-1 text-sm text-[#123f2d]/60">
+              Завершені турніри, результати та фотографії учасників.
+            </p>
+          </div>
+        )}
 
         {visibleTournaments.length > 0 ||
         (selectedTab === "active" && activeLeagueSeasons.length > 0) ? (

@@ -8,7 +8,7 @@ export default function Footer() {
           </h3>
 
           <p className="mt-2 text-sm text-white/60">
-            Тенісна спільнота Ірпеня • Бучі • Києва
+            Тенісна спільнота Ірпеня • Бучі • Передмістя
           </p>
         </div>
 

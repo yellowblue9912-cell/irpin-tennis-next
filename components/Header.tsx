@@ -96,16 +96,14 @@ export default function Header() {
             Кабінет
           </Link>
 
-          <a
+          <Link
             href={telegramUrl}
-            target="_blank"
-            rel="noopener noreferrer"
             className="group inline-flex items-center gap-2 rounded-full bg-[#229ed9] px-5 py-3 text-sm font-black uppercase tracking-[0.06em] text-white shadow-[0_8px_20px_rgba(34,158,217,0.3)] transition duration-300 hover:-translate-y-0.5 hover:bg-[#188ac0]"
           >
             <TelegramIcon />
 
             <span>Telegram</span>
-          </a>
+          </Link>
         </div>
 
         <button
@@ -178,10 +176,9 @@ export default function Header() {
               <span>→</span>
             </Link>
 
-            <a
+            <Link
               href={telegramUrl}
-              target="_blank"
-              rel="noopener noreferrer"
+              onClick={() => setMenuOpen(false)}
               className="mt-2 flex items-center justify-between rounded-2xl bg-[#229ed9] px-5 py-4 text-base font-black uppercase tracking-[0.07em] text-white transition hover:bg-[#188ac0]"
             >
               <span className="flex items-center gap-3">
@@ -190,7 +187,7 @@ export default function Header() {
               </span>
 
               <span>↗</span>
-            </a>
+            </Link>
           </nav>
         </div>
       )}

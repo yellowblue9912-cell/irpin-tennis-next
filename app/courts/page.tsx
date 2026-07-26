@@ -4,7 +4,7 @@ import CourtsCatalog, {
 } from "@/components/CourtsCatalog";
 
 export const metadata: Metadata = {
-  title: "Тенісні корти Ірпеня, Бучі та Києва | Irpin Tennis",
+  title: "Тенісні корти Ірпеня, Бучі та передмістя | Irpin Tennis",
   description:
     "Порівнюйте тенісні корти за ціною, покриттям, типом та зручностями. Адреси, фото, ціни й контакти для бронювання.",
 };

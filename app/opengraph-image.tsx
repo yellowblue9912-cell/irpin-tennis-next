@@ -3,7 +3,7 @@ import { readFile } from "node:fs/promises";
 import { join } from "node:path";
 
 export const alt =
-  "Irpin Tennis — тенісна спільнота Ірпеня, Бучі та Києва";
+  "Irpin Tennis — тенісна спільнота Ірпеня, Бучі та передмістя";
 export const size = {
   width: 1200,
   height: 630,

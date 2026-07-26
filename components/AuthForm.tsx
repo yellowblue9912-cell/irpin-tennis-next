@@ -119,6 +119,13 @@ export default function AuthForm() {
               ? "Увійти в кабінет"
               : "Створити акаунт"}
         </button>
+
+        {mode === "signup" && (
+          <p className="text-center text-sm leading-6 text-[#123f2d]/60">
+            Створіть кабінет, щоб керувати профілем, залишати коментарі та
+            бачити закритий Telegram-чат спільноти.
+          </p>
+        )}
       </form>
     </div>
   );

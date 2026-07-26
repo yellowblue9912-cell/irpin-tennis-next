@@ -368,15 +368,13 @@ export default function HomePage() {
             </div>
 
             <div className="flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-xs font-bold text-white/65">
-              <a
+              <Link
                 href="/community"
-                target="_blank"
-                rel="noreferrer"
                 className="transition hover:text-[#dfff3f]"
                 data-ball-target
               >
                 Telegram
-              </a>
+              </Link>
 
               <Link
                 href="/coaches"

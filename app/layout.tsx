@@ -7,11 +7,11 @@ import StructuredData from "../components/StructuredData";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://www.irpintennis.com"),
-  title: "Теніс в Ірпені, Бучі та Києві | Irpin Tennis",
+  title: "Теніс в Ірпені, Бучі та передмісті | Irpin Tennis",
   description:
-    "Тенісна спільнота Ірпеня, Бучі та Києва: гравці, турніри, активні ліги, корти, тренери та результати матчів.",
+    "Тенісна спільнота Ірпеня, Бучі та передмістя: гравці, турніри, активні ліги, корти, тренери та результати матчів.",
   openGraph: {
-    title: "Теніс в Ірпені, Бучі та Києві | Irpin Tennis",
+    title: "Теніс в Ірпені, Бучі та передмісті | Irpin Tennis",
     description:
       "Гравці, турніри, ліги, корти й тренери тенісної спільноти Irpin Tennis.",
     url: "/",

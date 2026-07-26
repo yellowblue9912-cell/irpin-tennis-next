@@ -8,8 +8,8 @@ const structuredData = {
       url: "https://www.irpintennis.com",
       logo: "https://www.irpintennis.com/logo.png",
       description:
-        "Тенісна спільнота Ірпеня, Бучі та Києва: гравці, турніри, ліги, корти й тренери.",
-      areaServed: ["Ірпінь", "Буча", "Київ"],
+        "Тенісна спільнота Ірпеня, Бучі та передмістя: гравці, турніри, ліги, корти й тренери.",
+      areaServed: ["Ірпінь", "Буча", "Передмістя"],
       sport: "Tennis",
     },
     {
