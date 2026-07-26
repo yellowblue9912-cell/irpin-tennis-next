@@ -1,11 +1,6 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import Image from "next/image";
 import { createClient } from "@/lib/supabase/server";
-import {
-  getTournamentPhotos,
-  getTournamentVideo,
-} from "@/lib/tournaments/photos";
 
 type TournamentPageProps = {
   params: Promise<{
@@ -70,6 +65,7 @@ export default async function TournamentPage({
       player1_set1,
       player2_set1,
       status,
+      notes,
       player1:players!matches_player1_id_fkey (
         id,
         name,
@@ -102,8 +98,6 @@ export default async function TournamentPage({
     month: "long",
     year: "numeric",
   }).format(new Date(tournament.tournament_date));
-  const tournamentPhotos = getTournamentPhotos(tournament.slug);
-  const tournamentVideo = getTournamentVideo(tournament.slug);
 
   return (
     <main className="min-h-screen bg-zinc-950 text-white">
@@ -149,66 +143,6 @@ export default async function TournamentPage({
             </p>
           )}
         </section>
-
-        {tournamentPhotos.length > 0 && (
-          <section className="mt-6">
-            <div className="mb-4">
-              <p className="text-sm font-semibold uppercase tracking-[0.2em] text-lime-400">
-                Атмосфера турніру
-              </p>
-              <h2 className="mt-2 text-2xl font-black sm:text-3xl">
-                Фото з турніру
-              </h2>
-            </div>
-
-            <div className="grid gap-3 sm:grid-cols-2">
-              {tournamentPhotos.map((photo, index) => (
-                <figure
-                  key={photo.src}
-                  className={`relative overflow-hidden rounded-3xl border border-zinc-800 bg-zinc-900 ${
-                    index === 0 && tournamentPhotos.length % 2 === 1
-                      ? "sm:col-span-2"
-                      : ""
-                  }`}
-                >
-                  <div className="relative aspect-[4/3]">
-                    <Image
-                      src={photo.src}
-                      alt={photo.alt}
-                      fill
-                      sizes="(max-width: 640px) 100vw, 50vw"
-                      className="object-cover"
-                    />
-                  </div>
-                </figure>
-              ))}
-            </div>
-          </section>
-        )}
-
-        {tournamentVideo && (
-          <section className="mt-6">
-            <div className="mb-4">
-              <p className="text-sm font-semibold uppercase tracking-[0.2em] text-lime-400">
-                Атмосфера турніру
-              </p>
-              <h2 className="mt-2 text-2xl font-black sm:text-3xl">
-                Відео з турніру
-              </h2>
-            </div>
-
-            <div className="overflow-hidden rounded-3xl border border-zinc-800 bg-black">
-              <video
-                src={tournamentVideo.src}
-                aria-label={tournamentVideo.label}
-                controls
-                playsInline
-                preload="metadata"
-                className="max-h-[75vh] w-full bg-black object-contain"
-              />
-            </div>
-          </section>
-        )}
 
         <section className="mt-10">
           <div className="mb-5 flex items-end justify-between gap-4">
@@ -378,6 +312,12 @@ export default async function TournamentPage({
                       </span>
                     </div>
                   </div>
+
+                  {match.notes && (
+                    <p className="mt-4 rounded-xl bg-amber-100 px-4 py-3 text-sm font-semibold leading-5 text-amber-950">
+                      {match.notes}
+                    </p>
+                  )}
                 </article>
               );
             })}
