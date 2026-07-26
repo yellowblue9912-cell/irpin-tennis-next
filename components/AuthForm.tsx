@@ -41,7 +41,7 @@ export default function AuthForm() {
         router.refresh();
       }
     } else {
-      const { error } = await supabase.auth.signUp({
+      const { data, error } = await supabase.auth.signUp({
         email,
         password,
         options: {
@@ -49,11 +49,23 @@ export default function AuthForm() {
         },
       });
 
-      setMessage(
-        error
-          ? error.message
-          : "Перевірте пошту та підтвердьте реєстрацію. Після цього адміністратор прив’яже ваш акаунт до профілю гравця.",
-      );
+      if (error) {
+        const rateLimited =
+          error.message.toLowerCase().includes("rate limit") ||
+          error.status === 429;
+        setMessage(
+          rateLimited
+            ? "Тимчасово перевищено ліміт реєстрацій. Спробуйте ще раз трохи пізніше або напишіть адміністратору."
+            : error.message,
+        );
+      } else if (data.session) {
+        router.replace("/account");
+        router.refresh();
+      } else {
+        setMessage(
+          "Перевірте пошту та підтвердьте реєстрацію. Після цього адміністратор прив’яже ваш акаунт до профілю гравця.",
+        );
+      }
     }
 
     setPending(false);
