@@ -11,7 +11,7 @@ export const metadata: Metadata = {
 type Coach = {
   name: string;
   image: string;
-  phone: string;
+  phone?: string;
   telegram?: string;
   audience: string;
   formats: string[];
@@ -24,12 +24,10 @@ const coaches: Coach[] = [
   {
     name: "Анна",
     image: "/coaches/anna.jpg",
-    phone: "+380 50 723 56 36",
-    telegram: "Dyshliukanya",
-    audience: "Тренування для дітей і дорослих.",
-    formats: ["Персональні тренування", "Групові тренування"],
-    prices: ["1200 грн / година"],
-    courts: "Лювс, Теракорт",
+    audience: "Поки учнів не набирає.",
+    formats: [],
+    prices: [],
+    courts: "Набір призупинено",
   },
   {
     name: "Юрій Ярославович",
@@ -88,6 +86,7 @@ const coaches: Coach[] = [
     name: "Марія",
     image: "/coaches/maria.jpg",
     phone: "+380 93 462 86 80",
+    telegram: "izmaylova_m_",
     audience: "Персональні, спліт- і групові тренування.",
     formats: ["Персональні тренування", "Спліт-тренування", "Групові тренування"],
     prices: [
@@ -96,6 +95,7 @@ const coaches: Coach[] = [
       "Групове — від 500 грн",
     ],
     courts: "Теракорт, Лювс",
+    imagePosition: "object-[center_35%]",
   },
   {
     name: "Максим",
@@ -190,12 +190,14 @@ export default function CoachesPage() {
                 </div>
 
                 <div className="mt-3 flex flex-wrap gap-2">
-                  <a
-                    href={phoneHref(coach.phone)}
-                    className="rounded-full bg-[#d7f34c] px-3 py-2 text-[11px] font-black text-[#123f2d] sm:px-4 sm:text-xs"
-                  >
-                    Зателефонувати
-                  </a>
+                  {coach.phone && (
+                    <a
+                      href={phoneHref(coach.phone)}
+                      className="rounded-full bg-[#d7f34c] px-3 py-2 text-[11px] font-black text-[#123f2d] sm:px-4 sm:text-xs"
+                    >
+                      Зателефонувати
+                    </a>
+                  )}
                   {coach.telegram && (
                     <a
                       href={`https://t.me/${coach.telegram}`}
