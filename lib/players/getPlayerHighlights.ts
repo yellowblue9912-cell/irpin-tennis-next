@@ -7,6 +7,15 @@ export type PlayerHighlight = {
 };
 
 const highlightsByPlayer: Record<string, PlayerHighlight[]> = {
+  "rostyslav-svidelskyi": [
+    {
+      id: "rostyslav-svidelskyi-highlight-1",
+      type: "video",
+      src: "/highlights/rostyslav-svidelskyi-1.mp4",
+      title: "Відео за участі Ростислава Свідельського",
+      description: "Ростислав грає у чорній футболці.",
+    },
+  ],
   "andrii-cherkasov": [
     {
       id: "andrii-cherkasov-highlight-1",
