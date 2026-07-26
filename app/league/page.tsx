@@ -118,17 +118,13 @@ export default function LeaguePage() {
         </div>
 
         <div className="grid gap-3 sm:gap-6 lg:grid-cols-3">
-          {leagues.map((league, index) => (
+          {leagues.map((league) => (
             <article
               key={league.slug}
               className="group flex min-h-full flex-col overflow-hidden rounded-2xl bg-white shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-xl sm:rounded-[32px]"
             >
               <div className={`${league.accent} p-4 sm:p-5`}>
                 <div className="flex items-start justify-between gap-4">
-                  <span className="text-xs font-black uppercase tracking-[0.18em] text-[#123f2d]/65">
-                    Ліга {String(index + 1).padStart(2, "0")}
-                  </span>
-
                   <span className="rounded-full bg-white/70 px-3 py-1.5 text-xs font-black uppercase tracking-wide text-[#123f2d]">
                     {league.slug === "masters"
                       ? "3.5+"
@@ -176,11 +172,7 @@ export default function LeaguePage() {
 
                 <Link
                   href={`/league/${league.slug}`}
-                  className={`mt-4 inline-flex items-center justify-between rounded-full px-5 py-3 text-xs font-black uppercase tracking-[0.08em] transition hover:scale-[1.02] ${league.button}`}
-                  style={{
-                    color:
-                      league.slug === "masters" ? "#123f2d" : "#ffffff",
-                  }}
+                  className="mt-4 inline-flex items-center justify-between rounded-full bg-[#123f2d] px-5 py-3 text-xs font-black uppercase tracking-[0.08em] text-white transition hover:scale-[1.02] hover:bg-[#1b5a41]"
                 >
                   <span>Переглянути лігу</span>
                   <span>→</span>
