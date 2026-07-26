@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import PlayerFeedback from "../../../components/PlayerFeedback";
+import { getPlayerHighlights } from "../../../lib/players/getPlayerHighlights";
 import {
   getPlayerProfile,
   type ProfileMatch,
@@ -64,6 +65,7 @@ export default async function PlayerProfilePage({
 
   const { player, stats, tournaments, matches } = profile;
   const age = getAge(player.birth_date);
+  const highlights = getPlayerHighlights(slug);
 
   return (
     <main className="mx-auto w-full max-w-7xl px-3 py-5 sm:px-5 sm:py-8 md:px-8 md:py-10">
@@ -156,6 +158,46 @@ export default async function PlayerProfilePage({
         <StatCard label="Титули" value={stats.titles} />
         <StatCard label="Подіуми" value={stats.podiums} />
       </section>
+
+      {highlights.length > 0 && (
+        <section className="mt-5 rounded-2xl bg-white p-4 shadow-sm sm:mt-8 sm:rounded-[28px] sm:p-8">
+          <div>
+            <p className="text-sm font-black uppercase tracking-[0.16em] text-[#ad4529]">
+              Найкращі моменти
+            </p>
+            <h2 className="mt-2 text-2xl font-black uppercase text-[#123f2d]">
+              Хайлайти
+            </h2>
+          </div>
+
+          <div className="mt-5 grid gap-5 lg:grid-cols-2">
+            {highlights.map((highlight) => (
+              <figure
+                key={highlight.id}
+                className="overflow-hidden rounded-2xl bg-[#123f2d]"
+              >
+                <video
+                  className="aspect-video w-full bg-black object-contain"
+                  controls
+                  playsInline
+                  preload="metadata"
+                >
+                  <source src={highlight.src} type="video/mp4" />
+                  Ваш браузер не підтримує відтворення відео.
+                </video>
+                <figcaption className="p-4 text-white">
+                  <p className="font-black">{highlight.title}</p>
+                  {highlight.description && (
+                    <p className="mt-1 text-sm text-white/65">
+                      {highlight.description}
+                    </p>
+                  )}
+                </figcaption>
+              </figure>
+            ))}
+          </div>
+        </section>
+      )}
 
       <section className="mt-8 grid gap-8 xl:grid-cols-[1fr_1.15fr]">
         <div className="rounded-[28px] bg-white p-6 shadow-sm md:p-8">
