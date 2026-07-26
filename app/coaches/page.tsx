@@ -13,6 +13,7 @@ type Coach = {
   image: string;
   phone?: string;
   telegram?: string;
+  instagram?: string;
   audience: string;
   formats: string[];
   prices: string[];
@@ -107,6 +108,25 @@ const coaches: Coach[] = [
     formats: ["Тренування для дітей", "Тренування для дорослих"],
     prices: ["Вартість — за домовленістю"],
     courts: "Campa",
+  },
+  {
+    name: "Олександр Ковальчук",
+    image: "/coaches/oleksandr-kovalchuk.jpg",
+    phone: "+380 63 241 80 38",
+    telegram: "AK20155",
+    instagram: "https://www.instagram.com/smith20155",
+    audience: "Тренує дорослих і дітей.",
+    formats: [
+      "Індивідуальні тренування",
+      "Спліт-тренування",
+      "Спаринг",
+    ],
+    prices: [
+      "Індивідуальне — 1000 грн",
+      "Спліт — 1200 грн",
+      "Спаринг — 1000 грн",
+    ],
+    courts: "Корти Пущі",
   },
 ];
 
@@ -207,6 +227,16 @@ export default function CoachesPage() {
                       className="rounded-full bg-[#229ed9] px-3 py-2 text-[11px] font-black text-white sm:px-4 sm:text-xs"
                     >
                       Telegram
+                    </a>
+                  )}
+                  {coach.instagram && (
+                    <a
+                      href={coach.instagram}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="rounded-full bg-[#ad4529] px-3 py-2 text-[11px] font-black text-white sm:px-4 sm:text-xs"
+                    >
+                      Instagram
                     </a>
                   )}
                 </div>
