@@ -103,6 +103,7 @@ const coaches: Coach[] = [
     image: "/coaches/maksym.jpg",
     phone: "+380 67 500 57 08",
     telegram: "Yakhnii",
+    instagram: "https://www.instagram.com/tennis.yakhnii",
     audience: "Тренує дітей і дорослих будь-якого рівня.",
     formats: ["Тренування для дітей", "Тренування для дорослих"],
     prices: ["Вартість — за домовленістю"],
