@@ -4,6 +4,12 @@ export type TournamentPhoto = {
 };
 
 const tournamentPhotos: Record<string, TournamentPhoto[]> = {
+  "irpin-tennis-30-35-2026-06-13": [
+    {
+      src: "/tournaments/irpin-tennis-30-35-2026-06-13/01.jpg",
+      alt: "Учасники турніру IRPIN TENNIS 3.0–3.5, 13 червня 2026 року",
+    },
+  ],
   "irpin-tennis-35-plus-2026-06-14": [
     {
       src: "/tournaments/irpin-tennis-35-plus-2026-06-14/01.jpg",
