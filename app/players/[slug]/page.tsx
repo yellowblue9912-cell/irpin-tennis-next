@@ -107,6 +107,12 @@ export default async function PlayerProfilePage({
                   {age} {ageWord(age)}
                 </span>
               )}
+              {player.tennis_experience_years !== null && (
+                <span className="rounded-full border border-white/15 px-2.5 py-1 text-[10px] font-bold text-white/75 sm:px-4 sm:py-2 sm:text-base">
+                  Досвід {player.tennis_experience_years}{" "}
+                  {ageWord(player.tennis_experience_years)}
+                </span>
+              )}
             </div>
           </div>
         </div>

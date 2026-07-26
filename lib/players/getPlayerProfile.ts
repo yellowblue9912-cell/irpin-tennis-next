@@ -11,6 +11,7 @@ export type ProfilePlayer = {
   bio: string | null;
   phone: string | null;
   birth_date: string | null;
+  tennis_experience_years: number | null;
   phone_public: boolean;
   is_active: boolean;
 };
@@ -161,7 +162,7 @@ export async function getPlayerProfile(
 
   const { data: publicContacts } = await supabase
     .from("public_player_contacts")
-    .select("phone, birth_date, phone_public")
+    .select("phone, birth_date, tennis_experience_years, phone_public")
     .eq("player_id", playerData.id)
     .maybeSingle();
 
@@ -171,6 +172,8 @@ export async function getPlayerProfile(
     photo_url: getPlayerPhoto(playerData.slug, playerData.photo_url),
     phone: publicContacts?.phone ?? null,
     birth_date: publicContacts?.birth_date ?? null,
+    tennis_experience_years:
+      publicContacts?.tennis_experience_years ?? null,
     phone_public: publicContacts?.phone_public ?? false,
   } as ProfilePlayer;
 

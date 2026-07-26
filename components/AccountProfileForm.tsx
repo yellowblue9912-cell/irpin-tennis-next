@@ -13,6 +13,7 @@ export type EditablePlayerProfile = {
   city: string | null;
   phone: string | null;
   birth_date: string | null;
+  tennis_experience_years: number | null;
   phone_public: boolean;
 };
 
@@ -75,6 +76,9 @@ export default function AccountProfileForm({
       player_id: player.id,
       phone: nullable(form.get("phone")),
       birth_date: nullable(form.get("birth_date")),
+      tennis_experience_years: nullableNumber(
+        form.get("tennis_experience_years"),
+      ),
       phone_public: form.get("phone_visibility") === "public",
       updated_at: new Date().toISOString(),
     };
@@ -141,6 +145,7 @@ export default function AccountProfileForm({
           <Field label="Ім’я та прізвище" name="name" defaultValue={player.name} required />
           <Field label="Місто" name="city" defaultValue={player.city ?? ""} />
           <Field label="Дата народження" name="birth_date" type="date" defaultValue={player.birth_date ?? ""} />
+          <ExperienceField defaultValue={player.tennis_experience_years} />
           <Field label="Номер телефону" name="phone" type="tel" defaultValue={player.phone ?? ""} />
         </div>
         <label className="mt-5 block">
@@ -196,6 +201,13 @@ function nullable(value: FormDataEntryValue | null) {
   return result || null;
 }
 
+function nullableNumber(value: FormDataEntryValue | null) {
+  const result = Number(String(value ?? "").trim());
+  return Number.isInteger(result) && result >= 1 && result <= 50
+    ? result
+    : null;
+}
+
 function Avatar({ name, photoUrl }: { name: string; photoUrl: string | null }) {
   return photoUrl ? (
     <img
@@ -235,6 +247,41 @@ function Field({
       />
     </label>
   );
+}
+
+function ExperienceField({
+  defaultValue,
+}: {
+  defaultValue: number | null;
+}) {
+  return (
+    <label className="block">
+      <span className="mb-2 block text-sm font-black uppercase tracking-wide">
+        Досвід у тенісі
+      </span>
+      <select
+        name="tennis_experience_years"
+        defaultValue={defaultValue ?? ""}
+        className="min-h-12 w-full rounded-xl border-2 border-[#123f2d]/30 bg-[#f1eadc] px-4 py-3 text-base text-[#123f2d] shadow-inner outline-none focus:border-[#123f2d] focus:bg-white sm:rounded-2xl"
+      >
+        <option value="">Не вказано</option>
+        {Array.from({ length: 50 }, (_, index) => index + 1).map((years) => (
+          <option key={years} value={years}>
+            {years} {yearsWord(years)}
+          </option>
+        ))}
+      </select>
+    </label>
+  );
+}
+
+function yearsWord(years: number) {
+  const lastTwo = years % 100;
+  const last = years % 10;
+  if (lastTwo >= 11 && lastTwo <= 14) return "років";
+  if (last === 1) return "рік";
+  if (last >= 2 && last <= 4) return "роки";
+  return "років";
 }
 
 function Toggle({ name, label, defaultChecked }: { name: string; label: string; defaultChecked: boolean }) {
