@@ -7,6 +7,15 @@ export type PlayerHighlight = {
 };
 
 const highlightsByPlayer: Record<string, PlayerHighlight[]> = {
+  "oleksandr-kavylin": [
+    {
+      id: "oleksandr-kavylin-highlight-1",
+      type: "video",
+      src: "/highlights/oleksandr-kavylin-1.mp4",
+      title: "Відео за участі Олександра Кавиліна",
+      description: "Олександр грає у синій футболці.",
+    },
+  ],
   "serhii-mateich": [
     {
       id: "serhii-mateich-highlight-1",
