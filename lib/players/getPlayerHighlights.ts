@@ -7,6 +7,14 @@ export type PlayerHighlight = {
 };
 
 const highlightsByPlayer: Record<string, PlayerHighlight[]> = {
+  "ihor-lapatiiev": [
+    {
+      id: "ihor-lapatiiev-highlight-1",
+      type: "video",
+      src: "/highlights/ihor-lapatiiev-1.mp4",
+      title: "Відео за участі Ігоря Лапатієва",
+    },
+  ],
   "andrii-levchenko": [
     {
       id: "andrii-levchenko-highlight-1",
