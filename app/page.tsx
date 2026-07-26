@@ -290,6 +290,46 @@ export default function HomePage() {
           </div>
         </section>
 
+        {/* Community philosophy */}
+        <section className="border-t border-[#173d2b]/10 bg-white/55">
+          <div className="mx-auto grid w-full max-w-[1600px] gap-5 px-5 py-8 sm:px-8 lg:grid-cols-[1.15fr_1fr] lg:items-center lg:gap-10 lg:py-10 xl:px-12">
+            <div>
+              <p className="text-[10px] font-black uppercase tracking-[0.3em] text-[#ad4529]">
+                Наша філософія
+              </p>
+
+              <h2 className="mt-2 max-w-2xl text-2xl font-black uppercase leading-tight tracking-[-0.03em] text-[#173d2b] sm:text-3xl">
+                Розвиваємо теніс разом
+              </h2>
+
+              <p className="mt-3 max-w-3xl text-sm font-medium leading-6 text-[#173d2b]/65 sm:text-base sm:leading-7">
+                Irpin Tennis — це некомерційний проєкт і спільнота гравців
+                Ірпеня, Бучі та передмістя. Ми створили його, щоб людям було
+                легше знаходити суперників, брати участь у змаганнях,
+                знайомитися та розвивати теніс у нашому регіоні.
+              </p>
+            </div>
+
+            <div className="grid gap-2.5 sm:grid-cols-3 lg:grid-cols-1">
+              <PhilosophyItem
+                icon="✓"
+                title="Без внесків"
+                text="Участь у наших турнірах і лігах безкоштовна."
+              />
+              <PhilosophyItem
+                icon="−%"
+                title="Доступні корти"
+                text="Для учасників змагань часто діють спеціальні знижки на оренду кортів."
+              />
+              <PhilosophyItem
+                icon="★"
+                title="Підтримка партнерів"
+                text="Корти та партнери спільноти можуть надавати призи переможцям."
+              />
+            </div>
+          </div>
+        </section>
+
         {/* US Open / Australian Open footer */}
         <footer className="relative overflow-hidden bg-[#08285d] text-white">
           <div className="absolute inset-x-0 top-0 h-[3px] bg-gradient-to-r from-[#e74b35] via-[#2b9df4] to-[#dfff3f]" />
@@ -458,6 +498,32 @@ export default function HomePage() {
 
       `}</style>
     </>
+  );
+}
+
+function PhilosophyItem({
+  icon,
+  title,
+  text,
+}: {
+  icon: string;
+  title: string;
+  text: string;
+}) {
+  return (
+    <div className="grid grid-cols-[38px_1fr] gap-3 rounded-2xl border border-[#173d2b]/10 bg-[#f4f0e5] p-3.5">
+      <span className="flex h-[38px] w-[38px] items-center justify-center rounded-full bg-[#173d2b] text-xs font-black text-[#dfff3f]">
+        {icon}
+      </span>
+      <div>
+        <h3 className="text-sm font-black uppercase text-[#173d2b]">
+          {title}
+        </h3>
+        <p className="mt-1 text-xs font-medium leading-5 text-[#173d2b]/60">
+          {text}
+        </p>
+      </div>
+    </div>
   );
 }
 
