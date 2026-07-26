@@ -108,6 +108,7 @@ const coaches: Coach[] = [
     formats: ["Тренування для дітей", "Тренування для дорослих"],
     prices: ["Вартість — за домовленістю"],
     courts: "Campa",
+    imagePosition: "object-center sm:object-[center_20%]",
   },
   {
     name: "Олександр Ковальчук",
@@ -127,6 +128,7 @@ const coaches: Coach[] = [
       "Спаринг — 1000 грн",
     ],
     courts: "Корти Пущі",
+    imagePosition: "object-center sm:object-[center_18%]",
   },
 ];
 
