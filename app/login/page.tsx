@@ -32,6 +32,30 @@ export default async function LoginPage() {
           і переглядайте статистику матчів та турнірів.
         </p>
 
+        <div className="mt-6 max-w-xl rounded-2xl bg-[#123f2d] p-5 text-white shadow-sm">
+          <p className="text-sm font-black uppercase tracking-[0.14em] text-[#c6f13d]">
+            Переваги особистого кабінету
+          </p>
+          <ul className="mt-4 grid gap-3 text-sm leading-6 sm:grid-cols-2">
+            <li className="rounded-xl bg-white/10 px-4 py-3">
+              Змінюйте фото та інформацію у профілі
+            </li>
+            <li className="rounded-xl bg-white/10 px-4 py-3">
+              Додавайте телефон і керуйте його видимістю
+            </li>
+            <li className="rounded-xl bg-white/10 px-4 py-3">
+              Вказуйте вік, досвід у тенісі та розповідь про себе
+            </li>
+            <li className="rounded-xl bg-white/10 px-4 py-3">
+              Коментуйте профілі та оцінюйте гравців
+            </li>
+            <li className="rounded-xl bg-white/10 px-4 py-3 sm:col-span-2">
+              Отримуйте доступ до закритого Telegram-чату спільноти після
+              прив’язки картки гравця
+            </li>
+          </ul>
+        </div>
+
         <div className="mt-6 max-w-xl rounded-2xl border border-[#123f2d]/10 bg-white p-4 shadow-sm sm:p-5">
           <p className="font-black text-[#123f2d]">
             Що робити після реєстрації?
