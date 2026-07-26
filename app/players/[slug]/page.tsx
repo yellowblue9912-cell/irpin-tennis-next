@@ -35,7 +35,7 @@ export async function generateMetadata({
 
   const description = `${player.name} — профіль гравця Irpin Tennis${
     player.rating ? `, рейтинг ${player.rating}` : ""
-  }. Статистика матчів, перемоги, турніри та досягнення${
+  }. Статистика матчів, перемоги та участь у турнірах${
     player.city ? ` у місті ${player.city}` : ""
   }.`;
 
@@ -62,7 +62,7 @@ export default async function PlayerProfilePage({
     notFound();
   }
 
-  const { player, stats, tournaments, matches, achievements } = profile;
+  const { player, stats, tournaments, matches } = profile;
   const age = getAge(player.birth_date);
 
   return (
@@ -155,43 +155,6 @@ export default async function PlayerProfilePage({
         <StatCard label="Win Rate" value={`${stats.winRate}%`} />
         <StatCard label="Титули" value={stats.titles} />
         <StatCard label="Подіуми" value={stats.podiums} />
-      </section>
-
-      <section className="mt-5 rounded-2xl bg-white p-4 shadow-sm sm:mt-8 sm:rounded-[28px] sm:p-8">
-        <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
-          <div>
-            <p className="text-sm font-black uppercase tracking-[0.16em] text-[#ad4529]">
-              Відзнаки
-            </p>
-            <h2 className="mt-2 text-2xl font-black uppercase">Досягнення</h2>
-          </div>
-          <p className="text-sm text-[#123f2d]/50">
-            Розраховуються автоматично за результатами.
-          </p>
-        </div>
-
-        {achievements.length > 0 ? (
-          <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {achievements.map((achievement) => (
-              <article
-                key={achievement.id}
-                className="flex gap-4 rounded-2xl bg-[#f6f0e5] p-5"
-              >
-                <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-white text-2xl">
-                  {achievement.icon}
-                </span>
-                <div>
-                  <h3 className="font-black">{achievement.title}</h3>
-                  <p className="mt-1 text-sm leading-5 text-[#123f2d]/55">
-                    {achievement.description}
-                  </p>
-                </div>
-              </article>
-            ))}
-          </div>
-        ) : (
-          <EmptyState text="Досягнення з’являться після перших офіційних матчів." />
-        )}
       </section>
 
       <section className="mt-8 grid gap-8 xl:grid-cols-[1fr_1.15fr]">

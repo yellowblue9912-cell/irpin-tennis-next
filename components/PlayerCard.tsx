@@ -47,7 +47,7 @@ export default function PlayerCard({ player, position }: Props) {
 
         <div className="mt-2 hidden flex-wrap gap-2 md:flex">
           <span className="rounded-full bg-[#f6f0e5] px-3 py-1 text-xs font-bold text-[#123f2d]/60">
-            Переглянути статистику й досягнення
+            Переглянути статистику та матчі
           </span>
         </div>
       </div>

@@ -16,13 +16,6 @@ export type ProfilePlayer = {
   is_active: boolean;
 };
 
-export type ProfileAchievement = {
-  id: string;
-  icon: string;
-  title: string;
-  description: string;
-};
-
 export type ProfileTournament = {
   id: string;
   title: string;
@@ -61,7 +54,6 @@ export type PlayerProfileData = {
   player: ProfilePlayer;
   tournaments: ProfileTournament[];
   matches: ProfileMatch[];
-  achievements: ProfileAchievement[];
   stats: {
     tournaments: number;
     matches: number;
@@ -635,64 +627,10 @@ export async function getPlayerProfile(
       tournament.place <= 3,
   ).length;
 
-  const achievements: ProfileAchievement[] = [];
-
-  if (profileMatches.length > 0) {
-    achievements.push({
-      id: "first-match",
-      icon: "🎾",
-      title: "Перший матч",
-      description: "Зіграно перший офіційний матч у спільноті.",
-    });
-  }
-  if (wins > 0) {
-    achievements.push({
-      id: "first-win",
-      icon: "⚡",
-      title: "Перша перемога",
-      description: "Здобуто першу перемогу в офіційному матчі.",
-    });
-  }
-  [10, 25, 50, 100].forEach((milestone) => {
-    if (wins >= milestone) {
-      achievements.push({
-        id: `wins-${milestone}`,
-        icon: "🏅",
-        title: `${milestone} перемог`,
-        description: `Досягнуто позначки у ${milestone} перемог.`,
-      });
-    }
-  });
-  if (titles > 0) {
-    achievements.push({
-      id: "tournament-champion",
-      icon: "🏆",
-      title: "Чемпіон турніру",
-      description: titles === 1 ? "Виграно перший турнір." : `Виграно турнірів: ${titles}.`,
-    });
-  }
-  if (podiums >= 3) {
-    achievements.push({
-      id: "three-podiums",
-      icon: "🥉",
-      title: "Стабільний призер",
-      description: "Три або більше фінішів на подіумі.",
-    });
-  }
-  if (profileMatches.length >= 50) {
-    achievements.push({
-      id: "matches-50",
-      icon: "🔥",
-      title: "50 матчів",
-      description: "Зіграно 50 офіційних матчів.",
-    });
-  }
-
   return {
     player,
     tournaments,
     matches: profileMatches,
-    achievements,
     stats: {
       tournaments: tournaments.length,
       matches: profileMatches.length,
