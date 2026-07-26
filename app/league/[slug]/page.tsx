@@ -455,13 +455,6 @@ export default async function LeaguePage({ params }: PageProps) {
         Boolean(match.winner),
     );
 
-  const totalMatches = matches.length;
-
-  const totalPossibleMatches =
-    standings.length > 1
-      ? (standings.length * (standings.length - 1)) / 2
-      : 0;
-
   const seasonProgress = getSeasonTimeProgress(
     season.start_date,
     season.end_date,
@@ -512,7 +505,7 @@ export default async function LeaguePage({ params }: PageProps) {
                   "Тенісна ліга у форматі кожен грає з кожним."}
               </p>
 
-              <div className="mt-5 grid grid-cols-2 gap-2 sm:mt-7 sm:grid-cols-3 sm:gap-3">
+              <div className="mt-5 grid grid-cols-2 gap-2 sm:mt-7 sm:gap-3">
                 <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
                   <p className="text-xs font-semibold uppercase tracking-wider text-slate-400">
                     Тривалість сезону
@@ -534,18 +527,6 @@ export default async function LeaguePage({ params }: PageProps) {
                   </p>
                 </div>
 
-                <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
-                  <p className="text-xs font-semibold uppercase tracking-wider text-slate-400">
-                    Зіграно матчів
-                  </p>
-
-                  <p className="mt-2 text-2xl font-black text-white">
-                    {totalMatches}
-                    <span className="ml-1 text-sm font-semibold text-slate-400">
-                      / {totalPossibleMatches}
-                    </span>
-                  </p>
-                </div>
               </div>
 
               <div className="mt-6">
