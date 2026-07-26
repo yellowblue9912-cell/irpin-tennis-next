@@ -7,6 +7,15 @@ export type PlayerHighlight = {
 };
 
 const highlightsByPlayer: Record<string, PlayerHighlight[]> = {
+  "andrii-cherkasov": [
+    {
+      id: "andrii-cherkasov-highlight-1",
+      type: "video",
+      src: "/highlights/andrii-cherkasov-1.mp4",
+      title: "Відео за участі Андрія Черкасова",
+      description: "Андрій грає у білій майці.",
+    },
+  ],
   "ihor-lapatiiev": [
     {
       id: "ihor-lapatiiev-highlight-1",
