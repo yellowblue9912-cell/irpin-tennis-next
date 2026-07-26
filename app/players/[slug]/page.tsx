@@ -162,15 +162,12 @@ export default async function PlayerProfilePage({
       {highlights.length > 0 && (
         <section className="mt-5 rounded-2xl bg-white p-4 shadow-sm sm:mt-8 sm:rounded-[28px] sm:p-8">
           <div>
-            <p className="text-sm font-black uppercase tracking-[0.16em] text-[#ad4529]">
-              Найкращі моменти
-            </p>
             <h2 className="mt-2 text-2xl font-black uppercase text-[#123f2d]">
-              Хайлайти
+              Відео за участі гравця
             </h2>
           </div>
 
-          <div className="mt-5 grid gap-5 lg:grid-cols-2">
+          <div className="mt-5 max-w-3xl">
             {highlights.map((highlight) => (
               <figure
                 key={highlight.id}

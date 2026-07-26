@@ -12,8 +12,8 @@ const highlightsByPlayer: Record<string, PlayerHighlight[]> = {
       id: "vadym-buchkaryk-highlight-1",
       type: "video",
       src: "/highlights/vadym-buchkaryk-1.mp4",
-      title: "Вадим Бучкарик",
-      description: "Вадим — у жовтій футболці.",
+      title: "Відео за участі Вадима Бучкарика",
+      description: "Вадим грає у жовтій футболці.",
     },
   ],
 };
