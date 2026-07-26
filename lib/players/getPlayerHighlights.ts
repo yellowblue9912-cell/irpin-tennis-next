@@ -7,6 +7,14 @@ export type PlayerHighlight = {
 };
 
 const highlightsByPlayer: Record<string, PlayerHighlight[]> = {
+  "oleksandr-nesterov": [
+    {
+      id: "oleksandr-nesterov-highlight-1",
+      type: "video",
+      src: "/highlights/oleksandr-nesterov-1.mp4",
+      title: "Відео за участі Олександра Нестерова",
+    },
+  ],
   "olia-aleksieieva": [
     {
       id: "olia-aleksieieva-highlight-1",
