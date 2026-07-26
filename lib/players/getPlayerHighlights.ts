@@ -7,6 +7,15 @@ export type PlayerHighlight = {
 };
 
 const highlightsByPlayer: Record<string, PlayerHighlight[]> = {
+  "roman-avramenko": [
+    {
+      id: "roman-avramenko-highlight-1",
+      type: "video",
+      src: "/highlights/roman-avramenko-1.mp4",
+      title: "Відео за участі Романа Авраменка",
+      description: "Роман грає у зеленій футболці.",
+    },
+  ],
   "oleksandr-nesterov": [
     {
       id: "oleksandr-nesterov-highlight-1",
