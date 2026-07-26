@@ -14,7 +14,41 @@ type Comment = {
   authorName: string;
   authorSlug: string;
   authorPhoto: string | null;
+  likeCount: number;
+  liked: boolean;
 };
+
+type CommentLikeRow = {
+  comment_id: string;
+  like_count: number | string;
+  liked: boolean;
+};
+
+type CommentLikeToggleResult = {
+  like_count: number | string;
+  liked: boolean;
+};
+
+const COMMENT_LIKE_DEVICE_KEY = "irpintennis-comment-like-device";
+
+async function getCommentLikeDeviceHash() {
+  let deviceId = window.localStorage.getItem(COMMENT_LIKE_DEVICE_KEY);
+  if (!deviceId) {
+    deviceId =
+      typeof crypto.randomUUID === "function"
+        ? crypto.randomUUID()
+        : `${Date.now()}-${Math.random().toString(36).slice(2)}-${Math.random().toString(36).slice(2)}`;
+    window.localStorage.setItem(COMMENT_LIKE_DEVICE_KEY, deviceId);
+  }
+
+  const digest = await crypto.subtle.digest(
+    "SHA-256",
+    new TextEncoder().encode(deviceId),
+  );
+  return Array.from(new Uint8Array(digest))
+    .map((byte) => byte.toString(16).padStart(2, "0"))
+    .join("");
+}
 
 export default function PlayerFeedback({
   targetPlayerId,
@@ -31,6 +65,7 @@ export default function PlayerFeedback({
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editingBody, setEditingBody] = useState("");
   const [editingAnonymous, setEditingAnonymous] = useState(false);
+  const [likingCommentId, setLikingCommentId] = useState<string | null>(null);
 
   const load = useCallback(async () => {
     const supabase = createClient();
@@ -47,7 +82,8 @@ export default function PlayerFeedback({
     }
     setAuthorPlayerId(linkedPlayerId);
 
-    const [{ data: commentRows }, { data: reactionRows }] = await Promise.all([
+    const deviceHash = await getCommentLikeDeviceHash();
+    const [{ data: commentRows }, { data: reactionRows }, { data: commentLikes }] = await Promise.all([
       supabase
         .from("player_comments")
         .select("id, author_player_id, body, is_anonymous, created_at")
@@ -58,6 +94,10 @@ export default function PlayerFeedback({
         .from("player_reactions")
         .select("author_player_id, vote")
         .eq("target_player_id", targetPlayerId),
+      supabase.rpc("get_player_comment_likes", {
+        p_target_player_id: targetPlayerId,
+        p_device_hash: deviceHash,
+      }),
     ]);
 
     const authorIds = Array.from(
@@ -70,6 +110,15 @@ export default function PlayerFeedback({
           .in("id", authorIds)
       : { data: [] };
     const authorMap = new Map((authors ?? []).map((author) => [author.id, author]));
+    const commentLikeMap = new Map(
+      ((commentLikes ?? []) as CommentLikeRow[]).map((like) => [
+        like.comment_id,
+        {
+          likeCount: Number(like.like_count),
+          liked: Boolean(like.liked),
+        },
+      ]),
+    );
 
     setComments(
       (commentRows ?? []).map((row) => {
@@ -81,6 +130,8 @@ export default function PlayerFeedback({
           authorPhoto: !row.is_anonymous && author
             ? getPlayerPhoto(author.slug, author.photo_url)
             : null,
+          likeCount: commentLikeMap.get(row.id)?.likeCount ?? 0,
+          liked: commentLikeMap.get(row.id)?.liked ?? false,
         };
       }),
     );
@@ -175,6 +226,37 @@ export default function PlayerFeedback({
     setMessage(error ? `Не вдалося видалити коментар: ${error.message}` : "");
     await load();
     setPending(false);
+  }
+
+  async function toggleCommentLike(commentId: string) {
+    setLikingCommentId(commentId);
+    setMessage("");
+
+    const supabase = createClient();
+    const deviceHash = await getCommentLikeDeviceHash();
+    const { data, error } = await supabase.rpc("toggle_player_comment_like", {
+      p_comment_id: commentId,
+      p_device_hash: deviceHash,
+    });
+
+    if (error) {
+      setMessage(`Не вдалося поставити вподобайку: ${error.message}`);
+    } else {
+      const result = (data?.[0] ?? null) as CommentLikeToggleResult | null;
+      setComments((current) =>
+        current.map((comment) =>
+          comment.id === commentId
+            ? {
+                ...comment,
+                liked: Boolean(result?.liked),
+                likeCount: Number(result?.like_count ?? comment.likeCount),
+              }
+            : comment,
+        ),
+      );
+    }
+
+    setLikingCommentId(null);
   }
 
   return (
@@ -327,6 +409,25 @@ export default function PlayerFeedback({
                   year: "numeric",
                 }).format(new Date(comment.created_at))}
               </time>
+              <button
+                type="button"
+                onClick={() => toggleCommentLike(comment.id)}
+                disabled={likingCommentId === comment.id}
+                aria-pressed={comment.liked}
+                aria-label={
+                  comment.liked
+                    ? "Прибрати вподобайку з коментаря"
+                    : "Вподобати коментар"
+                }
+                className={`mt-2 inline-flex min-h-9 items-center gap-1.5 rounded-full border px-3 py-1.5 text-xs font-black transition disabled:opacity-60 ${
+                  comment.liked
+                    ? "border-[#123f2d] bg-[#c6f13d] text-[#123f2d]"
+                    : "border-[#123f2d]/15 bg-white text-[#123f2d]/70 hover:border-[#123f2d]/35"
+                }`}
+              >
+                <span aria-hidden="true">👍</span>
+                <span>{comment.likeCount}</span>
+              </button>
               {comment.author_player_id === authorPlayerId && editingId !== comment.id && (
                 <div className="mt-2 flex gap-3 text-xs font-black">
                   <button
