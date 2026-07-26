@@ -7,6 +7,15 @@ export type PlayerHighlight = {
 };
 
 const highlightsByPlayer: Record<string, PlayerHighlight[]> = {
+  "dmytro-khmel": [
+    {
+      id: "dmytro-khmel-highlight-1",
+      type: "video",
+      src: "/highlights/dmytro-khmel-1.mp4",
+      title: "Відео за участі Дмитра Хміля",
+      description: "Дмитро виконує подачу.",
+    },
+  ],
   "oleksandr-kavylin": [
     {
       id: "oleksandr-kavylin-highlight-1",
