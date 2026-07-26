@@ -7,6 +7,15 @@ export type PlayerHighlight = {
 };
 
 const highlightsByPlayer: Record<string, PlayerHighlight[]> = {
+  "vlad-tsvitsinskyi": [
+    {
+      id: "vlad-tsvitsinskyi-highlight-1",
+      type: "video",
+      src: "/highlights/vlad-tsvitsinskyi-1.mp4",
+      title: "Відео за участі Влада Цвіцінського",
+      description: "Влад грає у червоній футболці.",
+    },
+  ],
   "vadym-buchkaryk": [
     {
       id: "vadym-buchkaryk-highlight-1",
