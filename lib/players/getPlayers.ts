@@ -22,6 +22,7 @@ export async function getPlayers(): Promise<Player[]> {
           photo_url,
           city,
           is_active,
+          user_id,
           created_at,
           updated_at
         `
@@ -65,7 +66,13 @@ export async function getPlayers(): Promise<Player[]> {
   }
 
   return ((data ?? []) as Player[])
-    .filter((player) => eligiblePlayerIds.has(player.id))
+    .filter(
+      (player) =>
+        eligiblePlayerIds.has(player.id) ||
+        Boolean(
+          (player as Player & { user_id?: string | null }).user_id,
+        ),
+    )
     .map((player) => ({
       ...player,
       name: getPlayerName(player.slug, player.name),
