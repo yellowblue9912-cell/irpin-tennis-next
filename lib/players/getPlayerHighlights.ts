@@ -7,6 +7,14 @@ export type PlayerHighlight = {
 };
 
 const highlightsByPlayer: Record<string, PlayerHighlight[]> = {
+  "oleksandr-kovalchuk": [
+    {
+      id: "oleksandr-kovalchuk-highlight-1",
+      type: "video",
+      src: "/highlights/oleksandr-kovalchuk-1.mp4",
+      title: "Відео за участі Олександра Ковальчука",
+    },
+  ],
   "sasha-rudnytskyi": [
     {
       id: "sasha-rudnytskyi-highlight-1",
