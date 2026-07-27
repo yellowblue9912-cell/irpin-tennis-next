@@ -771,6 +771,7 @@ export async function getPlayerProfile(
           : match.player1_set3,
         is_winner: match.winner_id === player.id,
         status: "finished",
+        ...getRatingDetails("league", match.id),
       };
     })
     .filter((match): match is ProfileMatch => match !== null);
@@ -816,7 +817,6 @@ export async function getPlayerProfile(
         is_winner: match.winner_id === player.id,
         status: "finished",
         ...getRatingDetails("rating_match", match.id),
-        ...getRatingDetails("league", match.id),
       };
     })
     .filter((match): match is ProfileMatch => match !== null);
