@@ -49,6 +49,10 @@ export default async function LoginPage() {
             <li className="rounded-xl bg-white/10 px-4 py-3">
               Коментуйте профілі та оцінюйте гравців
             </li>
+            <li className="rounded-xl bg-[#c6f13d] px-4 py-3 font-bold text-[#123f2d] sm:col-span-2">
+              Кидайте виклики іншим гравцям, підтверджуйте результати та
+              отримуйте рейтингові очки навіть поза турнірами й лігами
+            </li>
             <li className="rounded-xl bg-white/10 px-4 py-3 sm:col-span-2">
               Отримуйте доступ до закритого Telegram-чату спільноти після
               прив’язки картки гравця

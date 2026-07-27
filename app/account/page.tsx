@@ -3,6 +3,10 @@ import { redirect } from "next/navigation";
 import AccountProfileForm, {
   type EditablePlayerProfile,
 } from "../../components/AccountProfileForm";
+import RatingMatchDashboard, {
+  type RatingMatch,
+  type RatingMatchPlayer,
+} from "../../components/RatingMatchDashboard";
 import { createClient } from "../../lib/supabase/server";
 
 export const metadata: Metadata = {
@@ -19,7 +23,7 @@ export default async function AccountPage() {
 
   const { data: player } = await supabase
     .from("players")
-    .select("id, slug, name, photo_url, bio, city")
+    .select("id, slug, name, photo_url, bio, city, rating")
     .eq("user_id", data.user.id)
     .maybeSingle();
 
@@ -30,6 +34,28 @@ export default async function AccountPage() {
         .eq("player_id", player.id)
         .maybeSingle()
     : { data: null };
+
+  const [{ data: registeredPlayers }, { data: ratingMatches }] = player
+    ? await Promise.all([
+        supabase
+          .from("players")
+          .select("id, name, slug, rating")
+          .not("user_id", "is", null)
+          .eq("is_active", true)
+          .neq("id", player.id)
+          .order("name"),
+        supabase
+          .from("rating_matches")
+          .select(
+            "id, challenger_id, opponent_id, status, submitted_by_player_id, winner_id, player1_set1, player2_set1, player1_set2, player2_set2, player1_set3, player2_set3, played_at, created_at",
+          )
+          .or(
+            `challenger_id.eq.${player.id},opponent_id.eq.${player.id}`,
+          )
+          .order("created_at", { ascending: false })
+          .limit(30),
+      ])
+    : [{ data: [] }, { data: [] }];
 
   return (
     <main className="mx-auto min-h-[calc(100vh-64px)] w-full max-w-5xl bg-[#f4efe4] px-3 py-5 text-[#123f2d] sm:px-6 sm:py-8 md:py-12">
@@ -52,7 +78,8 @@ export default async function AccountPage() {
 
       <div className="mt-8">
         {player ? (
-          <AccountProfileForm
+          <>
+            <AccountProfileForm
             player={
               {
                 ...player,
@@ -63,7 +90,20 @@ export default async function AccountPage() {
                 phone_public: privateProfile?.phone_public ?? false,
               } as EditablePlayerProfile
             }
-          />
+            />
+            <RatingMatchDashboard
+              currentPlayer={
+                {
+                  id: player.id,
+                  name: player.name,
+                  slug: player.slug,
+                  rating: player.rating,
+                } as RatingMatchPlayer
+              }
+              opponents={(registeredPlayers ?? []) as RatingMatchPlayer[]}
+              matches={(ratingMatches ?? []) as RatingMatch[]}
+            />
+          </>
         ) : (
           <section className="rounded-[28px] bg-white p-7 shadow-sm sm:p-10">
             <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-[#c6f13d] text-2xl">

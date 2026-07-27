@@ -106,6 +106,20 @@ type LeagueMatchRow = {
   created_at: string;
 };
 
+type RatingMatchRow = {
+  id: string;
+  challenger_id: string;
+  opponent_id: string;
+  winner_id: string;
+  player1_set1: number | null;
+  player2_set1: number | null;
+  player1_set2: number | null;
+  player2_set2: number | null;
+  player1_set3: number | null;
+  player2_set3: number | null;
+  played_at: string;
+};
+
 type TournamentRow = {
   id: string;
   title: string;
@@ -174,6 +188,7 @@ export async function getPlayerProfile(
     { data: matchesData, error: matchesError },
     { data: leagueMatchesData, error: leagueMatchesError },
     { data: leaguePlayersData, error: leaguePlayersError },
+    { data: ratingMatchesData, error: ratingMatchesError },
   ] = await Promise.all([
     supabase
       .from("tournament_placements")
@@ -246,6 +261,28 @@ export async function getPlayerProfile(
         `,
       )
       .eq("player_id", player.id),
+
+    supabase
+      .from("rating_matches")
+      .select(
+        `
+          id,
+          challenger_id,
+          opponent_id,
+          winner_id,
+          player1_set1,
+          player2_set1,
+          player1_set2,
+          player2_set2,
+          player1_set3,
+          player2_set3,
+          played_at
+        `,
+      )
+      .eq("status", "confirmed")
+      .or(
+        `challenger_id.eq.${player.id},opponent_id.eq.${player.id}`,
+      ),
   ]);
 
   if (placementsError) {
@@ -270,10 +307,18 @@ export async function getPlayerProfile(
     );
   }
 
+  if (ratingMatchesError) {
+    console.error(
+      "Player rating matches loading error:",
+      ratingMatchesError,
+    );
+  }
+
   const placements = (placementsData ?? []) as PlacementRow[];
   const matches = (matchesData ?? []) as MatchRow[];
   const leagueMatches = (leagueMatchesData ?? []) as LeagueMatchRow[];
   const leaguePlayers = (leaguePlayersData ?? []) as LeaguePlayerRow[];
+  const ratingMatches = (ratingMatchesData ?? []) as RatingMatchRow[];
 
   const tournamentIds = Array.from(
     new Set([
@@ -300,6 +345,11 @@ export async function getPlayerProfile(
         match.player1_id === player.id
           ? match.player2_id
           : match.player1_id,
+      ),
+      ...ratingMatches.map((match) =>
+        match.challenger_id === player.id
+          ? match.opponent_id
+          : match.challenger_id,
       ),
     ]),
   );
@@ -595,9 +645,54 @@ export async function getPlayerProfile(
     })
     .filter((match): match is ProfileMatch => match !== null);
 
+  const ratingProfileMatches: ProfileMatch[] = ratingMatches
+    .map((match) => {
+      const playerIsFirst = match.challenger_id === player.id;
+      const opponentId = playerIsFirst
+        ? match.opponent_id
+        : match.challenger_id;
+      const opponent = opponentsMap.get(opponentId);
+
+      if (!opponent || !match.winner_id) {
+        return null;
+      }
+
+      return {
+        id: `rating-${match.id}`,
+        tournament_id: "rating-match",
+        tournament_title: "Рейтинговий матч",
+        tournament_date: match.played_at,
+        opponent_id: opponent.id,
+        opponent_name: opponent.name,
+        opponent_slug: opponent.slug,
+        player_set1: playerIsFirst
+          ? match.player1_set1
+          : match.player2_set1,
+        opponent_set1: playerIsFirst
+          ? match.player2_set1
+          : match.player1_set1,
+        player_set2: playerIsFirst
+          ? match.player1_set2
+          : match.player2_set2,
+        opponent_set2: playerIsFirst
+          ? match.player2_set2
+          : match.player1_set2,
+        player_set3: playerIsFirst
+          ? match.player1_set3
+          : match.player2_set3,
+        opponent_set3: playerIsFirst
+          ? match.player2_set3
+          : match.player1_set3,
+        is_winner: match.winner_id === player.id,
+        status: "finished",
+      };
+    })
+    .filter((match): match is ProfileMatch => match !== null);
+
   const profileMatches = [
     ...tournamentProfileMatches,
     ...leagueProfileMatches,
+    ...ratingProfileMatches,
   ].sort(
     (a, b) =>
       new Date(b.tournament_date).getTime() -
