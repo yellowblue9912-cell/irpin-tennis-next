@@ -48,6 +48,10 @@ export type ProfileMatch = {
   opponent_set3: number | null;
   is_winner: boolean;
   status: string;
+  rating_before: number | null;
+  rating_after: number | null;
+  rating_change: number | null;
+  opponent_rating_before: number | null;
 };
 
 export type PlayerProfileData = {
@@ -148,6 +152,16 @@ type OpponentRow = {
   id: string;
   name: string;
   slug: string;
+};
+
+type RatingHistoryRow = {
+  player_id: string;
+  opponent_id: string;
+  source_type: "tournament" | "league" | "rating_match";
+  source_match_id: string;
+  rating_before: number;
+  rating_after: number;
+  rating_change: number;
 };
 
 export async function getPlayerProfile(
@@ -357,6 +371,8 @@ export async function getPlayerProfile(
   let tournamentsMap = new Map<string, TournamentRow>();
   let leagueSeasonsMap = new Map<string, LeagueSeasonRow>();
   let opponentsMap = new Map<string, OpponentRow>();
+  let playerRatingHistory: RatingHistoryRow[] = [];
+  let opponentRatingHistory: RatingHistoryRow[] = [];
 
   if (tournamentIds.length > 0) {
     const { data: tournamentsData, error: tournamentsError } =
@@ -420,6 +436,111 @@ export async function getPlayerProfile(
       ),
     );
   }
+
+  const { data: playerRatingHistoryData, error: ratingHistoryError } =
+    await supabase
+      .from("player_rating_history")
+      .select(
+        `
+          player_id,
+          opponent_id,
+          source_type,
+          source_match_id,
+          rating_before,
+          rating_after,
+          rating_change
+        `,
+      )
+      .eq("player_id", player.id);
+
+  if (ratingHistoryError) {
+    console.error(
+      "Player rating history loading error:",
+      ratingHistoryError,
+    );
+  } else {
+    playerRatingHistory =
+      (playerRatingHistoryData ?? []) as RatingHistoryRow[];
+  }
+
+  const ratingSourceIds = Array.from(
+    new Set(
+      playerRatingHistory.map((history) => history.source_match_id),
+    ),
+  );
+
+  if (ratingSourceIds.length > 0) {
+    const {
+      data: opponentRatingHistoryData,
+      error: opponentRatingHistoryError,
+    } = await supabase
+      .from("player_rating_history")
+      .select(
+        `
+          player_id,
+          opponent_id,
+          source_type,
+          source_match_id,
+          rating_before,
+          rating_after,
+          rating_change
+        `,
+      )
+      .in("source_match_id", ratingSourceIds)
+      .neq("player_id", player.id);
+
+    if (opponentRatingHistoryError) {
+      console.error(
+        "Opponent rating history loading error:",
+        opponentRatingHistoryError,
+      );
+    } else {
+      opponentRatingHistory =
+        (opponentRatingHistoryData ?? []) as RatingHistoryRow[];
+    }
+  }
+
+  const ratingHistoryKey = (
+    sourceType: RatingHistoryRow["source_type"],
+    sourceMatchId: string,
+  ) => `${sourceType}:${sourceMatchId}`;
+
+  const playerRatingHistoryMap = new Map(
+    playerRatingHistory.map((history) => [
+      ratingHistoryKey(
+        history.source_type,
+        history.source_match_id,
+      ),
+      history,
+    ]),
+  );
+
+  const opponentRatingHistoryMap = new Map(
+    opponentRatingHistory.map((history) => [
+      ratingHistoryKey(
+        history.source_type,
+        history.source_match_id,
+      ),
+      history,
+    ]),
+  );
+
+  const getRatingDetails = (
+    sourceType: RatingHistoryRow["source_type"],
+    sourceMatchId: string,
+  ) => {
+    const key = ratingHistoryKey(sourceType, sourceMatchId);
+    const history = playerRatingHistoryMap.get(key);
+    const opponentHistory = opponentRatingHistoryMap.get(key);
+
+    return {
+      rating_before: history?.rating_before ?? null,
+      rating_after: history?.rating_after ?? null,
+      rating_change: history?.rating_change ?? null,
+      opponent_rating_before:
+        opponentHistory?.rating_before ?? null,
+    };
+  };
 
   const tournamentHistory = placements
     .map((placement) => {
@@ -590,6 +711,7 @@ export async function getPlayerProfile(
           : match.player1_set3,
         is_winner: match.winner_id === player.id,
         status: match.status,
+        ...getRatingDetails("tournament", match.id),
       };
     })
     .filter((match): match is ProfileMatch => match !== null);
@@ -685,6 +807,8 @@ export async function getPlayerProfile(
           : match.player1_set3,
         is_winner: match.winner_id === player.id,
         status: "finished",
+        ...getRatingDetails("rating_match", match.id),
+        ...getRatingDetails("league", match.id),
       };
     })
     .filter((match): match is ProfileMatch => match !== null);

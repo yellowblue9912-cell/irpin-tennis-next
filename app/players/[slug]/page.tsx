@@ -274,6 +274,7 @@ export default async function PlayerProfilePage({
               <MatchCard
                 key={match.id}
                 match={match}
+                playerName={player.name}
               />
             ))}
 
@@ -288,7 +289,11 @@ export default async function PlayerProfilePage({
                 </summary>
                 <div className="mt-4 space-y-3">
                   {matches.slice(5).map((match) => (
-                    <MatchCard key={match.id} match={match} />
+                    <MatchCard
+                      key={match.id}
+                      match={match}
+                      playerName={player.name}
+                    />
                   ))}
                 </div>
               </details>
@@ -430,10 +435,20 @@ function TournamentCard({
 
 function MatchCard({
   match,
+  playerName,
 }: {
   match: ProfileMatch;
+  playerName: string;
 }) {
   const score = formatScore(match);
+  const hasRatingDetails =
+    match.rating_before !== null &&
+    match.rating_after !== null &&
+    match.rating_change !== null;
+  const formattedRatingChange =
+    match.rating_change === null
+      ? ""
+      : `${match.rating_change >= 0 ? "+" : ""}${match.rating_change.toFixed(2)}`;
 
   return (
     <div className="rounded-2xl border border-[#123f2d]/10 p-4">
@@ -467,6 +482,31 @@ function MatchCard({
           </span>
         </div>
       </div>
+
+      {hasRatingDetails && (
+        <div className="mt-3 rounded-xl bg-[#f6f0e5] px-3 py-2.5">
+          <p className="text-sm font-black text-[#123f2d]">
+            {playerName} {match.rating_before?.toFixed(2)} →{" "}
+            {match.rating_after?.toFixed(2)}{" "}
+            <span
+              className={
+                (match.rating_change ?? 0) >= 0
+                  ? "text-green-700"
+                  : "text-red-700"
+              }
+            >
+              ({formattedRatingChange})
+            </span>
+          </p>
+
+          <p className="mt-1 text-xs font-semibold text-[#123f2d]/65">
+            {match.opponent_rating_before !== null
+              ? `Суперник: ${match.opponent_rating_before.toFixed(2)} · `
+              : ""}
+            Рахунок: {score}
+          </p>
+        </div>
+      )}
     </div>
   );
 }
