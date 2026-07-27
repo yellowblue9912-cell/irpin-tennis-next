@@ -2,6 +2,7 @@ import Link from "next/link";
 import Image from "next/image";
 import type { Metadata } from "next";
 import Footer from "@/components/Footer";
+import LazyVideo from "@/components/LazyVideo";
 import { createClient } from "@/lib/supabase/server";
 import {
   getTournamentCover,
@@ -507,14 +508,11 @@ function TournamentCardMedia({ slug }: { slug: string }) {
   if (video) {
     return (
       <div className="relative mb-5 aspect-[16/10] overflow-hidden rounded-2xl bg-zinc-900">
-        <video
+        <LazyVideo
           src={video.src}
-          aria-label={video.label}
-          autoPlay
-          muted
-          loop
-          playsInline
-          preload="metadata"
+          webmSrc={video.webmSrc}
+          poster={video.poster}
+          label={video.label}
           className="h-full w-full object-cover"
         />
         <span className="absolute bottom-3 left-3 rounded-full bg-black/65 px-3 py-1.5 text-[10px] font-black uppercase tracking-wide text-white backdrop-blur">

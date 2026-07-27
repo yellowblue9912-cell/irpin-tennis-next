@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import ChallengePlayerButton from "../../../components/ChallengePlayerButton";
+import LazyVideo from "../../../components/LazyVideo";
 import PlayerFeedback from "../../../components/PlayerFeedback";
 import { getPlayerHighlights } from "../../../lib/players/getPlayerHighlights";
 import {
@@ -203,15 +204,12 @@ export default async function PlayerProfilePage({
                 key={highlight.id}
                 className="overflow-hidden rounded-2xl bg-[#123f2d]"
               >
-                <video
-                  className="aspect-video w-full bg-black object-contain"
-                  controls
-                  playsInline
-                  preload="metadata"
-                >
-                  <source src={highlight.src} type="video/mp4" />
-                  Ваш браузер не підтримує відтворення відео.
-                </video>
+                <LazyVideo
+                  src={highlight.src}
+                  webmSrc={highlight.webmSrc}
+                  poster={highlight.poster}
+                  label={highlight.title}
+                />
                 <figcaption className="p-4 text-white">
                   <p className="font-black">{highlight.title}</p>
                   {highlight.description && (

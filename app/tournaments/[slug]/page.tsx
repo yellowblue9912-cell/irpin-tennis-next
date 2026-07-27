@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
+import LazyVideo from "@/components/LazyVideo";
 import { createClient } from "@/lib/supabase/server";
 import {
   getTournamentPhotos,
@@ -199,12 +200,11 @@ export default async function TournamentPage({
             </div>
 
             <div className="overflow-hidden rounded-3xl border border-zinc-800 bg-black">
-              <video
+              <LazyVideo
                 src={tournamentVideo.src}
-                aria-label={tournamentVideo.label}
-                controls
-                playsInline
-                preload="metadata"
+                webmSrc={tournamentVideo.webmSrc}
+                poster={tournamentVideo.poster}
+                label={tournamentVideo.label}
                 className="max-h-[75vh] w-full bg-black object-contain"
               />
             </div>

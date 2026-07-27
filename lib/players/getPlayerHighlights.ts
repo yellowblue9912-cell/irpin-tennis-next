@@ -2,6 +2,8 @@ export type PlayerHighlight = {
   id: string;
   type: "video";
   src: string;
+  webmSrc?: string;
+  poster?: string;
   title: string;
   description?: string;
 };

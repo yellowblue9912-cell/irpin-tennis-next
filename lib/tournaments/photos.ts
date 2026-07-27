@@ -5,6 +5,8 @@ export type TournamentPhoto = {
 
 export type TournamentVideo = {
   src: string;
+  webmSrc?: string;
+  poster?: string;
   label: string;
 };
 

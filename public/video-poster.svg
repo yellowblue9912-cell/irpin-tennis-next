@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="720" viewBox="0 0 1280 720" role="img" aria-label="Відео Irpin Tennis">
+  <defs>
+    <radialGradient id="glow" cx="72%" cy="22%" r="78%">
+      <stop offset="0" stop-color="#2d7558"/>
+      <stop offset="1" stop-color="#123f2d"/>
+    </radialGradient>
+    <pattern id="court" width="160" height="160" patternUnits="userSpaceOnUse">
+      <path d="M0 80h160M80 0v160" stroke="#fff" stroke-opacity=".08" stroke-width="2"/>
+    </pattern>
+  </defs>
+  <rect width="1280" height="720" fill="url(#glow)"/>
+  <rect width="1280" height="720" fill="url(#court)"/>
+  <circle cx="1080" cy="105" r="180" fill="none" stroke="#d7f34c" stroke-opacity=".22" stroke-width="36"/>
+  <circle cx="1080" cy="105" r="108" fill="#d7f34c" fill-opacity=".12"/>
+  <g fill="#fff">
+    <text x="640" y="325" font-family="Arial, sans-serif" font-size="78" font-weight="900" text-anchor="middle" letter-spacing="8">IRPIN TENNIS</text>
+    <text x="640" y="385" font-family="Arial, sans-serif" font-size="24" font-weight="700" text-anchor="middle" letter-spacing="9" opacity=".72">ВІДЕО ЗА УЧАСТІ ГРАВЦЯ</text>
+  </g>
+  <circle cx="640" cy="500" r="55" fill="#d7f34c"/>
+  <path d="M625 470l48 30-48 30z" fill="#123f2d"/>
+</svg>
