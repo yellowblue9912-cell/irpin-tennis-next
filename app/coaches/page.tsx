@@ -252,7 +252,8 @@ export default function CoachesPage() {
                       href={coach.website}
                       target="_blank"
                       rel="noreferrer"
-                      className="rounded-full bg-[#123f2d] px-3 py-2 text-[11px] font-black text-white sm:px-4 sm:text-xs"
+                      className="rounded-full border-2 border-[#123f2d] bg-white px-3 py-2 text-[11px] font-black sm:px-4 sm:text-xs"
+                      style={{ color: "#123f2d" }}
                     >
                       Сайт
                     </a>
