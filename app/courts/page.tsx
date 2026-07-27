@@ -69,6 +69,7 @@ const courts: CourtCatalogItem[] = [
     outdoor: true,
     shower: true,
     toilet: true,
+    stringer: true,
   },
   {
     name: "Пуща-Водиця",
@@ -122,6 +123,52 @@ export default function CourtsPage() {
         </section>
 
         <CourtsCatalog courts={courts} />
+
+        <section
+          aria-labelledby="tennis-services-title"
+          className="mt-8 overflow-hidden rounded-[28px] border border-[#123f2d]/10 bg-white shadow-sm"
+        >
+          <div className="grid md:grid-cols-[minmax(0,1fr)_auto] md:items-center">
+            <div className="p-5 sm:p-7">
+              <p className="text-xs font-black uppercase tracking-[0.18em] text-[#ad4529]">
+                Послуги для тенісистів
+              </p>
+              <h2
+                id="tennis-services-title"
+                className="mt-2 text-2xl font-black uppercase text-[#123f2d] sm:text-3xl"
+              >
+                Стрінгування ракеток
+              </h2>
+              <p className="mt-2 text-sm leading-6 text-[#123f2d]/65 sm:text-base">
+                Стас — заміна струн на тенісних ракетках.
+              </p>
+
+              <div className="mt-4 flex flex-wrap gap-2">
+                <span className="rounded-full bg-[#f6f0e5] px-3 py-1.5 text-xs font-black text-[#123f2d]">
+                  📍 Корт «Лювс»
+                </span>
+                <span className="rounded-full bg-[#f6f0e5] px-3 py-1.5 text-xs font-black text-[#123f2d]">
+                  600 грн — зі струнами майстра
+                </span>
+                <span className="rounded-full bg-[#f6f0e5] px-3 py-1.5 text-xs font-black text-[#123f2d]">
+                  500 грн — зі своїми струнами
+                </span>
+              </div>
+            </div>
+
+            <div className="border-t border-[#123f2d]/10 p-5 md:border-l md:border-t-0 md:p-7">
+              <a
+                href="tel:+380916134919"
+                className="inline-flex w-full items-center justify-center rounded-full bg-[#d7f34c] px-6 py-3.5 text-sm font-black uppercase tracking-wide text-[#123f2d] transition hover:-translate-y-0.5 hover:bg-[#c9eb2e] md:w-auto"
+              >
+                Зателефонувати
+              </a>
+              <p className="mt-3 text-center text-sm font-bold text-[#123f2d]/60">
+                091 613 49 19
+              </p>
+            </div>
+          </div>
+        </section>
       </div>
     </main>
   );

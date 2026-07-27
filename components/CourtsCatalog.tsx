@@ -17,6 +17,7 @@ export type CourtCatalogItem = {
   outdoor: boolean;
   shower: boolean;
   toilet: boolean;
+  stringer?: boolean;
 };
 
 type CourtsCatalogProps = {
@@ -185,6 +186,7 @@ export default function CourtsCatalog({ courts }: CourtsCatalogProps) {
                   {[court.surface, court.type]
                     .concat(court.shower ? ["Душ"] : [])
                     .concat(court.toilet ? ["Туалет"] : [])
+                    .concat(court.stringer ? ["Стрінгер на локації"] : [])
                     .map((label) => (
                       <span
                         key={label}
