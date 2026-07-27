@@ -532,13 +532,21 @@ export async function getPlayerProfile(
     const key = ratingHistoryKey(sourceType, sourceMatchId);
     const history = playerRatingHistoryMap.get(key);
     const opponentHistory = opponentRatingHistoryMap.get(key);
+    const finiteNumberOrNull = (value: unknown) => {
+      if (value === null || value === undefined || value === "") {
+        return null;
+      }
+
+      const number = Number(value);
+      return Number.isFinite(number) ? number : null;
+    };
 
     return {
-      rating_before: history?.rating_before ?? null,
-      rating_after: history?.rating_after ?? null,
-      rating_change: history?.rating_change ?? null,
+      rating_before: finiteNumberOrNull(history?.rating_before),
+      rating_after: finiteNumberOrNull(history?.rating_after),
+      rating_change: finiteNumberOrNull(history?.rating_change),
       opponent_rating_before:
-        opponentHistory?.rating_before ?? null,
+        finiteNumberOrNull(opponentHistory?.rating_before),
     };
   };
 
