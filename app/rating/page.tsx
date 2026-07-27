@@ -2,9 +2,9 @@ import Link from "next/link";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Рейтингова система тенісистів | Irpin Tennis",
+  title: "Як працює рейтинг | Irpin Tennis",
   description:
-    "Опис тенісних рівнів від 3.0 до 4.75: навички, стабільність, тактика та принципи визначення рейтингу гравця.",
+    "Правила та формула рейтингу Irpin Tennis, вплив результатів матчів і опис тенісних рівнів від 3.0 до 4.75.",
   alternates: { canonical: "/rating" },
 };
 
@@ -132,7 +132,7 @@ export default function RatingPage() {
           </p>
 
           <h1 className="mt-3 text-4xl font-black uppercase sm:text-5xl">
-            Рейтингова система
+            Як працює рейтинг
           </h1>
 
           <p className="mt-4 max-w-3xl text-sm leading-6 text-white/70 sm:text-base">

@@ -6,7 +6,7 @@ import { getPlayers } from "@/lib/players/getPlayers";
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
-  title: "Гравці та рейтинг тенісистів | Irpin Tennis",
+  title: "Гравці Irpin Tennis — рейтинг і профілі",
   description:
     "Профілі тенісистів Ірпеня, Бучі та передмістя: рейтинг, статистика матчів, перемоги й участь у турнірах.",
   alternates: { canonical: "/players" },
@@ -26,7 +26,7 @@ export default async function PlayersPage() {
           </p>
 
           <h1 className="mt-3 text-3xl font-black uppercase leading-none md:mt-5 md:text-6xl">
-            Рейтинг гравців
+            Гравці
           </h1>
 
           <div className="mt-4 max-w-3xl md:mt-6">

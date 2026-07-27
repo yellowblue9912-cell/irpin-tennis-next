@@ -17,8 +17,8 @@ const mainCards = [
     accent: "terracotta",
   },
   {
-    title: "Рейтинг",
-    description: "Актуальний рейтинг гравців",
+    title: "Про рейтинг",
+    description: "Правила, формула та рівні гравців",
     href: "/rating",
     accent: "purple",
   },

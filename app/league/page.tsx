@@ -259,7 +259,7 @@ export default function LeaguePage() {
               </p>
 
               <h2 className="mt-3 text-3xl font-black uppercase md:text-5xl">
-                Переглянь рейтингову систему
+                Дізнайся, як працює рейтинг
               </h2>
 
               <p className="mt-4 max-w-2xl leading-7 text-white/75">
@@ -272,7 +272,7 @@ export default function LeaguePage() {
               href="/rating"
               className="inline-flex justify-center rounded-full bg-[#d7f34c] px-7 py-4 text-sm font-black uppercase tracking-wide text-[#123f2d] transition hover:scale-105"
             >
-              Переглянути рівні
+              Як працює рейтинг
             </Link>
           </div>
         </div>
