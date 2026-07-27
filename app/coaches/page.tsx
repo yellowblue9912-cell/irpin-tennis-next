@@ -14,6 +14,7 @@ type Coach = {
   phone?: string;
   telegram?: string;
   instagram?: string;
+  website?: string;
   audience: string;
   formats: string[];
   prices: string[];
@@ -104,6 +105,7 @@ const coaches: Coach[] = [
     phone: "+380 67 500 57 08",
     telegram: "Yakhnii",
     instagram: "https://www.instagram.com/tennis.yakhnii",
+    website: "https://www.tennisua.net/",
     audience: "Тренує дітей і дорослих будь-якого рівня.",
     formats: ["Тренування для дітей", "Тренування для дорослих"],
     prices: ["Вартість — за домовленістю"],
@@ -243,6 +245,16 @@ export default function CoachesPage() {
                       className="rounded-full bg-[#ad4529] px-3 py-2 text-[11px] font-black text-white sm:px-4 sm:text-xs"
                     >
                       Instagram
+                    </a>
+                  )}
+                  {coach.website && (
+                    <a
+                      href={coach.website}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="rounded-full bg-[#123f2d] px-3 py-2 text-[11px] font-black text-white sm:px-4 sm:text-xs"
+                    >
+                      Сайт
                     </a>
                   )}
                 </div>
