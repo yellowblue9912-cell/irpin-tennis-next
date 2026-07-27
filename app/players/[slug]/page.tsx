@@ -2,6 +2,7 @@ import Link from "next/link";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
+import ChallengePlayerButton from "../../../components/ChallengePlayerButton";
 import PlayerFeedback from "../../../components/PlayerFeedback";
 import { getPlayerHighlights } from "../../../lib/players/getPlayerHighlights";
 import {
@@ -66,6 +67,25 @@ export default async function PlayerProfilePage({
   const { player, stats, tournaments, matches } = profile;
   const age = getAge(player.birth_date);
   const highlights = getPlayerHighlights(slug);
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  const [{ data: currentPlayer }, { data: challengeTarget }] =
+    await Promise.all([
+      user
+        ? supabase
+            .from("players")
+            .select("id")
+            .eq("user_id", user.id)
+            .maybeSingle()
+        : Promise.resolve({ data: null }),
+      supabase
+        .from("players")
+        .select("user_id")
+        .eq("id", player.id)
+        .maybeSingle(),
+    ]);
 
   return (
     <main className="mx-auto w-full max-w-7xl px-3 py-5 sm:px-5 sm:py-8 md:px-8 md:py-10">
@@ -115,6 +135,16 @@ export default async function PlayerProfilePage({
                   {ageWord(player.tennis_experience_years)}
                 </span>
               )}
+            </div>
+
+            <div className="mt-3 sm:mt-5">
+              <ChallengePlayerButton
+                targetPlayerId={player.id}
+                targetPlayerName={player.name}
+                isAuthenticated={Boolean(user)}
+                currentPlayerId={currentPlayer?.id ?? null}
+                targetCanReceiveChallenge={Boolean(challengeTarget?.user_id)}
+              />
             </div>
           </div>
         </div>
