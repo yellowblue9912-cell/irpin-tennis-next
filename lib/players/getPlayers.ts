@@ -2,6 +2,10 @@ import { createClient } from "../supabase/server";
 import type { Player } from "../../types/player";
 import { getPlayerName, getPlayerPhoto } from "./getPlayerPhoto";
 
+const ratingVisibilityOverrides = new Set([
+  "vitalii-zavadskyi",
+]);
+
 export async function getPlayers(): Promise<Player[]> {
   const supabase = await createClient();
 
@@ -22,7 +26,6 @@ export async function getPlayers(): Promise<Player[]> {
           photo_url,
           city,
           is_active,
-          user_id,
           created_at,
           updated_at
         `
@@ -69,9 +72,7 @@ export async function getPlayers(): Promise<Player[]> {
     .filter(
       (player) =>
         eligiblePlayerIds.has(player.id) ||
-        Boolean(
-          (player as Player & { user_id?: string | null }).user_id,
-        ),
+        ratingVisibilityOverrides.has(player.slug),
     )
     .map((player) => ({
       ...player,
