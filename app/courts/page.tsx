@@ -148,10 +148,10 @@ export default function CourtsPage() {
                   📍 Корт «Лювс»
                 </span>
                 <span className="rounded-full bg-[#f6f0e5] px-3 py-1.5 text-xs font-black text-[#123f2d]">
-                  600 грн — зі струнами майстра
+                  700 грн — якщо у вас немає струн
                 </span>
                 <span className="rounded-full bg-[#f6f0e5] px-3 py-1.5 text-xs font-black text-[#123f2d]">
-                  500 грн — зі своїми струнами
+                  400 грн — зі своїми струнами
                 </span>
               </div>
             </div>
