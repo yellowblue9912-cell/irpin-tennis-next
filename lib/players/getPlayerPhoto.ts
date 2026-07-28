@@ -4,7 +4,7 @@ const bundledPlayerPhotos: Record<string, string> = {
   "viacheslav-rudyi": "/players/viacheslav-rudyi.webp",
   "serhii-mateich": "/players/serhii-mateich.webp",
   "viacheslav-hunin": "/players/viacheslav-hunin.webp",
-  "mykyta-svoiehlazov": "/players/mykyta-svoiehlazov.webp",
+  "mykyta-svoiehlazov": "/players/mykyta-svoiehlazov-bat.png",
   "ivan-viunkovskyi": "/players/ivan-viunkovskyi.webp",
   "oleksandr-ivanenko": "/players/oleksandr-ivanenko.webp",
   "ihor-lapatiiev": "/players/ihor-lapatiiev.webp",
