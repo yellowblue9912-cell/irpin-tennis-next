@@ -52,6 +52,8 @@ export type ProfileMatch = {
   rating_after: number | null;
   rating_change: number | null;
   opponent_rating_before: number | null;
+  rating_event_date: string | null;
+  rating_created_at: string | null;
 };
 
 export type PlayerProfileData = {
@@ -162,6 +164,8 @@ type RatingHistoryRow = {
   rating_before: number;
   rating_after: number;
   rating_change: number;
+  event_date: string;
+  created_at: string;
 };
 
 export async function getPlayerProfile(
@@ -448,7 +452,9 @@ export async function getPlayerProfile(
           source_match_id,
           rating_before,
           rating_after,
-          rating_change
+          rating_change,
+          event_date,
+          created_at
         `,
       )
       .eq("player_id", player.id);
@@ -483,7 +489,9 @@ export async function getPlayerProfile(
           source_match_id,
           rating_before,
           rating_after,
-          rating_change
+          rating_change,
+          event_date,
+          created_at
         `,
       )
       .in("source_match_id", ratingSourceIds)
@@ -547,6 +555,8 @@ export async function getPlayerProfile(
       rating_change: finiteNumberOrNull(history?.rating_change),
       opponent_rating_before:
         finiteNumberOrNull(opponentHistory?.rating_before),
+      rating_event_date: history?.event_date ?? null,
+      rating_created_at: history?.created_at ?? null,
     };
   };
 
@@ -826,9 +836,29 @@ export async function getPlayerProfile(
     ...leagueProfileMatches,
     ...ratingProfileMatches,
   ].sort(
-    (a, b) =>
-      new Date(b.tournament_date).getTime() -
-      new Date(a.tournament_date).getTime(),
+    (a, b) => {
+      const eventDateDifference =
+        new Date(
+          b.rating_event_date ?? b.tournament_date,
+        ).getTime() -
+        new Date(
+          a.rating_event_date ?? a.tournament_date,
+        ).getTime();
+
+      if (eventDateDifference !== 0) {
+        return eventDateDifference;
+      }
+
+      const historyOrderDifference =
+        new Date(b.rating_created_at ?? 0).getTime() -
+        new Date(a.rating_created_at ?? 0).getTime();
+
+      if (historyOrderDifference !== 0) {
+        return historyOrderDifference;
+      }
+
+      return b.id.localeCompare(a.id);
+    },
   );
 
   const wins = profileMatches.filter(
