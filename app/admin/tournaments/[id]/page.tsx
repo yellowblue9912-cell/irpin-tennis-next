@@ -122,6 +122,13 @@ export default async function TournamentPage({
 
         <div className="flex flex-col gap-3 sm:flex-row">
           <Link
+            href={`/admin/tournaments/${tournament.id}/matches/new`}
+            className="inline-flex items-center justify-center rounded-2xl bg-[#123f2d] px-5 py-3 font-black text-white transition hover:bg-[#1b5a41]"
+          >
+            Додати результат
+          </Link>
+
+          <Link
             href={`/admin/tournaments/${tournament.id}/participants`}
             className="inline-flex items-center justify-center rounded-2xl bg-[#ad4529] px-5 py-3 font-black text-white transition hover:bg-[#923820]"
           >
