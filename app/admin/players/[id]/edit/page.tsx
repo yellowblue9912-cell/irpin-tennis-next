@@ -68,16 +68,28 @@ export default async function EditPlayerPage({
       );
     }
 
+    const updates: {
+      name: string;
+      slug: string;
+      city: string | null;
+      is_active: boolean;
+      user_id: string | null;
+      rating?: number;
+    } = {
+      name,
+      slug,
+      city: city || null,
+      is_active: isActive,
+      user_id: authUser?.id ?? null,
+    };
+
+    if (rating !== Number(player.rating)) {
+      updates.rating = rating;
+    }
+
     const { error } = await supabase
       .from("players")
-      .update({
-        name,
-        slug,
-        rating,
-        city: city || null,
-        is_active: isActive,
-        user_id: authUser?.id ?? null,
-      })
+      .update(updates)
       .eq("id", id);
 
     if (error) {
@@ -191,10 +203,15 @@ export default async function EditPlayerPage({
             required
             min="1"
             max="7"
-            step="0.25"
+            step="0.01"
             defaultValue={player.rating}
             className="w-full rounded-2xl border border-[#123f2d]/15 bg-[#f6f0e5] px-4 py-3 outline-none transition focus:border-[#123f2d]"
           />
+
+          <p className="mt-2 text-sm text-[#123f2d]/45">
+            Можна зберігати точне поточне значення, наприклад 3.01. Якщо рейтинг
+            не змінювати, прив’язка email не вплине на історію матчів.
+          </p>
         </div>
 
         <div className="mt-6">
