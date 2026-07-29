@@ -111,7 +111,7 @@ export async function createTournamentMatch(formData: FormData) {
     player1_set3: set3[0],
     player2_set3: set3[1],
     status: "finished",
-    notes: notes || "Додано вручну через адмін-панель",
+    notes: notes || null,
   });
 
   if (insertError) {

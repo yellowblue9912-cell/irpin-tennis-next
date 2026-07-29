@@ -136,10 +136,9 @@ export async function createLeagueMatch(formData: FormData) {
         set3[0] !== null && set3Format === "match_tiebreak"
           ? "Третій сет — матч-тайбрейк"
           : "",
-        "Додано вручну через адмін-панель",
       ]
         .filter(Boolean)
-        .join(" · "),
+        .join(" · ") || null,
     })
     .select("id")
     .single();

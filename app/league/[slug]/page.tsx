@@ -213,6 +213,14 @@ function buildSets(match: LeagueMatchFromDatabase) {
   );
 }
 
+function getPublicMatchNote(notes: string | null) {
+  return (
+    notes
+      ?.replace(/(?:\s*·\s*)?Додано вручну через адмін-панель$/u, "")
+      .trim() || null
+  );
+}
+
 function getSeasonTimeProgress(startDate: string, endDate: string) {
   const dayMs = 24 * 60 * 60 * 1000;
   const start = Date.parse(`${startDate}T00:00:00Z`);
@@ -805,6 +813,7 @@ export default async function LeaguePage({ params }: PageProps) {
             <div className="grid gap-4 lg:grid-cols-2">
               {matches.map((match) => {
                 const sets = buildSets(match);
+                const publicNote = getPublicMatchNote(match.notes);
 
                 const player1Won =
                   match.winner.id === match.player1.id;
@@ -914,9 +923,9 @@ export default async function LeaguePage({ params }: PageProps) {
                         </div>
                       </div>
 
-                      {match.notes && (
+                      {publicNote && (
                         <div className="mt-4 rounded-xl bg-amber-50 px-4 py-3 text-sm text-amber-800">
-                          {match.notes}
+                          {publicNote}
                         </div>
                       )}
                     </div>

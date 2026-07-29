@@ -14,6 +14,14 @@ type TournamentPageProps = {
   }>;
 };
 
+function getPublicMatchNote(notes: string | null) {
+  return (
+    notes
+      ?.replace(/(?:\s*·\s*)?Додано вручну через адмін-панель$/u, "")
+      .trim() || null
+  );
+}
+
 export default async function TournamentPage({
   params,
 }: TournamentPageProps) {
@@ -324,6 +332,7 @@ export default async function TournamentPage({
 
           <div className="mt-5 grid gap-4 md:grid-cols-2">
             {matches?.map((match) => {
+              const publicNote = getPublicMatchNote(match.notes);
               const player1 = Array.isArray(match.player1)
                 ? match.player1[0]
                 : match.player1;
@@ -380,9 +389,9 @@ export default async function TournamentPage({
                     </div>
                   </div>
 
-                  {match.notes && (
+                  {publicNote && (
                     <p className="mt-4 rounded-xl bg-amber-100 px-4 py-3 text-sm font-semibold leading-5 text-amber-950">
-                      {match.notes}
+                      {publicNote}
                     </p>
                   )}
                 </article>
