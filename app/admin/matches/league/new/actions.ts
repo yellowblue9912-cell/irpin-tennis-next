@@ -4,7 +4,7 @@ import { randomUUID } from "node:crypto";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { isAdminAuthenticated } from "@/lib/adminAuth";
-import { createClient } from "@/lib/supabase/server";
+import { createAdminSupabaseClient } from "@/lib/supabase/admin";
 
 type LeaguePlayerRow = {
   player_id: string;
@@ -36,6 +36,7 @@ export async function createLeagueMatch(formData: FormData) {
   const player2Id = String(formData.get("player2_id") ?? "").trim();
   const playedAt = String(formData.get("played_at") ?? "").trim();
   const notes = String(formData.get("notes") ?? "").trim();
+  const set3Format = String(formData.get("set3_format") ?? "full_set");
 
   if (!seasonId || !player1Id || !player2Id || !playedAt) {
     throw new Error("Заповніть лігу, гравців і дату");
@@ -77,11 +78,12 @@ export async function createLeagueMatch(formData: FormData) {
   const loserId = winnerId === player1Id ? player2Id : player1Id;
   const winnerSets = Math.max(player1SetsWon, player2SetsWon);
   const loserSets = Math.min(player1SetsWon, player2SetsWon);
-  const player1Games = playedSets.reduce(
+  const gamesSets = set3Format === "match_tiebreak" ? sets.slice(0, 2) : sets;
+  const player1Games = gamesSets.reduce(
     (total, [score]) => total + Number(score),
     0,
   );
-  const player2Games = playedSets.reduce(
+  const player2Games = gamesSets.reduce(
     (total, [, score]) => total + Number(score),
     0,
   );
@@ -90,7 +92,7 @@ export async function createLeagueMatch(formData: FormData) {
   const loserGames =
     winnerId === player1Id ? player2Games : player1Games;
 
-  const supabase = await createClient();
+  const supabase = createAdminSupabaseClient();
   const { data: memberships, error: membershipsError } = await supabase
     .from("league_players")
     .select(
@@ -129,7 +131,15 @@ export async function createLeagueMatch(formData: FormData) {
       player1_set3: set3[0],
       player2_set3: set3[1],
       played_at: playedAt,
-      notes: notes || "Додано вручну через адмін-панель",
+      notes: [
+        notes,
+        set3[0] !== null && set3Format === "match_tiebreak"
+          ? "Третій сет — матч-тайбрейк"
+          : "",
+        "Додано вручну через адмін-панель",
+      ]
+        .filter(Boolean)
+        .join(" · "),
     })
     .select("id")
     .single();

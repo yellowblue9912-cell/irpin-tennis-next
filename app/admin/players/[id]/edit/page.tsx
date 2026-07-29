@@ -1,6 +1,12 @@
 import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
+import { isAdminAuthenticated } from "@/lib/adminAuth";
+import {
+  createAdminSupabaseClient,
+  findAuthUserByEmail,
+  getAuthUserEmail,
+} from "@/lib/supabase/admin";
 import { createClient } from "../../../../../lib/supabase/server";
 
 type EditPlayerPageProps = {
@@ -25,13 +31,20 @@ export default async function EditPlayerPage({
     notFound();
   }
 
+  const linkedEmail = await getAuthUserEmail(player.user_id);
+
   async function updatePlayer(formData: FormData) {
     "use server";
+
+    if (!(await isAdminAuthenticated())) {
+      throw new Error("Потрібна авторизація адміністратора");
+    }
 
     const name = String(formData.get("name") ?? "").trim();
     const slug = String(formData.get("slug") ?? "").trim();
     const rating = Number(formData.get("rating"));
     const city = String(formData.get("city") ?? "").trim();
+    const email = String(formData.get("email") ?? "").trim().toLowerCase();
     const isActive = formData.get("is_active") === "on";
 
     if (!name) {
@@ -46,7 +59,14 @@ export default async function EditPlayerPage({
       throw new Error("Рейтинг повинен бути від 1.00 до 7.00");
     }
 
-    const supabase = await createClient();
+    const supabase = createAdminSupabaseClient();
+    const authUser = email ? await findAuthUserByEmail(email) : null;
+
+    if (email && !authUser) {
+      throw new Error(
+        "Користувача з такою поштою не знайдено. Спочатку він має зареєструватися на сайті",
+      );
+    }
 
     const { error } = await supabase
       .from("players")
@@ -56,6 +76,7 @@ export default async function EditPlayerPage({
         rating,
         city: city || null,
         is_active: isActive,
+        user_id: authUser?.id ?? null,
       })
       .eq("id", id);
 
@@ -111,6 +132,30 @@ export default async function EditPlayerPage({
             defaultValue={player.name}
             className="w-full rounded-2xl border border-[#123f2d]/15 bg-[#f6f0e5] px-4 py-3 outline-none transition focus:border-[#123f2d]"
           />
+        </div>
+
+        <div className="mt-6">
+          <label
+            htmlFor="email"
+            className="mb-2 block text-sm font-black uppercase tracking-wide"
+          >
+            Email облікового запису
+          </label>
+
+          <input
+            id="email"
+            name="email"
+            type="email"
+            autoComplete="off"
+            defaultValue={linkedEmail}
+            placeholder="player@example.com"
+            className="w-full rounded-2xl border border-[#123f2d]/15 bg-[#f6f0e5] px-4 py-3 outline-none transition focus:border-[#123f2d]"
+          />
+
+          <p className="mt-2 text-sm text-[#123f2d]/45">
+            Вкажіть email зареєстрованого користувача. Щоб відв’язати акаунт,
+            залиште поле порожнім.
+          </p>
         </div>
 
         <div className="mt-6">

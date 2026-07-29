@@ -153,6 +153,22 @@ export default async function NewLeagueMatchPage() {
         </fieldset>
 
         <label className="mt-6 block text-sm font-black uppercase tracking-wide">
+          Формат третього сету
+          <select
+            name="set3_format"
+            defaultValue="full_set"
+            className={`${inputClass} mt-2 normal-case`}
+          >
+            <option value="full_set">Повноцінний третій сет</option>
+            <option value="match_tiebreak">Матч-тайбрейк</option>
+          </select>
+          <span className="mt-2 block text-sm font-normal normal-case text-[#123f2d]/45">
+            Для матч-тайбрейку введіть фактичний рахунок, наприклад 10:7.
+            Його очки не додаватимуться до різниці геймів.
+          </span>
+        </label>
+
+        <label className="mt-6 block text-sm font-black uppercase tracking-wide">
           Примітка
           <textarea
             name="notes"

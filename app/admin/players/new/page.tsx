@@ -49,6 +49,29 @@ export default function NewPlayerPage() {
 
         <div className="mt-6">
           <label
+            htmlFor="email"
+            className="mb-2 block text-sm font-black uppercase tracking-wide"
+          >
+            Email облікового запису
+          </label>
+
+          <input
+            id="email"
+            name="email"
+            type="email"
+            autoComplete="off"
+            placeholder="player@example.com"
+            className="w-full rounded-2xl border border-[#123f2d]/15 bg-[#f6f0e5] px-4 py-3 outline-none transition focus:border-[#123f2d]"
+          />
+
+          <p className="mt-2 text-sm text-[#123f2d]/45">
+            Необов’язково. Користувач має спочатку зареєструватися на сайті з
+            цією поштою.
+          </p>
+        </div>
+
+        <div className="mt-6">
+          <label
             htmlFor="slug"
             className="mb-2 block text-sm font-black uppercase tracking-wide"
           >
