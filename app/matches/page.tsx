@@ -443,9 +443,9 @@ function PlayerRow({ player, winner }: { player: Player; winner: boolean }) {
       {player.name}
       <span
         className="ml-2 inline-block rounded-lg bg-[#f7f1e7] px-2 py-1 align-middle text-xs font-black text-[#123f2d]"
-        title={`Місце в рейтингу: ${player.rank ?? "—"}, рейтинг: ${Number(player.rating).toFixed(2)}`}
+        title={`Місце в загальному рейтингу: ${player.rank ?? "—"}`}
       >
-        №{player.rank ?? "—"} · {Number(player.rating).toFixed(2)}
+        №{player.rank ?? "—"}
       </span>
     </Link>
   );
