@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
+import { getPlayers } from "@/lib/players/getPlayers";
 
 export const metadata: Metadata = {
   title: "Останні матчі | Irpin Tennis",
@@ -9,7 +10,13 @@ export const metadata: Metadata = {
   alternates: { canonical: "/matches" },
 };
 
-type Player = { id: string; name: string; slug: string };
+type Player = {
+  id: string;
+  name: string;
+  slug: string;
+  rating: number;
+  rank?: number;
+};
 type Competition = {
   id: string;
   title: string;
@@ -71,7 +78,10 @@ export default async function MatchesPage({
   const filters = await searchParams;
   const selectedPlayer = valueOf(filters.player);
   const selectedCompetition = valueOf(filters.competition);
-  const supabase = await createClient();
+  const [supabase, rankedPlayers] = await Promise.all([
+    createClient(),
+    getPlayers(),
+  ]);
 
   const [
     { data: tournamentMatches, error: tournamentError },
@@ -88,9 +98,9 @@ export default async function MatchesPage({
         player1_set1, player2_set1,
         player1_set2, player2_set2,
         player1_set3, player2_set3,
-        player1:players!matches_player1_id_fkey (id, name, slug),
-        player2:players!matches_player2_id_fkey (id, name, slug),
-        winner:players!matches_winner_id_fkey (id, name, slug),
+        player1:players!matches_player1_id_fkey (id, name, slug, rating),
+        player2:players!matches_player2_id_fkey (id, name, slug, rating),
+        winner:players!matches_winner_id_fkey (id, name, slug, rating),
         competition:tournaments!matches_tournament_id_fkey (
           id, title, slug, tournament_date
         )
@@ -103,9 +113,9 @@ export default async function MatchesPage({
         player1_set1, player2_set1,
         player1_set2, player2_set2,
         player1_set3, player2_set3,
-        player1:players!league_matches_player1_id_fkey (id, name, slug),
-        player2:players!league_matches_player2_id_fkey (id, name, slug),
-        winner:players!league_matches_winner_id_fkey (id, name, slug),
+        player1:players!league_matches_player1_id_fkey (id, name, slug, rating),
+        player2:players!league_matches_player2_id_fkey (id, name, slug, rating),
+        winner:players!league_matches_winner_id_fkey (id, name, slug, rating),
         competition:league_seasons!league_matches_season_id_fkey (
           id, title, start_date
         )
@@ -117,14 +127,14 @@ export default async function MatchesPage({
         player1_set1, player2_set1,
         player1_set2, player2_set2,
         player1_set3, player2_set3,
-        player1:players!rating_matches_challenger_id_fkey (id, name, slug),
-        player2:players!rating_matches_opponent_id_fkey (id, name, slug),
-        winner:players!rating_matches_winner_id_fkey (id, name, slug)
+        player1:players!rating_matches_challenger_id_fkey (id, name, slug, rating),
+        player2:players!rating_matches_opponent_id_fkey (id, name, slug, rating),
+        winner:players!rating_matches_winner_id_fkey (id, name, slug, rating)
       `)
       .eq("status", "confirmed"),
     supabase
       .from("players")
-      .select("id, name, slug")
+      .select("id, name, slug, rating")
       .eq("is_active", true)
       .order("name", { ascending: true }),
     supabase
@@ -141,6 +151,14 @@ export default async function MatchesPage({
   if (leagueError) console.error("Recent league matches:", leagueError);
   if (ratingError) console.error("Recent rating matches:", ratingError);
 
+  const playerRanks = new Map(
+    rankedPlayers.map((player, index) => [player.id, index + 1]),
+  );
+  const withRank = (player: Player): Player => ({
+    ...player,
+    rank: playerRanks.get(player.id),
+  });
+
   const recentMatches: RecentMatch[] = [];
 
   for (const row of tournamentMatches ?? []) {
@@ -150,10 +168,12 @@ export default async function MatchesPage({
         | Array<Competition & { tournament_date: string }>
         | null;
     };
-    const player1 = one(match.player1);
-    const player2 = one(match.player2);
+    const rawPlayer1 = one(match.player1);
+    const rawPlayer2 = one(match.player2);
     const competition = one(match.competition);
-    if (!player1 || !player2 || !competition) continue;
+    if (!rawPlayer1 || !rawPlayer2 || !competition) continue;
+    const player1 = withRank(rawPlayer1);
+    const player2 = withRank(rawPlayer2);
 
     recentMatches.push({
       id: `tournament-${match.id}`,
@@ -178,10 +198,12 @@ export default async function MatchesPage({
         | Array<Competition & { start_date: string }>
         | null;
     };
-    const player1 = one(match.player1);
-    const player2 = one(match.player2);
+    const rawPlayer1 = one(match.player1);
+    const rawPlayer2 = one(match.player2);
     const competition = one(match.competition);
-    if (!player1 || !player2 || !competition) continue;
+    if (!rawPlayer1 || !rawPlayer2 || !competition) continue;
+    const player1 = withRank(rawPlayer1);
+    const player2 = withRank(rawPlayer2);
 
     const leagueSlug = competition.title.toLowerCase().includes("challenger")
       ? "challenger"
@@ -208,9 +230,11 @@ export default async function MatchesPage({
       played_at: string | null;
       confirmed_at: string | null;
     };
-    const player1 = one(match.player1);
-    const player2 = one(match.player2);
-    if (!player1 || !player2) continue;
+    const rawPlayer1 = one(match.player1);
+    const rawPlayer2 = one(match.player2);
+    if (!rawPlayer1 || !rawPlayer2) continue;
+    const player1 = withRank(rawPlayer1);
+    const player2 = withRank(rawPlayer2);
 
     recentMatches.push({
       id: `rating-${match.id}`,
@@ -417,6 +441,12 @@ function PlayerRow({ player, winner }: { player: Player; winner: boolean }) {
     >
       {winner ? "🏆 " : ""}
       {player.name}
+      <span
+        className="ml-2 inline-block rounded-lg bg-[#f7f1e7] px-2 py-1 align-middle text-xs font-black text-[#123f2d]"
+        title={`Місце в рейтингу: ${player.rank ?? "—"}, рейтинг: ${Number(player.rating).toFixed(2)}`}
+      >
+        №{player.rank ?? "—"} · {Number(player.rating).toFixed(2)}
+      </span>
     </Link>
   );
 }
