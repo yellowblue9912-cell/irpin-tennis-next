@@ -5,7 +5,7 @@ export default async function PlayersPage() {
   const supabase = createAdminSupabaseClient();
   const { data: players, error } = await supabase
     .from("players")
-    .select("id, name, rating, is_active")
+    .select("id, name, rating, is_active, user_id")
     .order("rating", { ascending: false })
     .order("name", { ascending: true });
 
@@ -13,6 +13,28 @@ export default async function PlayersPage() {
     console.error("Get admin players error:", error);
     throw new Error(`Не вдалося завантажити гравців: ${error.message}`);
   }
+
+  const { data: authData, error: authError } =
+    await supabase.auth.admin.listUsers({
+      page: 1,
+      perPage: 1000,
+    });
+
+  if (authError) {
+    console.error("Get auth users error:", authError);
+  }
+
+  const emailsByUserId = new Map(
+    (authData?.users ?? []).map((user) => [user.id, user.email ?? ""]),
+  );
+  const linkedUserIds = new Set(
+    (players ?? [])
+      .map((player) => player.user_id)
+      .filter((userId): userId is string => Boolean(userId)),
+  );
+  const unlinkedUsers = (authData?.users ?? []).filter(
+    (user) => !linkedUserIds.has(user.id),
+  );
 
   return (
     <div>
@@ -33,11 +55,12 @@ export default async function PlayersPage() {
         </Link>
       </div>
 
-      <div className="rounded-3xl bg-white shadow overflow-hidden">
+      <div className="overflow-x-auto rounded-3xl bg-white shadow">
         <table className="w-full">
           <thead className="bg-gray-100">
             <tr>
               <th className="p-5 text-left">Ім&apos;я</th>
+              <th className="p-5 text-left">Email / кабінет</th>
               <th className="p-5 text-left">Рейтинг</th>
               <th className="p-5 text-left">Статус</th>
               <th className="p-5 text-right">Дії</th>
@@ -49,6 +72,16 @@ export default async function PlayersPage() {
               <tr key={player.id} className="border-t">
                 <td className="p-5 font-medium">
                   {player.name}
+                </td>
+
+                <td className="p-5">
+                  {player.user_id ? (
+                    <span className="font-medium">
+                      {emailsByUserId.get(player.user_id) || "Пошта не знайдена"}
+                    </span>
+                  ) : (
+                    <span className="text-gray-400">Не прив’язано</span>
+                  )}
                 </td>
 
                 <td className="p-5 font-bold">
@@ -81,7 +114,7 @@ export default async function PlayersPage() {
             {(players ?? []).length === 0 && (
               <tr>
                 <td
-                  colSpan={4}
+                  colSpan={5}
                   className="p-10 text-center text-gray-500"
                 >
                   Ще немає жодного гравця
@@ -90,6 +123,43 @@ export default async function PlayersPage() {
             )}
           </tbody>
         </table>
+      </div>
+
+      <div className="mt-8 rounded-3xl bg-white p-6 shadow">
+        <h2 className="text-2xl font-black">
+          Зареєстровані пошти без профілю гравця
+        </h2>
+        <p className="mt-2 text-gray-500">
+          Ці користувачі зареєстрували особистий кабінет, але ще не прив’язані
+          до жодного гравця.
+        </p>
+
+        {unlinkedUsers.length > 0 ? (
+          <div className="mt-5 overflow-x-auto">
+            <table className="w-full">
+              <thead className="bg-gray-100">
+                <tr>
+                  <th className="p-4 text-left">Email</th>
+                  <th className="p-4 text-left">Дата реєстрації</th>
+                </tr>
+              </thead>
+              <tbody>
+                {unlinkedUsers.map((user) => (
+                  <tr key={user.id} className="border-t">
+                    <td className="p-4 font-medium">
+                      {user.email || "Пошта не вказана"}
+                    </td>
+                    <td className="p-4 text-gray-500">
+                      {new Date(user.created_at).toLocaleDateString("uk-UA")}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        ) : (
+          <p className="mt-5 text-gray-500">Таких облікових записів немає.</p>
+        )}
       </div>
     </div>
   );
