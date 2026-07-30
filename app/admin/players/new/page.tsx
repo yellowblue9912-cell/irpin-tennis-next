@@ -1,7 +1,16 @@
+"use client";
+
 import Link from "next/link";
-import { createPlayer } from "./actions";
+import { useActionState } from "react";
+import { createPlayer, type CreatePlayerState } from "./actions";
 
 export default function NewPlayerPage() {
+  const initialState: CreatePlayerState = { error: null };
+  const [state, formAction, isPending] = useActionState(
+    createPlayer,
+    initialState,
+  );
+
   return (
     <main>
       <div className="mb-8">
@@ -26,9 +35,19 @@ export default function NewPlayerPage() {
       </div>
 
       <form
-        action={createPlayer}
+        action={formAction}
+        autoComplete="off"
         className="max-w-2xl rounded-[28px] bg-white p-7 shadow-sm md:p-9"
       >
+        {state.error ? (
+          <div
+            role="alert"
+            className="mb-6 rounded-2xl border border-red-200 bg-red-50 px-4 py-3 font-bold text-red-700"
+          >
+            {state.error}
+          </div>
+        ) : null}
+
         <div>
           <label
             htmlFor="name"
@@ -120,9 +139,10 @@ export default function NewPlayerPage() {
         <div className="mt-8 flex flex-col gap-3 sm:flex-row">
           <button
             type="submit"
+            disabled={isPending}
             className="inline-flex items-center justify-center rounded-2xl bg-[#123f2d] px-6 py-3 font-black text-white transition hover:bg-[#1b5a41]"
           >
-            Зберегти гравця
+            {isPending ? "Зберігаємо…" : "Зберегти гравця"}
           </button>
 
           <Link

@@ -8,6 +8,10 @@ import {
   findAuthUserByEmail,
 } from "@/lib/supabase/admin";
 
+export type CreatePlayerState = {
+  error: string | null;
+};
+
 async function getUniquePlayerSlug(
   supabase: ReturnType<typeof createAdminSupabaseClient>,
   requestedSlug: string,
@@ -40,9 +44,12 @@ async function getUniquePlayerSlug(
   }
 }
 
-export async function createPlayer(formData: FormData) {
+export async function createPlayer(
+  _previousState: CreatePlayerState,
+  formData: FormData,
+): Promise<CreatePlayerState> {
   if (!(await isAdminAuthenticated())) {
-    throw new Error("Потрібна авторизація адміністратора");
+    return { error: "Потрібна авторизація адміністратора" };
   }
 
   const name = String(formData.get("name") ?? "").trim();
@@ -52,21 +59,49 @@ export async function createPlayer(formData: FormData) {
     .replace(",", ".");
   const email = String(formData.get("email") ?? "").trim().toLowerCase();
 
-  if (!name) throw new Error("Вкажіть ім'я гравця");
+  if (!name) return { error: "Вкажіть ім'я гравця" };
 
   const rating = Number(ratingInput);
   if (!Number.isFinite(rating) || rating < 1 || rating > 7) {
-    throw new Error("Рейтинг повинен бути від 1.00 до 7.00");
+    return { error: "Рейтинг повинен бути від 1.00 до 7.00" };
   }
 
   const supabase = createAdminSupabaseClient();
-  const slug = await getUniquePlayerSlug(supabase, slugInput || name);
-  const authUser = email ? await findAuthUserByEmail(email) : null;
+  let slug: string;
+  let authUser: Awaited<ReturnType<typeof findAuthUserByEmail>> = null;
+
+  try {
+    slug = await getUniquePlayerSlug(supabase, slugInput || name);
+    authUser = email ? await findAuthUserByEmail(email) : null;
+  } catch (error) {
+    return {
+      error: error instanceof Error ? error.message : "Не вдалося перевірити дані",
+    };
+  }
 
   if (email && !authUser) {
-    throw new Error(
-      "Користувача з такою поштою не знайдено. Спочатку він має зареєструватися на сайті",
-    );
+    return {
+      error:
+        "Користувача з такою поштою не знайдено. Спочатку він має зареєструватися на сайті",
+    };
+  }
+
+  if (authUser) {
+    const { data: linkedPlayer, error: linkedPlayerError } = await supabase
+      .from("players")
+      .select("name")
+      .eq("user_id", authUser.id)
+      .maybeSingle();
+
+    if (linkedPlayerError) {
+      return { error: linkedPlayerError.message };
+    }
+
+    if (linkedPlayer) {
+      return {
+        error: `Ця пошта вже прив’язана до профілю «${linkedPlayer.name}». Залиште поле пошти порожнім або відредагуйте наявний профіль.`,
+      };
+    }
   }
 
   const { error } = await supabase.from("players").insert({
@@ -79,7 +114,7 @@ export async function createPlayer(formData: FormData) {
 
   if (error) {
     console.error(error);
-    throw new Error(error.message);
+    return { error: error.message };
   }
 
   revalidatePath("/admin/players");
