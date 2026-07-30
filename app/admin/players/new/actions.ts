@@ -8,6 +8,38 @@ import {
   findAuthUserByEmail,
 } from "@/lib/supabase/admin";
 
+async function getUniquePlayerSlug(
+  supabase: ReturnType<typeof createAdminSupabaseClient>,
+  requestedSlug: string,
+) {
+  const baseSlug =
+    requestedSlug
+      .toLowerCase()
+      .trim()
+      .normalize("NFKC")
+      .replace(/\s+/g, "-")
+      .replace(/[^\p{L}\p{N}-]/gu, "")
+      .replace(/-+/g, "-")
+      .replace(/^-|-$/g, "") || "player";
+
+  let candidate = baseSlug;
+  let suffix = 2;
+
+  while (true) {
+    const { data, error } = await supabase
+      .from("players")
+      .select("id")
+      .eq("slug", candidate)
+      .maybeSingle();
+
+    if (error) throw new Error(error.message);
+    if (!data) return candidate;
+
+    candidate = `${baseSlug}-${suffix}`;
+    suffix += 1;
+  }
+}
+
 export async function createPlayer(formData: FormData) {
   if (!(await isAdminAuthenticated())) {
     throw new Error("Потрібна авторизація адміністратора");
@@ -20,24 +52,15 @@ export async function createPlayer(formData: FormData) {
     .replace(",", ".");
   const email = String(formData.get("email") ?? "").trim().toLowerCase();
 
-  if (!name) {
-    throw new Error("Вкажіть ім'я гравця");
-  }
+  if (!name) throw new Error("Вкажіть ім'я гравця");
 
   const rating = Number(ratingInput);
-
   if (!Number.isFinite(rating) || rating < 1 || rating > 7) {
     throw new Error("Рейтинг повинен бути від 1.00 до 7.00");
   }
 
-  const slug =
-    slugInput ||
-    name
-      .toLowerCase()
-      .replace(/\s+/g, "-")
-      .replace(/[^a-zа-яіїєґ0-9-]/gi, "");
-
   const supabase = createAdminSupabaseClient();
+  const slug = await getUniquePlayerSlug(supabase, slugInput || name);
   const authUser = email ? await findAuthUserByEmail(email) : null;
 
   if (email && !authUser) {
