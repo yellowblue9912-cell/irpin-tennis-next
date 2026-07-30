@@ -8,7 +8,7 @@ import { useState } from "react";
 const menuItems = [
   { label: "Гравці", href: "/players" },
   { label: "Турніри", href: "/tournaments" },
-  { label: "Ліга", href: "/league" },
+  { label: "Останні матчі", href: "/matches" },
   { label: "Корти", href: "/courts" },
   { label: "Тренери", href: "/coaches" },
   { label: "Про рейтинг", href: "/rating" },

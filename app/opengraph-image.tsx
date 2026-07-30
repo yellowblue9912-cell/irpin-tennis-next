@@ -70,7 +70,7 @@ export default async function OpenGraphImage() {
               color: "rgba(255,248,238,0.8)",
             }}
           >
-            Гравці · Турніри · Ліги · Корти · Тренери
+            Гравці · Турніри · Матчі · Корти · Тренери
           </div>
         </div>
         <div

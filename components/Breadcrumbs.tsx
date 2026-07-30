@@ -6,6 +6,7 @@ import { usePathname } from "next/navigation";
 const names: Record<string, string> = {
   players: "Гравці",
   tournaments: "Турніри",
+  matches: "Останні матчі",
   courts: "Корти",
   rating: "Як працює рейтинг",
   league: "Ліги",
