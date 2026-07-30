@@ -15,7 +15,9 @@ export async function createPlayer(formData: FormData) {
 
   const name = String(formData.get("name") ?? "").trim();
   const slugInput = String(formData.get("slug") ?? "").trim();
-  const ratingInput = String(formData.get("rating") ?? "3");
+  const ratingInput = String(formData.get("rating") ?? "3")
+    .trim()
+    .replace(",", ".");
   const email = String(formData.get("email") ?? "").trim().toLowerCase();
 
   if (!name) {
@@ -23,6 +25,10 @@ export async function createPlayer(formData: FormData) {
   }
 
   const rating = Number(ratingInput);
+
+  if (!Number.isFinite(rating) || rating < 1 || rating > 7) {
+    throw new Error("Рейтинг повинен бути від 1.00 до 7.00");
+  }
 
   const slug =
     slugInput ||
@@ -44,6 +50,7 @@ export async function createPlayer(formData: FormData) {
     name,
     slug,
     rating,
+    rating_base: rating,
     user_id: authUser?.id ?? null,
   });
 
@@ -53,5 +60,7 @@ export async function createPlayer(formData: FormData) {
   }
 
   revalidatePath("/admin/players");
+  revalidatePath("/players");
+  revalidatePath("/rating");
   redirect("/admin/players");
 }

@@ -1,8 +1,18 @@
 import Link from "next/link";
-import { getPlayers } from "../../../lib/players/getPlayers";
+import { createAdminSupabaseClient } from "@/lib/supabase/admin";
 
 export default async function PlayersPage() {
-  const players = await getPlayers();
+  const supabase = createAdminSupabaseClient();
+  const { data: players, error } = await supabase
+    .from("players")
+    .select("id, name, rating, is_active")
+    .order("rating", { ascending: false })
+    .order("name", { ascending: true });
+
+  if (error) {
+    console.error("Get admin players error:", error);
+    throw new Error(`Не вдалося завантажити гравців: ${error.message}`);
+  }
 
   return (
     <div>
@@ -11,7 +21,7 @@ export default async function PlayersPage() {
           <h1 className="text-4xl font-black">Players</h1>
 
           <p className="text-gray-500 mt-2">
-            Всього гравців: {players.length}
+            Всього гравців: {(players ?? []).length}
           </p>
         </div>
 
@@ -35,7 +45,7 @@ export default async function PlayersPage() {
           </thead>
 
           <tbody>
-            {players.map((player) => (
+            {(players ?? []).map((player) => (
               <tr key={player.id} className="border-t">
                 <td className="p-5 font-medium">
                   {player.name}
@@ -68,7 +78,7 @@ export default async function PlayersPage() {
               </tr>
             ))}
 
-            {players.length === 0 && (
+            {(players ?? []).length === 0 && (
               <tr>
                 <td
                   colSpan={4}

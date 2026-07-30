@@ -102,14 +102,19 @@ export default function NewPlayerPage() {
           <input
             id="rating"
             name="rating"
-            type="number"
+            type="text"
+            inputMode="decimal"
             required
-            min="1"
-            max="7"
-            step="0.25"
+            pattern="[1-7](?:[.,][0-9]{1,2})?"
             defaultValue="3.0"
+            placeholder="Наприклад: 3.01"
             className="w-full rounded-2xl border border-[#123f2d]/15 bg-[#f6f0e5] px-4 py-3 outline-none transition focus:border-[#123f2d]"
           />
+
+          <p className="mt-2 text-sm text-[#123f2d]/45">
+            Можна вказати точний поточний рейтинг через крапку або кому:
+            3.01 чи 3,01.
+          </p>
         </div>
 
         <div className="mt-8 flex flex-col gap-3 sm:flex-row">
