@@ -433,21 +433,23 @@ function MatchCard({ match }: { match: RecentMatch }) {
 
 function PlayerRow({ player, winner }: { player: Player; winner: boolean }) {
   return (
-    <Link
-      href={`/players/${player.slug}`}
-      className={`min-w-0 truncate text-base font-black transition hover:text-[#bb5a3c] sm:text-lg ${
-        winner ? "text-[#123f2d]" : "text-[#123f2d]/65"
-      }`}
-    >
-      {winner ? "🏆 " : ""}
-      {player.name}
+    <div className="flex min-w-0 items-center gap-2">
+      <Link
+        href={`/players/${player.slug}`}
+        className={`min-w-0 flex-1 truncate text-base font-black transition hover:text-[#bb5a3c] sm:text-lg ${
+          winner ? "text-[#123f2d]" : "text-[#123f2d]/65"
+        }`}
+      >
+        {winner ? "🏆 " : ""}
+        {player.name}
+      </Link>
       <span
-        className="ml-2 inline-block rounded-lg bg-[#f7f1e7] px-2 py-1 align-middle text-xs font-black text-[#123f2d]"
+        className="shrink-0 rounded-lg bg-[#f7f1e7] px-2 py-1 text-xs font-black text-[#123f2d]"
         title={`Місце в загальному рейтингу: ${player.rank ?? "—"}`}
       >
         №{player.rank ?? "—"}
       </span>
-    </Link>
+    </div>
   );
 }
 
