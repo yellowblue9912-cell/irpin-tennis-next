@@ -78,6 +78,8 @@ export default async function MatchesPage({
     { data: leagueMatches, error: leagueError },
     { data: ratingMatches, error: ratingError },
     { data: playersData },
+    { data: activeTournaments },
+    { data: activeLeagueSeasons },
   ] = await Promise.all([
     supabase
       .from("matches")
@@ -125,6 +127,14 @@ export default async function MatchesPage({
       .select("id, name, slug")
       .eq("is_active", true)
       .order("name", { ascending: true }),
+    supabase
+      .from("tournaments")
+      .select("id, title")
+      .in("status", ["active", "live", "ongoing", "in_progress"]),
+    supabase
+      .from("league_seasons")
+      .select("id, title")
+      .eq("is_active", true),
   ]);
 
   if (tournamentError) console.error("Recent tournament matches:", tournamentError);
@@ -222,18 +232,18 @@ export default async function MatchesPage({
       new Date(`${a.date}T12:00:00`).getTime(),
   );
 
-  const competitionOptions = Array.from(
-    new Map(
-      recentMatches.map((match) => [
-        match.competitionId,
-        {
-          id: match.competitionId,
-          title: match.competitionTitle,
-          type: match.type,
-        },
-      ]),
-    ).values(),
-  ).sort((a, b) => a.title.localeCompare(b.title, "uk"));
+  const competitionOptions = [
+    ...(activeTournaments ?? []).map((competition) => ({
+      id: `tournament:${competition.id}`,
+      title: competition.title,
+      type: "tournament" as const,
+    })),
+    ...(activeLeagueSeasons ?? []).map((competition) => ({
+      id: `league:${competition.id}`,
+      title: competition.title,
+      type: "league" as const,
+    })),
+  ].sort((a, b) => a.title.localeCompare(b.title, "uk"));
 
   const filteredMatches = recentMatches
     .filter(
