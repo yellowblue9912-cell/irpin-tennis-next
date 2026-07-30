@@ -1,6 +1,8 @@
 import Link from "next/link";
 import { createAdminSupabaseClient } from "@/lib/supabase/admin";
 
+export const dynamic = "force-dynamic";
+
 export default async function PlayersPage() {
   const supabase = createAdminSupabaseClient();
   const { data: players, error } = await supabase
