@@ -3,6 +3,7 @@ import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import { getPlayers } from "@/lib/players/getPlayers";
 import { isThirdSetTiebreak } from "@/lib/matches/tiebreak";
+import PlayerFilterCombobox from "@/components/PlayerFilterCombobox";
 
 export const metadata: Metadata = {
   title: "Останні матчі | Irpin Tennis",
@@ -311,21 +312,13 @@ export default async function MatchesPage({
           method="get"
           className="grid gap-4 rounded-[28px] bg-white p-5 shadow-sm md:grid-cols-[1fr_1fr_auto] md:items-end"
         >
-          <label className="grid gap-2 text-sm font-black uppercase tracking-wide">
-            Гравець
-            <select
-              name="player"
-              defaultValue={selectedPlayer}
-              className="min-w-0 rounded-2xl border border-[#123f2d]/15 bg-[#f7f1e7] px-4 py-3 text-base font-semibold normal-case outline-none focus:border-[#123f2d]"
-            >
-              <option value="">Усі гравці</option>
-              {(playersData ?? []).map((player) => (
-                <option key={player.id} value={player.id}>
-                  {player.name}
-                </option>
-              ))}
-            </select>
-          </label>
+          <PlayerFilterCombobox
+            players={(playersData ?? []).map((player) => ({
+              id: player.id,
+              name: player.name,
+            }))}
+            selectedId={selectedPlayer}
+          />
 
           <label className="grid gap-2 text-sm font-black uppercase tracking-wide">
             Ліга / турнір
