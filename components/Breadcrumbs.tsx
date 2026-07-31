@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useEffect, useState } from "react";
 
 const names: Record<string, string> = {
   players: "Гравці",
@@ -28,6 +29,32 @@ function getName(segment: string) {
 
 export default function Breadcrumbs() {
   const pathname = usePathname();
+  const [playerNames, setPlayerNames] = useState<Record<string, string>>({});
+
+  useEffect(() => {
+    const segments = pathname.split("/").filter(Boolean);
+    if (segments.length !== 2 || segments[0] !== "players") return;
+
+    const slug = segments[1];
+    if (playerNames[slug]) return;
+
+    const controller = new AbortController();
+
+    fetch(`/api/breadcrumbs/players/${encodeURIComponent(slug)}`, {
+      signal: controller.signal,
+    })
+      .then((response) => (response.ok ? response.json() : null))
+      .then((data: { name?: string } | null) => {
+        if (!data?.name) return;
+        setPlayerNames((current) => ({ ...current, [slug]: data.name! }));
+      })
+      .catch((error: unknown) => {
+        if (error instanceof DOMException && error.name === "AbortError") return;
+        console.error("Breadcrumb player name error:", error);
+      });
+
+    return () => controller.abort();
+  }, [pathname, playerNames]);
 
   if (pathname === "/") return null;
 
@@ -46,6 +73,11 @@ export default function Breadcrumbs() {
         {segments.map((segment, index) => {
           const href = "/" + segments.slice(0, index + 1).join("/");
           const last = index === segments.length - 1;
+          const isPlayerProfile =
+            segments.length === 2 && segments[0] === "players" && index === 1;
+          const label = isPlayerProfile
+            ? playerNames[segment] ?? "Профіль гравця"
+            : getName(segment);
 
           return (
             <div key={href} className="flex items-center gap-2">
@@ -53,14 +85,14 @@ export default function Breadcrumbs() {
 
               {last ? (
                 <span className="font-semibold text-[#ad4529]">
-                  {getName(segment)}
+                  {label}
                 </span>
               ) : (
                 <Link
                   href={href}
                   className="font-semibold text-[#123f2d] hover:text-[#ad4529]"
                 >
-                  {getName(segment)}
+                  {label}
                 </Link>
               )}
             </div>
