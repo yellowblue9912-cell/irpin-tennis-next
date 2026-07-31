@@ -38,7 +38,7 @@ export default function RootLayout({
         <StructuredData />
         <Header />
         <Breadcrumbs />
-        <main>{children}</main>
+        {children}
       </body>
     </html>
   );
