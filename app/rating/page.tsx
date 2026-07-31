@@ -173,8 +173,9 @@ export default function RatingPage() {
           <Link
             href="/players"
             className="inline-flex shrink-0 items-center justify-center rounded-2xl bg-[#123f2d] px-6 py-4 font-black text-white transition hover:bg-[#ad4529]"
+            style={{ color: "#ffffff" }}
           >
-            Переглянути гравців →
+            <span className="text-white">Переглянути гравців →</span>
           </Link>
         </section>
       </div>
