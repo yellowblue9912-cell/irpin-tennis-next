@@ -71,17 +71,25 @@ function valueOf(value: string | string[] | undefined) {
   return Array.isArray(value) ? value[0] ?? "" : value ?? "";
 }
 
+function visibleCountOf(value: string | string[] | undefined) {
+  const parsed = Number.parseInt(valueOf(value), 10);
+  if (!Number.isFinite(parsed)) return 20;
+  return Math.max(20, parsed);
+}
+
 export default async function MatchesPage({
   searchParams,
 }: {
   searchParams: Promise<{
     player?: string | string[];
     competition?: string | string[];
+    shown?: string | string[];
   }>;
 }) {
   const filters = await searchParams;
   const selectedPlayer = valueOf(filters.player);
   const selectedCompetition = valueOf(filters.competition);
+  const visibleCount = visibleCountOf(filters.shown);
   const [supabase, rankedPlayers] = await Promise.all([
     createClient(),
     getPlayers(),
@@ -276,7 +284,7 @@ export default async function MatchesPage({
     })),
   ].sort((a, b) => a.title.localeCompare(b.title, "uk"));
 
-  const filteredMatches = recentMatches
+  const matchingMatches = recentMatches
     .filter(
       (match) =>
         !selectedPlayer ||
@@ -287,8 +295,15 @@ export default async function MatchesPage({
       (match) =>
         !selectedCompetition ||
         match.competitionId === selectedCompetition,
-    )
-    .slice(0, 60);
+    );
+  const filteredMatches = matchingMatches.slice(0, visibleCount);
+  const hasMoreMatches = filteredMatches.length < matchingMatches.length;
+  const nextPageParams = new URLSearchParams();
+  if (selectedPlayer) nextPageParams.set("player", selectedPlayer);
+  if (selectedCompetition) {
+    nextPageParams.set("competition", selectedCompetition);
+  }
+  nextPageParams.set("shown", String(visibleCount + 20));
 
   return (
     <main className="min-h-screen bg-[#f7f1e7] text-[#123f2d]">
@@ -365,7 +380,7 @@ export default async function MatchesPage({
               Хронологія
             </p>
             <h2 className="mt-1 text-3xl font-black">
-              Зіграні матчі · {filteredMatches.length}
+              Зіграні матчі · {matchingMatches.length}
             </h2>
           </div>
         </div>
@@ -375,6 +390,18 @@ export default async function MatchesPage({
             <MatchCard key={match.id} match={match} />
           ))}
         </div>
+
+        {hasMoreMatches && (
+          <div className="mt-8 flex justify-center">
+            <Link
+              href={`/matches?${nextPageParams.toString()}`}
+              scroll={false}
+              className="rounded-2xl bg-[#123f2d] px-7 py-3.5 text-sm font-black uppercase tracking-wide text-white transition hover:bg-[#0d3224]"
+            >
+              Показати ще
+            </Link>
+          </div>
+        )}
 
         {filteredMatches.length === 0 && (
           <div className="mt-5 rounded-[28px] bg-white px-6 py-14 text-center shadow-sm">
