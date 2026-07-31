@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import type { Metadata } from "next";
 import { createClient } from "@/lib/supabase/server";
+import { isThirdSetTiebreak } from "@/lib/matches/tiebreak";
 
 type PageProps = {
   params: Promise<{
@@ -208,9 +209,12 @@ function buildSets(match: LeagueMatchFromDatabase) {
     },
   ];
 
-  return sets.filter(
-    (set) => set.player1 !== null && set.player2 !== null,
-  );
+  return sets
+    .filter((set) => set.player1 !== null && set.player2 !== null)
+    .map((set, index) => ({
+      ...set,
+      isTiebreak: index === 2 && isThirdSetTiebreak(match),
+    }));
 }
 
 function getPublicMatchNote(notes: string | null) {
@@ -875,7 +879,9 @@ export default async function LeaguePage({ params }: PageProps) {
                                     : "bg-slate-100 text-slate-500"
                                 }`}
                               >
-                                {set.player1}
+                                {set.isTiebreak
+                                  ? `[${set.player1}]`
+                                  : set.player1}
                               </span>
                             );
                           })}
@@ -916,7 +922,9 @@ export default async function LeaguePage({ params }: PageProps) {
                                     : "bg-slate-100 text-slate-500"
                                 }`}
                               >
-                                {set.player2}
+                                {set.isTiebreak
+                                  ? `[${set.player2}]`
+                                  : set.player2}
                               </span>
                             );
                           })}

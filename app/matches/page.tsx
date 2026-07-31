@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import { getPlayers } from "@/lib/players/getPlayers";
+import { isThirdSetTiebreak } from "@/lib/matches/tiebreak";
 
 export const metadata: Metadata = {
   title: "Останні матчі | Irpin Tennis",
@@ -34,6 +35,7 @@ type RawMatch = {
   player2_set2: number | null;
   player1_set3: number | null;
   player2_set3: number | null;
+  notes?: string | null;
 };
 type RecentMatch = {
   id: string;
@@ -46,6 +48,7 @@ type RecentMatch = {
   player2: Player;
   winnerId: string | null;
   sets: Array<[number, number]>;
+  thirdSetIsTiebreak: boolean;
 };
 
 function one<T>(value: T | T[] | null): T | null {
@@ -94,7 +97,7 @@ export default async function MatchesPage({
     supabase
       .from("matches")
       .select(`
-        id,
+        id, notes,
         player1_set1, player2_set1,
         player1_set2, player2_set2,
         player1_set3, player2_set3,
@@ -109,7 +112,7 @@ export default async function MatchesPage({
     supabase
       .from("league_matches")
       .select(`
-        id, played_at, created_at,
+        id, played_at, created_at, notes,
         player1_set1, player2_set1,
         player1_set2, player2_set2,
         player1_set3, player2_set3,
@@ -186,6 +189,7 @@ export default async function MatchesPage({
       player2,
       winnerId: one(match.winner)?.id ?? null,
       sets: buildSets(match),
+      thirdSetIsTiebreak: isThirdSetTiebreak(match),
     });
   }
 
@@ -222,6 +226,7 @@ export default async function MatchesPage({
       player2,
       winnerId: one(match.winner)?.id ?? null,
       sets: buildSets(match),
+      thirdSetIsTiebreak: isThirdSetTiebreak(match),
     });
   }
 
@@ -247,6 +252,7 @@ export default async function MatchesPage({
       player2,
       winnerId: one(match.winner)?.id ?? null,
       sets: buildSets(match),
+      thirdSetIsTiebreak: isThirdSetTiebreak(match),
     });
   }
 
@@ -420,12 +426,18 @@ function MatchCard({ match }: { match: RecentMatch }) {
           player={match.player1}
           winner={match.winnerId === match.player1.id}
         />
-        <Scores scores={match.sets.map((set) => set[0])} />
+        <Scores
+          scores={match.sets.map((set) => set[0])}
+          thirdSetIsTiebreak={match.thirdSetIsTiebreak}
+        />
         <PlayerRow
           player={match.player2}
           winner={match.winnerId === match.player2.id}
         />
-        <Scores scores={match.sets.map((set) => set[1])} />
+        <Scores
+          scores={match.sets.map((set) => set[1])}
+          thirdSetIsTiebreak={match.thirdSetIsTiebreak}
+        />
       </div>
     </article>
   );
@@ -453,15 +465,30 @@ function PlayerRow({ player, winner }: { player: Player; winner: boolean }) {
   );
 }
 
-function Scores({ scores }: { scores: number[] }) {
+function Scores({
+  scores,
+  thirdSetIsTiebreak,
+}: {
+  scores: number[];
+  thirdSetIsTiebreak: boolean;
+}) {
   return (
     <div className="flex gap-2">
       {scores.map((score, index) => (
         <span
           key={`${index}-${score}`}
-          className="flex h-9 min-w-9 items-center justify-center rounded-xl bg-[#123f2d] px-2 font-black text-white"
+          className={`flex h-9 min-w-9 items-center justify-center rounded-xl px-2 font-black ${
+            index === 2 && thirdSetIsTiebreak
+              ? "border-2 border-[#123f2d] bg-[#f7f1e7] text-[#123f2d]"
+              : "bg-[#123f2d] text-white"
+          }`}
+          title={
+            index === 2 && thirdSetIsTiebreak
+              ? "Матч-тайбрейк"
+              : undefined
+          }
         >
-          {score}
+          {index === 2 && thirdSetIsTiebreak ? `[${score}]` : score}
         </span>
       ))}
     </div>

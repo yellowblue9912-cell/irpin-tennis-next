@@ -602,10 +602,12 @@ function formatScore(match: ProfileMatch) {
       ([playerScore, opponentScore]) =>
         playerScore !== null && opponentScore !== null,
     )
-    .map(
-      ([playerScore, opponentScore]) =>
-        `${playerScore}:${opponentScore}`,
-    )
+    .map(([playerScore, opponentScore], index) => {
+      const formatted = `${playerScore}:${opponentScore}`;
+      return index === 2 && match.third_set_is_tiebreak
+        ? `[Тайбрейк ${formatted}]`
+        : formatted;
+    })
     .join(" ");
 }
 

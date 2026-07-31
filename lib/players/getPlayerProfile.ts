@@ -1,5 +1,6 @@
 import { createClient } from "../supabase/server";
 import { getPlayerName, getPlayerPhoto } from "./getPlayerPhoto";
+import { isThirdSetTiebreak } from "../matches/tiebreak";
 
 export type ProfilePlayer = {
   id: string;
@@ -46,6 +47,7 @@ export type ProfileMatch = {
   opponent_set2: number | null;
   player_set3: number | null;
   opponent_set3: number | null;
+  third_set_is_tiebreak: boolean;
   is_winner: boolean;
   status: string;
   rating_before: number | null;
@@ -93,6 +95,7 @@ type MatchRow = {
   player2_set2: number | null;
   player1_set3: number | null;
   player2_set3: number | null;
+  notes: string | null;
   status: string;
 };
 
@@ -108,6 +111,7 @@ type LeagueMatchRow = {
   player2_set2: number | null;
   player1_set3: number | null;
   player2_set3: number | null;
+  notes: string | null;
   played_at: string | null;
   created_at: string;
 };
@@ -238,6 +242,7 @@ export async function getPlayerProfile(
           player2_set2,
           player1_set3,
           player2_set3,
+          notes,
           status
         `,
       )
@@ -259,6 +264,7 @@ export async function getPlayerProfile(
           player2_set2,
           player1_set3,
           player2_set3,
+          notes,
           played_at,
           created_at
         `,
@@ -633,8 +639,12 @@ export async function getPlayerProfile(
             [match.player1_set3, match.player2_set3],
           ];
 
-          for (const [player1Score, player2Score] of sets) {
+          for (const [index, [player1Score, player2Score]] of sets.entries()) {
             if (player1Score === null || player2Score === null) {
+              continue;
+            }
+
+            if (index === 2 && isThirdSetTiebreak(match)) {
               continue;
             }
 
@@ -727,6 +737,7 @@ export async function getPlayerProfile(
         opponent_set3: playerIsFirst
           ? match.player2_set3
           : match.player1_set3,
+        third_set_is_tiebreak: isThirdSetTiebreak(match),
         is_winner: match.winner_id === player.id,
         status: match.status,
         ...getRatingDetails("tournament", match.id),
@@ -779,6 +790,7 @@ export async function getPlayerProfile(
         opponent_set3: playerIsFirst
           ? match.player2_set3
           : match.player1_set3,
+        third_set_is_tiebreak: isThirdSetTiebreak(match),
         is_winner: match.winner_id === player.id,
         status: "finished",
         ...getRatingDetails("league", match.id),
@@ -824,6 +836,7 @@ export async function getPlayerProfile(
         opponent_set3: playerIsFirst
           ? match.player2_set3
           : match.player1_set3,
+        third_set_is_tiebreak: isThirdSetTiebreak(match),
         is_winner: match.winner_id === player.id,
         status: "finished",
         ...getRatingDetails("rating_match", match.id),
