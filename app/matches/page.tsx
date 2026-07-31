@@ -397,8 +397,9 @@ export default async function MatchesPage({
               href={`/matches?${nextPageParams.toString()}`}
               scroll={false}
               className="rounded-2xl bg-[#123f2d] px-7 py-3.5 text-sm font-black uppercase tracking-wide text-white transition hover:bg-[#0d3224]"
+              style={{ color: "#ffffff" }}
             >
-              Показати ще
+              <span className="text-white">Показати ще</span>
             </Link>
           </div>
         )}
