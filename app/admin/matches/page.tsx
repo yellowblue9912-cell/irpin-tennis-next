@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { createAdminSupabaseClient } from "@/lib/supabase/admin";
 import { MatchActions } from "./MatchActions";
+import { repairAllRatings } from "./actions";
 
 export const dynamic = "force-dynamic";
 
@@ -150,6 +151,11 @@ export default async function AdminMatchesPage() {
       </section>
 
       <section className="mt-10">
+        <form action={repairAllRatings} className="mb-6 flex justify-end">
+          <button type="submit" className="rounded-xl bg-[#123f2d] px-5 py-3 text-sm font-black text-white" style={{ color: "#fff" }}>
+            Перерахувати всі рейтинги
+          </button>
+        </form>
         <div className="mb-5">
           <p className="text-sm font-black uppercase tracking-[0.18em] text-[#ad4529]">
             Останні записи

@@ -5,6 +5,7 @@ import { redirect } from "next/navigation";
 import { isAdminAuthenticated } from "@/lib/adminAuth";
 import { isThirdSetTiebreak } from "@/lib/matches/tiebreak";
 import { createAdminSupabaseClient } from "@/lib/supabase/admin";
+import { recalculateAllRatings } from "@/lib/rating/recalculateAllRatings";
 
 type MatchType = "league" | "rating" | "tournament";
 type Standing = { matches_played: number; wins: number; losses: number; sets_difference: number; games_difference: number; points: number };
@@ -82,8 +83,14 @@ export async function deleteMatch(formData: FormData) {
 export async function deleteLeagueMatch(formData: FormData) { formData.set("match_type", "league"); return deleteMatch(formData); }
 
 async function recalculateRatings() {
-  const { error } = await createAdminSupabaseClient().rpc("recalculate_player_ratings");
-  if (error) throw new Error(`Матч змінено, але рейтинг не перераховано: ${error.message}`);
+  await recalculateAllRatings();
+}
+
+export async function repairAllRatings() {
+  if (!(await isAdminAuthenticated())) throw new Error("Потрібна авторизація адміністратора");
+  await recalculateAllRatings();
+  revalidateMatchPages();
+  redirect("/admin/matches?ratings_repaired=1");
 }
 function revalidateMatchPages() {
   revalidatePath("/matches"); revalidatePath("/players"); revalidatePath("/players/[slug]", "page"); revalidatePath("/tournaments"); revalidatePath("/tournaments/[slug]", "page"); revalidatePath("/league/[slug]", "page"); revalidatePath("/account"); revalidatePath("/admin/matches");
