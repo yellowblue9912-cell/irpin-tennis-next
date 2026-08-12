@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { createAdminSupabaseClient } from "@/lib/supabase/admin";
-import { deleteLeagueMatch } from "./actions";
+import { MatchActions } from "./MatchActions";
 
 export const dynamic = "force-dynamic";
 
@@ -32,6 +32,7 @@ type AdminRecentMatch = {
   player2: string;
   winner: string;
   score: string;
+  scores: Array<[number | null, number | null]>;
 };
 
 export default async function AdminMatchesPage() {
@@ -176,17 +177,7 @@ export default async function AdminMatchesPage() {
                 </p>
               </div>
 
-              {match.type === "league" && (
-                <form action={deleteLeagueMatch}>
-                  <input type="hidden" name="match_id" value={match.sourceId} />
-                  <button
-                    type="submit"
-                    className="rounded-xl border border-red-700/20 bg-red-50 px-4 py-2.5 text-sm font-black text-red-700 transition hover:bg-red-700 hover:text-white"
-                  >
-                    Видалити
-                  </button>
-                </form>
-              )}
+              <MatchActions id={match.sourceId} type={match.type} player1={match.player1} player2={match.player2} scores={match.scores} />
             </article>
           ))}
         </div>
@@ -225,6 +216,7 @@ function normalizeMatch(
     player2: one(match.player2)?.name ?? "Гравець 2",
     winner: one(match.winner)?.name ?? "—",
     score: buildScore(match),
+    scores: [[match.player1_set1, match.player2_set1], [match.player1_set2, match.player2_set2], [match.player1_set3, match.player2_set3]],
   };
 }
 
