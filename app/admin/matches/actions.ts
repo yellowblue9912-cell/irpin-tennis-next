@@ -88,33 +88,11 @@ async function recalculateRatings() {
 
 export async function repairAllRatings() {
   if (!(await isAdminAuthenticated())) throw new Error("Потрібна авторизація адміністратора");
-  await restoreMissingPashaNikitaMatch();
   await recalculateAllRatings();
   revalidateMatchPages();
   redirect("/admin/matches?ratings_repaired=1");
 }
 
-async function restoreMissingPashaNikitaMatch() {
-  const db = createAdminSupabaseClient();
-  const matchId = "62bbd572-0f19-4a0d-afa0-f5e1afa65106";
-  const { data: existing, error: lookupError } = await db.from("rating_matches").select("id").eq("id", matchId).maybeSingle();
-  if (lookupError) throw new Error(`Не вдалося перевірити рейтинговий матч: ${lookupError.message}`);
-  if (existing) return;
-  const { error } = await db.from("rating_matches").insert({
-    id: matchId,
-    challenger_id: "4adb0497-ee2d-4b31-a069-619e8ce40b66",
-    opponent_id: "a08b01f3-ffaa-43c3-8677-154e0ec17d20",
-    winner_id: "4adb0497-ee2d-4b31-a069-619e8ce40b66",
-    status: "confirmed",
-    player1_set1: 6, player2_set1: 4,
-    player1_set2: 6, player2_set2: 4,
-    player1_set3: null, player2_set3: null,
-    played_at: "2026-08-12",
-    confirmed_at: new Date().toISOString(),
-    updated_at: new Date().toISOString(),
-  });
-  if (error) throw new Error(`Не вдалося відновити матч Паша — Нікіта: ${error.message}`);
-}
 function revalidateMatchPages() {
   revalidatePath("/matches"); revalidatePath("/players"); revalidatePath("/players/[slug]", "page"); revalidatePath("/tournaments"); revalidatePath("/tournaments/[slug]", "page"); revalidatePath("/league/[slug]", "page"); revalidatePath("/account"); revalidatePath("/admin/matches");
 }
