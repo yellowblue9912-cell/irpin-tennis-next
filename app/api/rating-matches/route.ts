@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { revalidatePath } from "next/cache";
 import { createClient } from "../../../lib/supabase/server";
 
 const errorMessages: Record<string, string> = {
@@ -89,6 +90,13 @@ export async function POST(request: Request) {
       { error: known ? errorMessages[known] : error.message },
       { status: 400 },
     );
+  }
+
+  if (body.action === "confirm" && Boolean(body.approve)) {
+    revalidatePath("/matches");
+    revalidatePath("/players");
+    revalidatePath("/players/[slug]", "page");
+    revalidatePath("/account");
   }
 
   return NextResponse.json({ message });
