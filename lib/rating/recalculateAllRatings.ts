@@ -48,7 +48,15 @@ export async function recalculateAllRatings() {
       notes: null, type: "rating_match" as const, eventDate: row.played_at ?? row.confirmed_at ?? row.created_at,
       sortKey: `${row.played_at ?? row.confirmed_at ?? row.created_at}|2|${row.confirmed_at ?? row.created_at}|${row.id}`,
     })),
-  ].filter((event) => event.player1_id && event.player2_id && event.winner_id).sort((a, b) => a.sortKey.localeCompare(b.sortKey));
+  ].filter((event) => event.player1_id && event.player2_id && event.winner_id)
+    .sort((a, b) => a.sortKey.localeCompare(b.sortKey))
+    .map((event, index) => ({
+      ...event,
+      // Preserve the calculated order for matches played on the same day.
+      // Profiles sort by event_date, so a small deterministic time offset
+      // prevents same-day matches from appearing in a random order.
+      eventDate: orderedEventDate(event.eventDate, index),
+    }));
 
   const bases = new Map((playersResult.data ?? []).map((row) => [row.id, Number(row.rating_base ?? 3)]));
   const changes = new Map<string, number[]>();
@@ -91,3 +99,10 @@ function historyRow(event: RatingEvent, playerId: string, opponentId: string, be
 }
 function addChange(changes: Map<string, number[]>, playerId: string, change: number) { const values = changes.get(playerId) ?? []; values.push(change); changes.set(playerId, values); }
 function rollingRating(base: number, values: number[]) { return round3(clamp(base + values.slice(-30).reduce((sum, value) => sum + value, 0))); }
+
+function orderedEventDate(value: string, index: number) {
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return value;
+  date.setUTCMilliseconds(date.getUTCMilliseconds() + index);
+  return date.toISOString();
+}
