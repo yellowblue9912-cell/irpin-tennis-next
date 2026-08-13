@@ -2,6 +2,7 @@
 
 import { FormEvent, useState } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { createClient } from "../lib/supabase/client";
 
 type Mode = "login" | "signup";
@@ -101,6 +102,17 @@ export default function AuthForm() {
           type="password"
           autoComplete={mode === "login" ? "current-password" : "new-password"}
         />
+
+        {mode === "login" && (
+          <div className="text-right">
+            <Link
+              href="/forgot-password"
+              className="text-sm font-bold text-[#123f2d]/65 underline decoration-[#123f2d]/25 underline-offset-4 transition hover:text-[#ad4529]"
+            >
+              Забули пароль?
+            </Link>
+          </div>
+        )}
 
         {message && (
           <p className="rounded-2xl bg-[#f6f0e5] p-4 text-sm leading-6 text-[#123f2d]/75">
