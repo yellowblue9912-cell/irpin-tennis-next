@@ -1,5 +1,6 @@
 import { createClient } from "../supabase/server";
 import { getPlayerName, getPlayerPhoto } from "./getPlayerPhoto";
+import { decodePlayerSlug } from "./decodePlayerSlug";
 import { isThirdSetTiebreak } from "../matches/tiebreak";
 
 export type ProfilePlayer = {
@@ -177,11 +178,12 @@ export async function getPlayerProfile(
   slug: string,
 ): Promise<PlayerProfileData | null> {
   const supabase = await createClient();
+  const decodedSlug = decodePlayerSlug(slug);
 
   const { data: playerData, error: playerError } = await supabase
     .from("players")
     .select("id, name, slug, rating, rating_base, photo_url, city, bio, is_active")
-    .eq("slug", slug)
+    .eq("slug", decodedSlug)
     .single();
 
   if (playerError || !playerData) {

@@ -6,6 +6,7 @@ import ChallengePlayerButton from "../../../components/ChallengePlayerButton";
 import LazyVideo from "../../../components/LazyVideo";
 import PlayerFeedback from "../../../components/PlayerFeedback";
 import { getPlayerHighlights } from "../../../lib/players/getPlayerHighlights";
+import { decodePlayerSlug } from "../../../lib/players/decodePlayerSlug";
 import {
   getPlayerProfile,
   type ProfileMatch,
@@ -22,11 +23,12 @@ export async function generateMetadata({
   params,
 }: PlayerProfilePageProps): Promise<Metadata> {
   const { slug } = await params;
+  const decodedSlug = decodePlayerSlug(slug);
   const supabase = await createClient();
   const { data: player } = await supabase
     .from("players")
     .select("name, city, rating")
-    .eq("slug", slug)
+    .eq("slug", decodedSlug)
     .maybeSingle();
 
   if (!player) {
@@ -45,11 +47,11 @@ export async function generateMetadata({
   return {
     title: `${player.name} — профіль тенісиста | Irpin Tennis`,
     description,
-    alternates: { canonical: `/players/${slug}` },
+    alternates: { canonical: `/players/${encodeURIComponent(decodedSlug)}` },
     openGraph: {
       title: `${player.name} | Irpin Tennis`,
       description,
-      url: `/players/${slug}`,
+      url: `/players/${encodeURIComponent(decodedSlug)}`,
       type: "profile",
     },
   };
@@ -59,7 +61,8 @@ export default async function PlayerProfilePage({
   params,
 }: PlayerProfilePageProps) {
   const { slug } = await params;
-  const profile = await getPlayerProfile(slug);
+  const decodedSlug = decodePlayerSlug(slug);
+  const profile = await getPlayerProfile(decodedSlug);
 
   if (!profile) {
     notFound();
@@ -67,7 +70,7 @@ export default async function PlayerProfilePage({
 
   const { player, stats, tournaments, matches } = profile;
   const age = getAge(player.birth_date);
-  const highlights = getPlayerHighlights(slug);
+  const highlights = getPlayerHighlights(decodedSlug);
   const supabase = await createClient();
   const {
     data: { user },
