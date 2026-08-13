@@ -459,10 +459,16 @@ function MatchCard({
     Number.isFinite(ratingBefore) &&
     Number.isFinite(ratingAfter) &&
     Number.isFinite(ratingChange);
+  const effectiveRatingChange = ratingAfter - ratingBefore;
+  const roundedEffectiveChange =
+    Math.abs(effectiveRatingChange) < 0.005 ? 0 : effectiveRatingChange;
+  const rollingWindowAdjusted =
+    hasRatingDetails &&
+    Math.abs(effectiveRatingChange - ratingChange) >= 0.0005;
   const formattedRatingChange =
     !hasRatingDetails
       ? ""
-      : `${ratingChange >= 0 ? "+" : ""}${formatRating(ratingChange)}`;
+      : `${roundedEffectiveChange > 0 ? "+" : ""}${formatRating(roundedEffectiveChange)}`;
 
   return (
     <div className="rounded-2xl border border-[#123f2d]/10 p-4">
@@ -504,7 +510,7 @@ function MatchCard({
             {formatRating(ratingAfter)}{" "}
             <span
               className={
-                ratingChange >= 0
+                roundedEffectiveChange >= 0
                   ? "text-green-700"
                   : "text-red-700"
               }
@@ -512,6 +518,14 @@ function MatchCard({
               ({formattedRatingChange})
             </span>
           </p>
+
+          {rollingWindowAdjusted && (
+            <p className="mt-1 text-[11px] font-semibold text-[#123f2d]/55">
+              Зміна за цей матч: {ratingChange > 0 ? "+" : ""}
+              {formatRating(ratingChange)}. Підсумковий рейтинг враховує
+              останні 30 матчів, тому одночасно випав найстаріший результат.
+            </p>
+          )}
 
           <p className="mt-1 text-xs font-semibold text-[#123f2d]/65">
             {match.opponent_rating_before !== null &&
