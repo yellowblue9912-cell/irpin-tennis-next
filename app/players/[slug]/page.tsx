@@ -115,11 +115,11 @@ export default async function PlayerProfilePage({
 
             <div className="mt-2 flex flex-wrap gap-1.5 sm:mt-5 sm:gap-3">
               <span className="rounded-full bg-white px-2.5 py-1 text-xs font-black text-[#123f2d] sm:px-4 sm:py-2 sm:text-base">
-                Поточний рейтинг {Number(player.rating).toFixed(2)}
+                Поточний рейтинг {formatRating(player.rating)}
               </span>
 
               <span className="rounded-full border border-white/25 px-2.5 py-1 text-[10px] font-bold text-white/85 sm:px-4 sm:py-2 sm:text-base">
-                Стартовий рейтинг {Number(player.rating_base).toFixed(2)}
+                Стартовий рейтинг {formatRating(player.rating_base)}
               </span>
 
               <span className="hidden rounded-full border border-white/15 px-4 py-2 font-bold text-white/75 sm:inline">
@@ -459,7 +459,7 @@ function MatchCard({
   const formattedRatingChange =
     !hasRatingDetails
       ? ""
-      : `${ratingChange >= 0 ? "+" : ""}${ratingChange.toFixed(2)}`;
+      : `${ratingChange >= 0 ? "+" : ""}${formatRating(ratingChange)}`;
 
   return (
     <div className="rounded-2xl border border-[#123f2d]/10 p-4">
@@ -497,8 +497,8 @@ function MatchCard({
       {hasRatingDetails && (
         <div className="mt-3 rounded-xl bg-[#f6f0e5] px-3 py-2.5">
           <p className="text-sm font-black text-[#123f2d]">
-            {playerName} {ratingBefore.toFixed(2)} →{" "}
-            {ratingAfter.toFixed(2)}{" "}
+            {playerName} {formatRating(ratingBefore)} →{" "}
+            {formatRating(ratingAfter)}{" "}
             <span
               className={
                 ratingChange >= 0
@@ -513,7 +513,7 @@ function MatchCard({
           <p className="mt-1 text-xs font-semibold text-[#123f2d]/65">
             {match.opponent_rating_before !== null &&
             Number.isFinite(opponentRatingBefore)
-              ? `Суперник: ${opponentRatingBefore.toFixed(2)} · `
+              ? `Суперник: ${formatRating(opponentRatingBefore)} · `
               : ""}
             Рахунок: {score}
           </p>
@@ -613,6 +613,10 @@ function formatScore(match: ProfileMatch) {
         : formatted;
     })
     .join(" ");
+}
+
+function formatRating(value: number) {
+  return (Math.round((Number(value) + Number.EPSILON) * 100) / 100).toFixed(2);
 }
 
 function getAge(birthDate: string | null) {
