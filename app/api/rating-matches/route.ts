@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { revalidatePath } from "next/cache";
 import { recalculateAllRatings } from "@/lib/rating/recalculateAllRatings";
 import { createClient } from "../../../lib/supabase/server";
+import { createAdminSupabaseClient } from "../../../lib/supabase/admin";
 
 const errorMessages: Record<string, string> = {
   PLAYER_NOT_LINKED: "Акаунт ще не прив’язаний до картки гравця.",
@@ -29,6 +30,11 @@ export async function POST(request: Request) {
   }
 
   const body = await request.json();
+
+  if (body.action === "confirm") {
+    return confirmRatingResult(data.user.id, body.matchId, Boolean(body.approve));
+  }
+
   let rpc = "";
   let args: Record<string, unknown> = {};
   let message = "Готово.";
@@ -102,4 +108,73 @@ export async function POST(request: Request) {
   }
 
   return NextResponse.json({ message });
+}
+
+async function confirmRatingResult(
+  userId: string,
+  matchId: string,
+  approve: boolean,
+) {
+  const admin = createAdminSupabaseClient();
+  const [{ data: currentPlayer }, { data: match }] = await Promise.all([
+    admin.from("players").select("id").eq("user_id", userId).maybeSingle(),
+    admin
+      .from("rating_matches")
+      .select("id, status, challenger_id, opponent_id, submitted_by_player_id")
+      .eq("id", matchId)
+      .maybeSingle(),
+  ]);
+
+  const canConfirm =
+    currentPlayer &&
+    match &&
+    match.status === "result_pending" &&
+    match.submitted_by_player_id !== currentPlayer.id &&
+    (match.challenger_id === currentPlayer.id ||
+      match.opponent_id === currentPlayer.id);
+
+  if (!canConfirm) {
+    return NextResponse.json(
+      { error: errorMessages.RESULT_NOT_CONFIRMABLE },
+      { status: 400 },
+    );
+  }
+
+  const now = new Date().toISOString();
+  const values = approve
+    ? { status: "confirmed", confirmed_at: now, updated_at: now }
+    : {
+        status: "accepted",
+        submitted_by_player_id: null,
+        winner_id: null,
+        player1_set1: null,
+        player2_set1: null,
+        player1_set2: null,
+        player2_set2: null,
+        player1_set3: null,
+        player2_set3: null,
+        played_at: null,
+        result_submitted_at: null,
+        updated_at: now,
+      };
+  const { error } = await admin
+    .from("rating_matches")
+    .update(values)
+    .eq("id", match.id);
+
+  if (error) {
+    return NextResponse.json({ error: error.message }, { status: 400 });
+  }
+
+  if (approve) await recalculateAllRatings();
+  revalidatePath("/matches");
+  revalidatePath("/players");
+  revalidatePath("/players/[slug]", "page");
+  revalidatePath("/account");
+
+  return NextResponse.json({
+    message: approve
+      ? "Результат підтверджено. Рейтинг оновлено."
+      : "Результат повернено на виправлення.",
+  });
 }
