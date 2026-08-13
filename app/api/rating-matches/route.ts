@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { revalidatePath } from "next/cache";
+import { recalculateAllRatings } from "@/lib/rating/recalculateAllRatings";
 import { createClient } from "../../../lib/supabase/server";
 
 const errorMessages: Record<string, string> = {
@@ -93,6 +94,7 @@ export async function POST(request: Request) {
   }
 
   if (body.action === "confirm" && Boolean(body.approve)) {
+    await recalculateAllRatings();
     revalidatePath("/matches");
     revalidatePath("/players");
     revalidatePath("/players/[slug]", "page");

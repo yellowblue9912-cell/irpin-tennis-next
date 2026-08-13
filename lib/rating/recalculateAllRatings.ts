@@ -74,11 +74,13 @@ export async function recalculateAllRatings() {
     const expected1 = 1 / (1 + Math.pow(10, rating2 - rating1));
     const delta1 = round3(0.05 * ((event.winner_id === event.player1_id ? 1 : 0) - expected1) * multiplier);
     const delta2 = -delta1;
-    history.push(historyRow(event, event.player1_id, event.player2_id, rating1, delta1, multiplier));
-    history.push(historyRow(event, event.player2_id, event.player1_id, rating2, delta2, multiplier));
     addChange(changes, event.player1_id, delta1); addChange(changes, event.player2_id, delta2);
-    current.set(event.player1_id, rollingRating(bases.get(event.player1_id)!, changes.get(event.player1_id)!));
-    current.set(event.player2_id, rollingRating(bases.get(event.player2_id)!, changes.get(event.player2_id)!));
+    const ratingAfter1 = rollingRating(bases.get(event.player1_id)!, changes.get(event.player1_id)!);
+    const ratingAfter2 = rollingRating(bases.get(event.player2_id)!, changes.get(event.player2_id)!);
+    history.push(historyRow(event, event.player1_id, event.player2_id, rating1, ratingAfter1, delta1, multiplier));
+    history.push(historyRow(event, event.player2_id, event.player1_id, rating2, ratingAfter2, delta2, multiplier));
+    current.set(event.player1_id, ratingAfter1);
+    current.set(event.player2_id, ratingAfter2);
   }
 
   const { error: deleteError } = await db.from("player_rating_history").delete().not("id", "is", null);
@@ -94,8 +96,8 @@ export async function recalculateAllRatings() {
   return { players: bases.size, matches: events.length, historyRows: history.length };
 }
 
-function historyRow(event: RatingEvent, playerId: string, opponentId: string, before: number, change: number, multiplier: number): HistoryInsert {
-  return { player_id: playerId, opponent_id: opponentId, source_type: event.type, source_match_id: event.id, event_date: event.eventDate, rating_before: round3(before), rating_after: round3(clamp(before + change)), rating_change: change, score_multiplier: multiplier, result: change > 0 ? "win" : "loss" };
+function historyRow(event: RatingEvent, playerId: string, opponentId: string, before: number, after: number, change: number, multiplier: number): HistoryInsert {
+  return { player_id: playerId, opponent_id: opponentId, source_type: event.type, source_match_id: event.id, event_date: event.eventDate, rating_before: round3(before), rating_after: round3(after), rating_change: change, score_multiplier: multiplier, result: change > 0 ? "win" : "loss" };
 }
 function addChange(changes: Map<string, number[]>, playerId: string, change: number) { const values = changes.get(playerId) ?? []; values.push(change); changes.set(playerId, values); }
 function rollingRating(base: number, values: number[]) { return round3(clamp(base + values.slice(-30).reduce((sum, value) => sum + value, 0))); }
