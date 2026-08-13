@@ -248,7 +248,8 @@ export async function getPlayerProfile(
         `,
       )
       .or(`player1_id.eq.${player.id},player2_id.eq.${player.id}`)
-      .eq("status", "finished"),
+      .eq("status", "finished")
+      .not("winner_id", "is", null),
 
     supabase
       .from("league_matches")
