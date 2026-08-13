@@ -6,6 +6,7 @@ import { createClient } from "@/lib/supabase/client";
 
 export default function UpdatePasswordForm() {
   const router = useRouter();
+  const [supabase] = useState(() => createClient());
   const [message, setMessage] = useState("");
   const [pending, setPending] = useState(false);
 
@@ -16,7 +17,7 @@ export default function UpdatePasswordForm() {
     const confirmation = String(form.get("confirmation") ?? "");
     if (password.length < 8) { setMessage("Пароль має містити щонайменше 8 символів."); setPending(false); return; }
     if (password !== confirmation) { setMessage("Паролі не збігаються."); setPending(false); return; }
-    const { error } = await createClient().auth.updateUser({ password });
+    const { error } = await supabase.auth.updateUser({ password });
     if (error) { setMessage("Посилання недійсне або застаріло. Запросіть новий лист для відновлення пароля."); setPending(false); return; }
     router.replace("/account?password_updated=1"); router.refresh();
   }

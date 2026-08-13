@@ -4,6 +4,7 @@ import "./globals.css";
 import Header from "../components/Header";
 import Breadcrumbs from "../components/Breadcrumbs";
 import StructuredData from "../components/StructuredData";
+import PasswordRecoveryRedirect from "../components/PasswordRecoveryRedirect";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://www.irpintennis.com"),
@@ -36,6 +37,7 @@ export default function RootLayout({
     <html lang="uk">
       <body className="min-h-screen bg-slate-50 text-[#123f2d] antialiased">
         <StructuredData />
+        <PasswordRecoveryRedirect />
         <Header />
         <Breadcrumbs />
         {children}
