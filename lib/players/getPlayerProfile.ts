@@ -7,6 +7,7 @@ export type ProfilePlayer = {
   name: string;
   slug: string;
   rating: number;
+  rating_base: number;
   photo_url: string | null;
   city: string | null;
   bio: string | null;
@@ -179,7 +180,7 @@ export async function getPlayerProfile(
 
   const { data: playerData, error: playerError } = await supabase
     .from("players")
-    .select("id, name, slug, rating, photo_url, city, bio, is_active")
+    .select("id, name, slug, rating, rating_base, photo_url, city, bio, is_active")
     .eq("slug", slug)
     .single();
 

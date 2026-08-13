@@ -115,7 +115,11 @@ export default async function PlayerProfilePage({
 
             <div className="mt-2 flex flex-wrap gap-1.5 sm:mt-5 sm:gap-3">
               <span className="rounded-full bg-white px-2.5 py-1 text-xs font-black text-[#123f2d] sm:px-4 sm:py-2 sm:text-base">
-                Рейтинг {Number(player.rating).toFixed(2)}
+                Поточний рейтинг {Number(player.rating).toFixed(2)}
+              </span>
+
+              <span className="rounded-full border border-white/25 px-2.5 py-1 text-[10px] font-bold text-white/85 sm:px-4 sm:py-2 sm:text-base">
+                Стартовий рейтинг {Number(player.rating_base).toFixed(2)}
               </span>
 
               <span className="hidden rounded-full border border-white/15 px-4 py-2 font-bold text-white/75 sm:inline">
@@ -263,7 +267,7 @@ export default async function PlayerProfilePage({
             </h2>
 
             <p className="mt-2 text-sm text-[#123f2d]/50">
-              Результати матчів із турнірів та ліг.
+              Від найновіших до найстаріших. Стартовий рейтинг указаний угорі профілю.
             </p>
           </div>
 
