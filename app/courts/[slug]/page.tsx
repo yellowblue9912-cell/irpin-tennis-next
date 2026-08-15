@@ -93,7 +93,7 @@ const courts: Record<string, Court> = {
         href: "tel:+380967561094",
       },
     ],
-    bookingUrl: null,
+    bookingUrl: "https://irpintenis.com.ua/",
     mapUrl:
       "https://maps.app.goo.gl/ZrAggQXzN3eMCyGq7?g_st=ic",
   },
@@ -157,7 +157,7 @@ const courts: Record<string, Court> = {
         href: "tel:+380967561094",
       },
     ],
-    bookingUrl: null,
+    bookingUrl: "https://irpintenis.com.ua/",
     mapUrl:
       "https://www.google.com/maps/search/?api=1&query=10-та+лінія+Ірпінь",
   },
