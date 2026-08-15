@@ -1,6 +1,5 @@
 import { NextResponse } from "next/server";
 import { revalidatePath } from "next/cache";
-import { recalculateAllRatings } from "@/lib/rating/recalculateAllRatings";
 import { createClient } from "../../../lib/supabase/server";
 import { createAdminSupabaseClient } from "../../../lib/supabase/admin";
 
@@ -99,14 +98,6 @@ export async function POST(request: Request) {
     );
   }
 
-  if (body.action === "confirm" && Boolean(body.approve)) {
-    await recalculateAllRatings();
-    revalidatePath("/matches");
-    revalidatePath("/players");
-    revalidatePath("/players/[slug]", "page");
-    revalidatePath("/account");
-  }
-
   return NextResponse.json({ message });
 }
 
@@ -166,7 +157,6 @@ async function confirmRatingResult(
     return NextResponse.json({ error: error.message }, { status: 400 });
   }
 
-  if (approve) await recalculateAllRatings();
   revalidatePath("/matches");
   revalidatePath("/players");
   revalidatePath("/players/[slug]", "page");

@@ -59,7 +59,6 @@ export async function updateMatchScore(formData: FormData) {
   }).eq("id", matchId);
   if (error) throw new Error(`Не вдалося оновити матч: ${error.message}`);
   if (type === "league") await rebuildLeagueStandings(row.season_id);
-  await recalculateRatings();
   revalidateMatchPages();
   redirect("/admin/matches?updated=1");
 }
@@ -75,16 +74,11 @@ export async function deleteMatch(formData: FormData) {
   const { error } = await supabase.from(table).delete().eq("id", matchId);
   if (error) throw new Error(`Не вдалося видалити матч: ${error.message}`);
   if (type === "league") await rebuildLeagueStandings((target as unknown as { season_id: string }).season_id);
-  await recalculateRatings();
   revalidateMatchPages();
   redirect("/admin/matches?deleted=1");
 }
 
 export async function deleteLeagueMatch(formData: FormData) { formData.set("match_type", "league"); return deleteMatch(formData); }
-
-async function recalculateRatings() {
-  await recalculateAllRatings();
-}
 
 export async function repairAllRatings() {
   if (!(await isAdminAuthenticated())) throw new Error("Потрібна авторизація адміністратора");
