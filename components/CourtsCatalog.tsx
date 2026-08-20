@@ -18,6 +18,7 @@ export type CourtCatalogItem = {
   shower: boolean;
   toilet: boolean;
   stringer?: boolean;
+  onlineBooking?: boolean;
 };
 
 type CourtsCatalogProps = {
@@ -169,9 +170,16 @@ export default function CourtsCatalog({ courts }: CourtsCatalogProps) {
                   }`}
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/10 to-transparent" />
-                <span className="absolute left-4 top-4 rounded-full bg-white/90 px-3 py-1 text-xs font-black text-[#123f2d] backdrop-blur">
-                  від {court.price} грн/год
-                </span>
+                <div className="absolute left-4 top-4 flex flex-col items-start gap-2">
+                  <span className="rounded-full bg-white/90 px-3 py-1 text-xs font-black text-[#123f2d] backdrop-blur">
+                    від {court.price} грн/год
+                  </span>
+                  {court.onlineBooking ? (
+                    <span className="rounded-full bg-[#c6f13d] px-3 py-1 text-xs font-black text-[#123f2d] shadow-sm">
+                      Онлайн-бронювання
+                    </span>
+                  ) : null}
+                </div>
                 <div className="absolute bottom-0 left-0 right-0 p-5 text-white">
                   <p className="text-xs font-black uppercase tracking-[0.14em] text-white/70">
                     {court.city} · {court.courtsCount}
@@ -197,7 +205,7 @@ export default function CourtsCatalog({ courts }: CourtsCatalogProps) {
                     ))}
                 </div>
                 <p className="mt-5 font-black text-[#ad4529] transition group-hover:translate-x-1">
-                  Детальніше →
+                  {court.onlineBooking ? "Детальніше та бронювання →" : "Детальніше →"}
                 </p>
               </div>
             </Link>

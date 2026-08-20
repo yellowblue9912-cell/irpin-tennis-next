@@ -39,6 +39,7 @@ const courts: CourtCatalogItem[] = [
     outdoor: true,
     shower: true,
     toilet: true,
+    onlineBooking: true,
   },
   {
     name: "Кампа",
@@ -70,6 +71,7 @@ const courts: CourtCatalogItem[] = [
     shower: true,
     toilet: true,
     stringer: true,
+    onlineBooking: true,
   },
   {
     name: "Пуща-Водиця",
