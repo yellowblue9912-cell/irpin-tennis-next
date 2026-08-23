@@ -24,6 +24,7 @@ const courts: CourtCatalogItem[] = [
     outdoor: true,
     shower: false,
     toilet: true,
+    onlineBooking: true,
   },
   {
     name: "Terrakort",
