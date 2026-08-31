@@ -78,7 +78,7 @@ export default async function Season2Page({ searchParams }: PageProps) {
           <div className="mt-7 flex flex-wrap gap-3">
             <span className="rounded-full bg-white/10 px-4 py-2 font-bold">Реєстрація до 20 вересня 2026 року</span>
             <span className="rounded-full bg-white/10 px-4 py-2 font-bold">Сезон: 21 вересня — 28 грудня 2026 року</span>
-            <span className="rounded-full bg-white/10 px-4 py-2 font-bold">Вартість — буде оголошено</span>
+            <span className="rounded-full bg-[#d7f34c] px-4 py-2 font-black text-[#123f2d]">Участь безкоштовна</span>
           </div>
         </div>
       </section>
