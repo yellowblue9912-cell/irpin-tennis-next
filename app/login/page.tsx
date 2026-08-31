@@ -10,12 +10,18 @@ export const metadata: Metadata = {
   robots: { index: false, follow: false },
 };
 
-export default async function LoginPage() {
+type LoginPageProps = { searchParams: Promise<{ next?: string }> };
+
+export default async function LoginPage({ searchParams }: LoginPageProps) {
+  const params = await searchParams;
+  const next = params.next?.startsWith("/") && !params.next.startsWith("//")
+    ? params.next
+    : "/account";
   const supabase = await createClient();
   const { data } = await supabase.auth.getUser();
 
   if (data.user) {
-    redirect("/account");
+    redirect(next);
   }
 
   return (
@@ -79,7 +85,7 @@ export default async function LoginPage() {
           </a>
         </div>
       </section>
-      <AuthForm />
+      <AuthForm next={next} />
     </main>
   );
 }

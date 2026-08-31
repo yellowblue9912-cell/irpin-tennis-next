@@ -7,7 +7,7 @@ import { createClient } from "../lib/supabase/client";
 
 type Mode = "login" | "signup";
 
-export default function AuthForm() {
+export default function AuthForm({ next = "/account" }: { next?: string }) {
   const router = useRouter();
   const [mode, setMode] = useState<Mode>("login");
   const [message, setMessage] = useState("");
@@ -38,7 +38,7 @@ export default function AuthForm() {
       if (error) {
         setMessage("Не вдалося увійти. Перевірте email і пароль.");
       } else {
-        router.replace("/account");
+        router.replace(next);
         router.refresh();
       }
     } else {
@@ -46,7 +46,7 @@ export default function AuthForm() {
         email,
         password,
         options: {
-          emailRedirectTo: `${window.location.origin}/auth/callback`,
+          emailRedirectTo: `${window.location.origin}/auth/callback?next=${encodeURIComponent(next)}`,
         },
       });
 
@@ -60,7 +60,7 @@ export default function AuthForm() {
             : error.message,
         );
       } else if (data.session) {
-        router.replace("/account");
+        router.replace(next);
         router.refresh();
       } else {
         setMessage(

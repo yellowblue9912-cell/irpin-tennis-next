@@ -238,6 +238,7 @@ export default async function TournamentsPage({
   const visibleTournaments = showAll
     ? filteredTournaments
     : filteredTournaments.slice(0, 5);
+  const season2IsVisible = selectedTab === "upcoming";
 
   return (
     <main className="min-h-screen bg-[#f6f0e5] text-[#123f2d]">
@@ -279,7 +280,8 @@ export default async function TournamentsPage({
             ).length;
             const count =
               tournamentCount +
-              (tab.id === "active" ? activeLeagueSeasons.length : 0);
+              (tab.id === "active" ? activeLeagueSeasons.length : 0) +
+              (tab.id === "upcoming" ? 1 : 0);
 
             return (
               <Link
@@ -317,10 +319,20 @@ export default async function TournamentsPage({
           </div>
         )}
 
-        {visibleTournaments.length > 0 ||
+        {visibleTournaments.length > 0 || season2IsVisible ||
         (selectedTab === "active" && activeLeagueSeasons.length > 0) ? (
           <>
           <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+            {season2IsVisible && (
+              <Link href="/tournaments/itl-season-2" className="group rounded-[24px] border-2 border-[#d7f34c] bg-[#123f2d] p-5 text-white shadow-sm transition hover:-translate-y-1 hover:shadow-xl sm:p-6">
+                <span className="rounded-full bg-[#d7f34c] px-4 py-2 text-xs font-black uppercase text-[#123f2d]">Відкрита реєстрація</span>
+                <p className="mt-6 text-xs font-black uppercase tracking-[0.2em] text-[#d7f34c]">Ірпінська тенісна ліга</p>
+                <h2 className="mt-2 text-3xl font-black uppercase leading-tight">ITL — сезон 2</h2>
+                <p className="mt-4 leading-7 text-white/70">Загальна ліга з розподілом за рівнем та окрема жіноча ліга.</p>
+                <div className="mt-5 rounded-2xl bg-white/10 p-4 font-bold">Реєстрація до 20 вересня 2026 року</div>
+                <div className="mt-5 flex items-center justify-between border-t border-white/15 pt-4"><span className="font-black">Опис і реєстрація</span><span className="text-2xl">→</span></div>
+              </Link>
+            )}
             {selectedTab === "active" &&
               activeLeagueSeasons.map((season) => (
                 <Link
