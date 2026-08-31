@@ -62,7 +62,7 @@ export default async function Season2Page({ searchParams }: PageProps) {
           </p>
           <div className="mt-7 flex flex-wrap gap-3">
             <span className="rounded-full bg-white/10 px-4 py-2 font-bold">Реєстрація до 20 вересня 2026 року</span>
-            <span className="rounded-full bg-white/10 px-4 py-2 font-bold">Початок сезону — буде оголошено</span>
+            <span className="rounded-full bg-white/10 px-4 py-2 font-bold">Сезон: 21 вересня — 28 грудня 2026 року</span>
             <span className="rounded-full bg-white/10 px-4 py-2 font-bold">Вартість — буде оголошено</span>
           </div>
         </div>
@@ -97,11 +97,44 @@ export default async function Season2Page({ searchParams }: PageProps) {
         </section>
 
         <section className="mt-8 rounded-[28px] bg-white p-6 shadow-sm sm:p-8">
+          <p className="text-xs font-black uppercase tracking-[0.18em] text-[#ad4529]">Формат змагань</p>
+          <h2 className="mt-2 text-2xl font-black uppercase">Регламент ліг</h2>
+          <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            {[
+              ["Ladies", "Жіноча ліга"],
+              ["Masters", "Окремий дивізіон сезону"],
+              ["Challenger", "Окремий дивізіон сезону"],
+              ["Futures", "Окремий дивізіон сезону"],
+            ].map(([name, description]) => (
+              <article key={name} className="rounded-2xl bg-[#f6f0e5] p-5">
+                <h3 className="text-xl font-black uppercase">{name}</h3>
+                <p className="mt-2 text-sm text-[#123f2d]/65">{description}</p>
+                <p className="mt-4 font-black">10 гравців</p>
+              </article>
+            ))}
+          </div>
+          <div className="mt-6 grid gap-4 md:grid-cols-3">
+            <div className="rounded-2xl border border-[#123f2d]/10 p-5">
+              <strong className="block text-lg">21 вересня — 28 грудня</strong>
+              <p className="mt-2 text-sm leading-6 text-[#123f2d]/65">Період проведення сезону 2026 року.</p>
+            </div>
+            <div className="rounded-2xl border border-[#123f2d]/10 p-5">
+              <strong className="block text-lg">Кругова система</strong>
+              <p className="mt-2 text-sm leading-6 text-[#123f2d]/65">Кожен учасник грає по одному повному матчу з кожним суперником у своїй лізі.</p>
+            </div>
+            <div className="rounded-2xl border border-[#123f2d]/10 p-5">
+              <strong className="block text-lg">9 матчів для кожного</strong>
+              <p className="mt-2 text-sm leading-6 text-[#123f2d]/65">За підсумками всіх матчів буде сформована фінальна турнірна таблиця.</p>
+            </div>
+          </div>
+        </section>
+
+        <section className="mt-8 rounded-[28px] bg-white p-6 shadow-sm sm:p-8">
           <h2 className="text-2xl font-black uppercase">Як це працює</h2>
           <ol className="mt-5 grid gap-4 md:grid-cols-3">
             <li className="rounded-2xl bg-[#f6f0e5] p-5"><strong>1. Реєстрація</strong><p className="mt-2 text-sm leading-6 text-[#123f2d]/65">Подайте заявку до 20 вересня.</p></li>
             <li className="rounded-2xl bg-[#f6f0e5] p-5"><strong>2. Розподіл</strong><p className="mt-2 text-sm leading-6 text-[#123f2d]/65">Організатори сформують ліги за рівнем учасників.</p></li>
-            <li className="rounded-2xl bg-[#f6f0e5] p-5"><strong>3. Старт сезону</strong><p className="mt-2 text-sm leading-6 text-[#123f2d]/65">Розклад і регламент опублікуємо після формування груп.</p></li>
+            <li className="rounded-2xl bg-[#f6f0e5] p-5"><strong>3. Старт сезону</strong><p className="mt-2 text-sm leading-6 text-[#123f2d]/65">21 вересня сформовані ліги розпочнуть сезон.</p></li>
           </ol>
         </section>
       </div>
