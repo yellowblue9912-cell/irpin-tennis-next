@@ -91,8 +91,8 @@ export default async function Season2Page({ searchParams }: PageProps) {
           />
         </section>
 
-        <Link href="/tournaments/itl-season-2/participants" className="mt-4 flex items-center justify-between rounded-2xl bg-[#123f2d] px-5 py-4 font-black !text-white shadow-sm">
-          <span className="!text-white">Переглянути учасників і розподіл</span><span className="text-xl !text-white">→</span>
+        <Link href="/tournaments/itl-season-2/participants" className="mt-4 flex items-center justify-between rounded-2xl px-5 py-4 font-black shadow-sm" style={{ backgroundColor: "#123f2d", color: "#ffffff" }}>
+          <span style={{ color: "#ffffff" }}>Переглянути учасників і розподіл</span><span className="text-xl" style={{ color: "#ffffff" }}>→</span>
         </Link>
       </div>
     </main>
@@ -113,26 +113,26 @@ function RegistrationCard({ title, description, division, count, isLoggedIn, cur
       <p className="mt-3 text-xs font-bold sm:text-sm">Учасників: {count}</p>
       {isRegistered ? (
         <div className="mt-3">
-          <div className="rounded-xl bg-[#d7f34c] px-2 py-2.5 text-center text-[11px] font-black sm:text-sm">Ви зареєстровані ✓</div>
+          <div className="rounded-xl px-2 py-2.5 text-center text-[11px] font-black sm:text-sm" style={{ backgroundColor: "#d7f34c", color: "#123f2d" }}>Ви зареєстровані ✓</div>
           <form action={cancelSeason2Registration} className="mt-2">
-            <button className="w-full rounded-xl border border-[#ad4529]/25 px-2 py-2 text-[10px] font-black text-[#ad4529] transition hover:bg-[#ad4529] hover:text-white sm:text-sm">
+            <button className="w-full rounded-xl border border-[#ad4529]/25 px-2 py-2 text-[10px] font-black transition sm:text-sm" style={{ backgroundColor: "#ffffff", color: "#ad4529" }}>
               Скасувати
             </button>
           </form>
         </div>
       ) : hasOtherRegistration ? (
-        <div className="mt-3 rounded-xl bg-[#f6f0e5] px-2 py-2.5 text-center text-[10px] font-bold text-[#123f2d]/65 sm:text-sm">
+        <div className="mt-3 rounded-xl px-2 py-2.5 text-center text-[10px] font-bold sm:text-sm" style={{ backgroundColor: "#f6f0e5", color: "#526b60" }}>
           Обрано іншу лігу
         </div>
       ) : isLoggedIn ? (
         <form action={registerForSeason2} className="mt-3">
           <input type="hidden" name="division" value={division} />
-          <button className="w-full rounded-xl bg-[#123f2d] px-2 py-2.5 text-[11px] font-black text-white transition hover:bg-[#1b6046] sm:text-sm">
+          <button className="w-full rounded-xl px-2 py-2.5 text-[11px] font-black transition sm:text-sm" style={{ backgroundColor: "#123f2d", color: "#ffffff" }}>
             Зареєструватися
           </button>
         </form>
       ) : (
-        <Link href="/login?next=%2Ftournaments%2Fitl-season-2" className="mt-3 flex justify-center rounded-xl bg-[#123f2d] px-2 py-2.5 text-center text-[10px] font-black text-white sm:text-sm">
+        <Link href="/login?next=%2Ftournaments%2Fitl-season-2" className="mt-3 flex justify-center rounded-xl px-2 py-2.5 text-center text-[10px] font-black sm:text-sm" style={{ backgroundColor: "#123f2d", color: "#ffffff" }}>
           Увійти / реєстрація
         </Link>
       )}
