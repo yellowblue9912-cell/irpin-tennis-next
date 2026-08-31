@@ -65,25 +65,25 @@ export default async function Season2Page({ searchParams }: PageProps) {
   return (
     <main className="min-h-screen bg-[#f6f0e5] text-[#123f2d]">
       <section className="bg-[#123f2d] text-white">
-        <div className="mx-auto max-w-6xl px-4 py-10 sm:px-6 sm:py-16">
-          <span className="rounded-full bg-[#d7f34c] px-4 py-2 text-xs font-black uppercase text-[#123f2d]">
+        <div className="mx-auto max-w-6xl px-4 py-6 sm:px-6 sm:py-8">
+          <span className="rounded-full bg-[#d7f34c] px-3 py-1.5 text-[11px] font-black uppercase text-[#123f2d]">
             Відкрита реєстрація
           </span>
-          <h1 className="mt-6 max-w-4xl text-4xl font-black uppercase leading-tight sm:text-6xl">
+          <h1 className="mt-4 max-w-4xl text-3xl font-black uppercase leading-tight sm:text-4xl">
             Ірпінська тенісна ліга — сезон 2
           </h1>
-          <p className="mt-5 max-w-3xl text-lg leading-8 text-white/75">
+          <p className="mt-3 max-w-4xl text-sm leading-6 text-white/75 sm:text-base">
             Учасники реєструються до загального списку, а після завершення прийому заявок будуть розподілені по лігах відповідно до рівня та кількості гравців.
           </p>
-          <div className="mt-7 flex flex-wrap gap-3">
-            <span className="rounded-full bg-white/10 px-4 py-2 font-bold">Реєстрація до 20 вересня 2026 року</span>
-            <span className="rounded-full bg-white/10 px-4 py-2 font-bold">Сезон: 21 вересня — 28 грудня 2026 року</span>
-            <span className="rounded-full bg-[#d7f34c] px-4 py-2 font-black text-[#123f2d]">Участь безкоштовна</span>
+          <div className="mt-4 flex flex-wrap gap-2 text-sm">
+            <span className="rounded-full bg-white/10 px-3 py-1.5 font-bold">Реєстрація до 20 вересня 2026 року</span>
+            <span className="rounded-full bg-white/10 px-3 py-1.5 font-bold">Сезон: 21 вересня — 28 грудня 2026 року</span>
+            <span className="rounded-full bg-[#d7f34c] px-3 py-1.5 font-black text-[#123f2d]">Участь безкоштовна</span>
           </div>
         </div>
       </section>
 
-      <div className="mx-auto max-w-6xl px-4 py-10 sm:px-6">
+      <div className="mx-auto max-w-6xl px-4 py-6 sm:px-6 sm:py-8">
         {(params.registered || params.cancelled || params.error) && (
           <div className="mb-7 rounded-2xl bg-white p-5 font-bold shadow-sm">
             {params.registered
