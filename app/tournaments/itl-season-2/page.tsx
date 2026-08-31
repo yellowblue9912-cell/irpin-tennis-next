@@ -119,6 +119,9 @@ export default async function Season2Page({ searchParams }: PageProps) {
           <p className="mt-3 max-w-3xl leading-7 text-[#123f2d]/65">
             Учасники загальної ліги розташовані за поточним рейтингом. До завершення реєстрації склад ліг може змінюватися.
           </p>
+          <div className="mt-4 rounded-2xl bg-[#f6f0e5] p-5 text-sm font-bold leading-6">
+            Орієнтовні рівні: Masters — 3.75 і вище, Challenger — 3.25–3.75, Futures — 3.25 і нижче. Рейтинг є лише орієнтиром і не гарантує участь саме в цій лізі. Остаточний розподіл залежатиме від рейтингу та складу всіх зареєстрованих гравців.
+          </div>
           <div className="mt-6 grid gap-5 md:grid-cols-2">
             <ParticipantGroup title="Masters" participants={generalParticipants.slice(0, 10)} startPosition={1} />
             <ParticipantGroup title="Challenger" participants={generalParticipants.slice(10, 20)} startPosition={11} />
@@ -137,10 +140,10 @@ export default async function Season2Page({ searchParams }: PageProps) {
           <h2 className="mt-2 text-2xl font-black uppercase">Регламент ліг</h2>
           <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
             {[
-              ["Ladies", "Жіноча ліга"],
-              ["Masters", "Окремий дивізіон сезону"],
-              ["Challenger", "Окремий дивізіон сезону"],
-              ["Futures", "Окремий дивізіон сезону"],
+              ["Ladies", "Окрема жіноча ліга"],
+              ["Masters", "Орієнтовний рейтинг: 3.75+"],
+              ["Challenger", "Орієнтовний рейтинг: 3.25–3.75"],
+              ["Futures", "Орієнтовний рейтинг: до 3.25"],
             ].map(([name, description]) => (
               <article key={name} className="rounded-2xl bg-[#f6f0e5] p-5">
                 <h3 className="text-xl font-black uppercase">{name}</h3>
