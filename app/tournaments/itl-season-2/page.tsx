@@ -91,8 +91,8 @@ export default async function Season2Page({ searchParams }: PageProps) {
           />
         </section>
 
-        <Link href="/tournaments/itl-season-2/participants" className="mt-4 flex items-center justify-between rounded-2xl bg-[#123f2d] px-5 py-4 font-black text-white shadow-sm">
-          <span>Переглянути учасників і розподіл</span><span className="text-xl">→</span>
+        <Link href="/tournaments/itl-season-2/participants" className="mt-4 flex items-center justify-between rounded-2xl bg-[#123f2d] px-5 py-4 font-black !text-white shadow-sm">
+          <span className="!text-white">Переглянути учасників і розподіл</span><span className="text-xl !text-white">→</span>
         </Link>
       </div>
     </main>
