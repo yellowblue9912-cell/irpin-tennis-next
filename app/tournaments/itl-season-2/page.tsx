@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import { createAdminSupabaseClient } from "@/lib/supabase/admin";
-import { registerForSeason2 } from "./actions";
+import { cancelSeason2Registration, registerForSeason2 } from "./actions";
 
 export const metadata: Metadata = {
   title: "Ірпінська тенісна ліга — сезон 2 | Irpin Tennis",
@@ -10,13 +10,15 @@ export const metadata: Metadata = {
 };
 
 type PageProps = {
-  searchParams: Promise<{ registered?: string; error?: string }>;
+  searchParams: Promise<{ registered?: string; cancelled?: string; error?: string }>;
 };
 
 const messages: Record<string, string> = {
   no_player_profile: "Ваш акаунт ще не прив’язаний до профілю гравця. Напишіть адміністратору, і ми допоможемо.",
   registration_closed: "Реєстрацію вже завершено.",
   registration_failed: "Не вдалося зберегти заявку. Спробуйте ще раз.",
+  cancellation_failed: "Не вдалося скасувати реєстрацію. Спробуйте ще раз.",
+  already_registered: "Ви вже зареєстровані в одній із ліг. Спочатку скасуйте поточну заявку, якщо хочете змінити вибір.",
   invalid_division: "Оберіть правильний розділ ліги.",
 };
 
@@ -37,11 +39,7 @@ export default async function Season2Page({ searchParams }: PageProps) {
     .select("player_id, division, player:players(name, slug)")
     .order("created_at", { ascending: true });
 
-  const registered = new Set(
-    (registrations ?? [])
-      .filter((item) => item.player_id === playerId)
-      .map((item) => item.division),
-  );
+  const currentRegistration = (registrations ?? []).find((item) => item.player_id === playerId)?.division ?? null;
   const counts = (registrations ?? []).reduce<Record<string, number>>((result, item) => {
     result[item.division] = (result[item.division] ?? 0) + 1;
     return result;
@@ -69,10 +67,12 @@ export default async function Season2Page({ searchParams }: PageProps) {
       </section>
 
       <div className="mx-auto max-w-6xl px-4 py-10 sm:px-6">
-        {(params.registered || params.error) && (
+        {(params.registered || params.cancelled || params.error) && (
           <div className="mb-7 rounded-2xl bg-white p-5 font-bold shadow-sm">
             {params.registered
               ? "Готово! Вашу заявку прийнято."
+              : params.cancelled
+                ? "Вашу реєстрацію скасовано."
               : messages[params.error ?? ""] ?? "Сталася помилка."}
           </div>
         )}
@@ -84,15 +84,15 @@ export default async function Season2Page({ searchParams }: PageProps) {
             division="general"
             count={counts.general ?? 0}
             isLoggedIn={Boolean(data.user)}
-            isRegistered={registered.has("general")}
+            currentRegistration={currentRegistration}
           />
           <RegistrationCard
             title="Жіноча ліга"
-            description="Окремий жіночий залік. Дівчата можуть одночасно зареєструватися і сюди, і до загальної ліги."
+            description="Окремий жіночий залік. Дівчата обирають участь або в жіночій, або в загальній лізі."
             division="women"
             count={counts.women ?? 0}
             isLoggedIn={Boolean(data.user)}
-            isRegistered={registered.has("women")}
+            currentRegistration={currentRegistration}
           />
         </section>
 
@@ -142,9 +142,12 @@ export default async function Season2Page({ searchParams }: PageProps) {
   );
 }
 
-function RegistrationCard({ title, description, division, count, isLoggedIn, isRegistered }: {
-  title: string; description: string; division: "general" | "women"; count: number; isLoggedIn: boolean; isRegistered: boolean;
+function RegistrationCard({ title, description, division, count, isLoggedIn, currentRegistration }: {
+  title: string; description: string; division: "general" | "women"; count: number; isLoggedIn: boolean; currentRegistration: string | null;
 }) {
+  const isRegistered = currentRegistration === division;
+  const hasOtherRegistration = Boolean(currentRegistration && !isRegistered);
+
   return (
     <article className="rounded-[28px] bg-white p-6 shadow-sm sm:p-8">
       <p className="text-xs font-black uppercase tracking-[0.18em] text-[#ad4529]">Сезон 2</p>
@@ -152,7 +155,18 @@ function RegistrationCard({ title, description, division, count, isLoggedIn, isR
       <p className="mt-4 min-h-20 leading-7 text-[#123f2d]/65">{description}</p>
       <p className="mt-5 font-bold">Зареєстровано: {count}</p>
       {isRegistered ? (
-        <div className="mt-5 rounded-2xl bg-[#d7f34c] px-5 py-4 text-center font-black">Ви зареєстровані ✓</div>
+        <div className="mt-5">
+          <div className="rounded-2xl bg-[#d7f34c] px-5 py-4 text-center font-black">Ви зареєстровані ✓</div>
+          <form action={cancelSeason2Registration} className="mt-3">
+            <button className="w-full rounded-2xl border border-[#ad4529]/25 px-5 py-3 font-black text-[#ad4529] transition hover:bg-[#ad4529] hover:text-white">
+              Скасувати реєстрацію
+            </button>
+          </form>
+        </div>
+      ) : hasOtherRegistration ? (
+        <div className="mt-5 rounded-2xl bg-[#f6f0e5] px-5 py-4 text-center font-bold text-[#123f2d]/65">
+          Ви вже обрали іншу лігу
+        </div>
       ) : isLoggedIn ? (
         <form action={registerForSeason2} className="mt-5">
           <input type="hidden" name="division" value={division} />

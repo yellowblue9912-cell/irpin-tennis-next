@@ -34,17 +34,52 @@ export async function registerForSeason2(formData: FormData) {
     redirect(`${RETURN_PATH}?error=no_player_profile`);
   }
 
+  const { data: existingRegistration } = await admin
+    .from("itl_season_2_registrations")
+    .select("division")
+    .eq("player_id", player.id)
+    .maybeSingle();
+
+  if (existingRegistration) {
+    redirect(`${RETURN_PATH}?error=already_registered`);
+  }
+
   const { error } = await admin.from("itl_season_2_registrations").insert({
     user_id: data.user.id,
     player_id: player.id,
     division,
   });
 
-  if (error && error.code !== "23505") {
+  if (error?.code === "23505") {
+    redirect(`${RETURN_PATH}?error=already_registered`);
+  }
+  if (error) {
     redirect(`${RETURN_PATH}?error=registration_failed`);
   }
 
   revalidatePath(RETURN_PATH);
   revalidatePath("/tournaments");
   redirect(`${RETURN_PATH}?registered=${division}`);
+}
+
+export async function cancelSeason2Registration() {
+  const supabase = await createClient();
+  const { data } = await supabase.auth.getUser();
+  if (!data.user) {
+    redirect(`/login?next=${encodeURIComponent(RETURN_PATH)}`);
+  }
+
+  const admin = createAdminSupabaseClient();
+  const { error } = await admin
+    .from("itl_season_2_registrations")
+    .delete()
+    .eq("user_id", data.user.id);
+
+  if (error) {
+    redirect(`${RETURN_PATH}?error=cancellation_failed`);
+  }
+
+  revalidatePath(RETURN_PATH);
+  revalidatePath("/tournaments");
+  redirect(`${RETURN_PATH}?cancelled=1`);
 }
