@@ -53,33 +53,35 @@ export default async function Season2ParticipantsPage() {
         </div>
 
         <div className="mt-4 grid gap-3 sm:grid-cols-2">
-          <ParticipantGroup title="Masters" subtitle="Орієнтовно 3.75+" participants={general.slice(0, 10)} startPosition={1} />
-          <ParticipantGroup title="Challenger" subtitle="Орієнтовно 3.25–3.75" participants={general.slice(10, 20)} startPosition={11} />
-          <ParticipantGroup title="Futures" subtitle="Орієнтовно до 3.25" participants={general.slice(20)} startPosition={21} />
-          <ParticipantGroup title="Ladies" subtitle="Жіноча ліга" participants={ladies} startPosition={1} />
+          <ParticipantGroup title="Masters" subtitle="Roland Garros · орієнтовно 3.75+" participants={general.slice(0, 10)} startPosition={1} color="#b84f2b" accent="#f6c7a7" />
+          <ParticipantGroup title="Challenger" subtitle="Wimbledon · орієнтовно 3.25–3.75" participants={general.slice(10, 20)} startPosition={11} color="#55317d" accent="#c7e85b" />
+          <ParticipantGroup title="Futures" subtitle="Australian Open · орієнтовно до 3.25" participants={general.slice(20)} startPosition={21} color="#0879bd" accent="#bcecff" />
+          <ParticipantGroup title="Ladies" subtitle="US Open · жіноча ліга" participants={ladies} startPosition={1} color="#172a52" accent="#ffd447" />
         </div>
       </div>
     </main>
   );
 }
 
-function ParticipantGroup({ title, subtitle, participants, startPosition }: {
+function ParticipantGroup({ title, subtitle, participants, startPosition, color, accent }: {
   title: string;
   subtitle: string;
   participants: Participant[];
   startPosition: number;
+  color: string;
+  accent: string;
 }) {
   return (
-    <section className="overflow-hidden rounded-2xl bg-white shadow-sm">
-      <header className="flex items-center justify-between bg-[#123f2d] px-4 py-3 text-white">
-        <div><h2 className="font-black uppercase">{title}</h2><p className="text-[10px] text-white/60">{subtitle}</p></div>
-        <span className="text-xs font-bold text-white/70">{participants.length}</span>
+    <section className="overflow-hidden rounded-2xl border bg-white shadow-sm" style={{ borderColor: `${color}35` }}>
+      <header className="flex items-center justify-between px-4 py-3 text-white" style={{ backgroundColor: color }}>
+        <div><h2 className="font-black uppercase" style={{ color: "#ffffff" }}>{title}</h2><p className="text-[10px]" style={{ color: accent }}>{subtitle}</p></div>
+        <span className="rounded-full px-2 py-1 text-xs font-black" style={{ backgroundColor: accent, color }}>{participants.length}</span>
       </header>
       {participants.length ? (
         <ol className="divide-y divide-[#123f2d]/10">
           {participants.map((participant, index) => (
             <li key={participant.slug} className="flex items-center gap-2 px-4 py-2.5">
-              <span className="w-7 shrink-0 text-xs font-black text-[#ad4529]">#{startPosition + index}</span>
+              <span className="w-7 shrink-0 text-xs font-black" style={{ color }}>#{startPosition + index}</span>
               <Link href={`/players/${participant.slug}`} className="min-w-0 flex-1 truncate text-sm font-black">{participant.name}</Link>
               <span className="shrink-0 rounded-full bg-[#f6f0e5] px-2 py-1 text-xs font-black">{participant.rating.toFixed(2)}</span>
             </li>

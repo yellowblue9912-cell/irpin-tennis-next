@@ -82,7 +82,7 @@ export default async function Season2Page({ searchParams }: PageProps) {
             currentRegistration={currentRegistration}
           />
           <RegistrationCard
-            title="Жіноча ліга"
+            title="Ladies League"
             description="Окремий жіночий залік. Дівчата обирають участь або в жіночій, або в загальній лізі."
             division="women"
             count={counts.women ?? 0}
