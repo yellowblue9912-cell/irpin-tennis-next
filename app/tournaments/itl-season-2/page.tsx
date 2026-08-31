@@ -36,7 +36,7 @@ export default async function Season2Page({ searchParams }: PageProps) {
 
   const { data: registrations } = await admin
     .from("itl_season_2_registrations")
-    .select("player_id, division, player:players(name, slug)")
+    .select("player_id, division, created_at, player:players(name, slug, rating)")
     .order("created_at", { ascending: true });
 
   const currentRegistration = (registrations ?? []).find((item) => item.player_id === playerId)?.division ?? null;
@@ -44,6 +44,23 @@ export default async function Season2Page({ searchParams }: PageProps) {
     result[item.division] = (result[item.division] ?? 0) + 1;
     return result;
   }, {});
+  const participants = (registrations ?? [])
+    .map((item) => {
+      const player = Array.isArray(item.player) ? item.player[0] : item.player;
+      if (!player) return null;
+      return {
+        division: item.division,
+        createdAt: item.created_at,
+        name: player.name,
+        slug: player.slug,
+        rating: Number(player.rating ?? 0),
+      };
+    })
+    .filter((item): item is NonNullable<typeof item> => Boolean(item));
+  const byRating = (a: (typeof participants)[number], b: (typeof participants)[number]) =>
+    b.rating - a.rating || a.createdAt.localeCompare(b.createdAt);
+  const generalParticipants = participants.filter((item) => item.division === "general").sort(byRating);
+  const ladiesParticipants = participants.filter((item) => item.division === "women").sort(byRating);
 
   return (
     <main className="min-h-screen bg-[#f6f0e5] text-[#123f2d]">
@@ -97,6 +114,25 @@ export default async function Season2Page({ searchParams }: PageProps) {
         </section>
 
         <section className="mt-8 rounded-[28px] bg-white p-6 shadow-sm sm:p-8">
+          <p className="text-xs font-black uppercase tracking-[0.18em] text-[#ad4529]">Учасники сезону</p>
+          <h2 className="mt-2 text-2xl font-black uppercase">Попередній розподіл за лігами</h2>
+          <p className="mt-3 max-w-3xl leading-7 text-[#123f2d]/65">
+            Учасники загальної ліги розташовані за поточним рейтингом. До завершення реєстрації склад ліг може змінюватися.
+          </p>
+          <div className="mt-6 grid gap-5 md:grid-cols-2">
+            <ParticipantGroup title="Masters" participants={generalParticipants.slice(0, 10)} startPosition={1} />
+            <ParticipantGroup title="Challenger" participants={generalParticipants.slice(10, 20)} startPosition={11} />
+            <ParticipantGroup title="Futures" participants={generalParticipants.slice(20, 30)} startPosition={21} />
+            <ParticipantGroup title="Ladies" participants={ladiesParticipants.slice(0, 10)} startPosition={1} />
+          </div>
+          {(generalParticipants.length > 30 || ladiesParticipants.length > 10) && (
+            <div className="mt-5 rounded-2xl bg-[#f6f0e5] p-5 font-bold">
+              У резерві: загальна ліга — {Math.max(0, generalParticipants.length - 30)}, жіноча ліга — {Math.max(0, ladiesParticipants.length - 10)}.
+            </div>
+          )}
+        </section>
+
+        <section className="mt-8 rounded-[28px] bg-white p-6 shadow-sm sm:p-8">
           <p className="text-xs font-black uppercase tracking-[0.18em] text-[#ad4529]">Формат змагань</p>
           <h2 className="mt-2 text-2xl font-black uppercase">Регламент ліг</h2>
           <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
@@ -139,6 +175,44 @@ export default async function Season2Page({ searchParams }: PageProps) {
         </section>
       </div>
     </main>
+  );
+}
+
+type Participant = {
+  name: string;
+  slug: string;
+  rating: number;
+};
+
+function ParticipantGroup({ title, participants, startPosition }: {
+  title: string;
+  participants: Participant[];
+  startPosition: number;
+}) {
+  return (
+    <article className="overflow-hidden rounded-2xl border border-[#123f2d]/10">
+      <header className="flex items-center justify-between bg-[#123f2d] px-5 py-4 text-white">
+        <h3 className="text-xl font-black uppercase">{title}</h3>
+        <span className="text-sm font-bold text-white/70">{participants.length}/10</span>
+      </header>
+      {participants.length ? (
+        <ol className="divide-y divide-[#123f2d]/10">
+          {participants.map((participant, index) => (
+            <li key={participant.slug} className="flex items-center gap-3 px-5 py-4">
+              <span className="w-8 shrink-0 font-black text-[#ad4529]">#{startPosition + index}</span>
+              <Link href={`/players/${participant.slug}`} className="min-w-0 flex-1 truncate font-black hover:text-[#ad4529]">
+                {participant.name}
+              </Link>
+              <span className="shrink-0 rounded-full bg-[#f6f0e5] px-3 py-1 text-sm font-black">
+                {participant.rating.toFixed(2)}
+              </span>
+            </li>
+          ))}
+        </ol>
+      ) : (
+        <p className="px-5 py-6 text-sm text-[#123f2d]/55">Поки немає зареєстрованих гравців.</p>
+      )}
+    </article>
   );
 }
 
