@@ -94,6 +94,25 @@ export default async function Season2Page({ searchParams }: PageProps) {
         <Link href="/tournaments/itl-season-2/participants" className="mt-4 flex items-center justify-between rounded-2xl px-5 py-4 font-black shadow-sm" style={{ backgroundColor: "#123f2d", color: "#ffffff" }}>
           <span style={{ color: "#ffffff" }}>Переглянути учасників і розподіл</span><span className="text-xl" style={{ color: "#ffffff" }}>→</span>
         </Link>
+
+        <section className="mt-4 rounded-2xl bg-white p-4 shadow-sm sm:p-5">
+          <div className="flex items-end justify-between gap-3">
+            <div>
+              <p className="text-[10px] font-black uppercase tracking-[0.16em] text-[#ad4529]">ITL — сезон 2</p>
+              <h2 className="mt-1 text-lg font-black uppercase sm:text-xl">Про лігу</h2>
+            </div>
+            <span className="rounded-full bg-[#d7f34c] px-3 py-1 text-[10px] font-black uppercase">Участь безкоштовна</span>
+          </div>
+          <p className="mt-3 text-xs leading-5 text-[#123f2d]/65 sm:text-sm">
+            Сезон для гравців різного рівня. Після завершення реєстрації учасників розподілять за рейтингом і складом заявок.
+          </p>
+          <div className="mt-3 grid grid-cols-2 gap-2 text-xs sm:grid-cols-4 sm:text-sm">
+            <div className="rounded-xl bg-[#f6f0e5] p-3"><strong className="block">21.09–28.12</strong><span className="text-[#123f2d]/55">Дати сезону</span></div>
+            <div className="rounded-xl bg-[#f6f0e5] p-3"><strong className="block">4 ліги</strong><span className="text-[#123f2d]/55">Masters, Challenger, Futures, Ladies</span></div>
+            <div className="rounded-xl bg-[#f6f0e5] p-3"><strong className="block">10 гравців</strong><span className="text-[#123f2d]/55">У кожній лізі</span></div>
+            <div className="rounded-xl bg-[#f6f0e5] p-3"><strong className="block">9 матчів</strong><span className="text-[#123f2d]/55">Кожен з кожним</span></div>
+          </div>
+        </section>
       </div>
     </main>
   );
