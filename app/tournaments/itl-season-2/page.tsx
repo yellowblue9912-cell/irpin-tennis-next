@@ -94,14 +94,6 @@ export default async function Season2Page({ searchParams }: PageProps) {
         <Link href="/tournaments/itl-season-2/participants" className="mt-4 flex items-center justify-between rounded-2xl bg-[#123f2d] px-5 py-4 font-black text-white shadow-sm">
           <span>Переглянути учасників і розподіл</span><span className="text-xl">→</span>
         </Link>
-
-        <details className="mt-3 rounded-2xl bg-white p-4 shadow-sm">
-          <summary className="cursor-pointer font-black">Короткий регламент</summary>
-          <div className="mt-3 space-y-2 text-sm leading-6 text-[#123f2d]/70">
-            <p>Сезон: 21 вересня — 28 грудня 2026 року. Участь безкоштовна.</p>
-            <p>У кожній лізі — 10 гравців. Кожен проводить по одному повному матчу з кожним суперником своєї ліги — усього 9 матчів.</p>
-          </div>
-        </details>
       </div>
     </main>
   );
