@@ -42,7 +42,7 @@ export default async function EditPlayerPage({
 
     const name = String(formData.get("name") ?? "").trim();
     const slug = String(formData.get("slug") ?? "").trim();
-    const rating = Number(formData.get("rating"));
+    const ratingBase = Number(formData.get("rating_base"));
     const city = String(formData.get("city") ?? "").trim();
     const email = String(formData.get("email") ?? "").trim().toLowerCase();
     const isActive = formData.get("is_active") === "on";
@@ -55,7 +55,7 @@ export default async function EditPlayerPage({
       throw new Error("Вкажіть slug");
     }
 
-    if (!Number.isFinite(rating) || rating < 1 || rating > 7) {
+    if (!Number.isFinite(ratingBase) || ratingBase < 1 || ratingBase > 7) {
       throw new Error("Рейтинг повинен бути від 1.00 до 7.00");
     }
 
@@ -74,7 +74,7 @@ export default async function EditPlayerPage({
       city: string | null;
       is_active: boolean;
       user_id: string | null;
-      rating?: number;
+      rating_base?: number;
     } = {
       name,
       slug,
@@ -83,8 +83,11 @@ export default async function EditPlayerPage({
       user_id: authUser?.id ?? null,
     };
 
-    if (rating !== Number(player.rating)) {
-      updates.rating = rating;
+    const ratingBaseChanged =
+      ratingBase !== Number(player.rating_base ?? player.rating);
+
+    if (ratingBaseChanged) {
+      updates.rating_base = ratingBase;
     }
 
     const { error } = await supabase
@@ -97,7 +100,23 @@ export default async function EditPlayerPage({
       throw new Error(`Не вдалося оновити гравця: ${error.message}`);
     }
 
+    if (ratingBaseChanged) {
+      const { error: recalculateError } = await supabase.rpc(
+        "recalculate_player_ratings",
+      );
+
+      if (recalculateError) {
+        console.error("Recalculate ratings error:", recalculateError);
+        throw new Error(
+          `Стартовий рейтинг збережено, але не вдалося перерахувати поточний: ${recalculateError.message}`,
+        );
+      }
+    }
+
     revalidatePath("/admin/players");
+    revalidatePath("/players");
+    revalidatePath(`/players/${slug}`);
+    revalidatePath("/rating");
     redirect("/admin/players");
   }
 
@@ -190,27 +209,27 @@ export default async function EditPlayerPage({
 
         <div className="mt-6">
           <label
-            htmlFor="rating"
+            htmlFor="rating_base"
             className="mb-2 block text-sm font-black uppercase tracking-wide"
           >
-            Рейтинг
+            Стартовий рейтинг
           </label>
 
           <input
-            id="rating"
-            name="rating"
+            id="rating_base"
+            name="rating_base"
             type="number"
             required
             min="1"
             max="7"
             step="0.01"
-            defaultValue={player.rating}
+            defaultValue={player.rating_base ?? player.rating}
             className="w-full rounded-2xl border border-[#123f2d]/15 bg-[#f6f0e5] px-4 py-3 outline-none transition focus:border-[#123f2d]"
           />
 
           <p className="mt-2 text-sm text-[#123f2d]/45">
-            Можна зберігати точне поточне значення, наприклад 3.01. Якщо рейтинг
-            не змінювати, прив’язка email не вплине на історію матчів.
+            Від цього значення система автоматично перерахує поточний рейтинг за
+            всіма зарахованими матчами. Поточний рейтинг: {Number(player.rating).toFixed(2)}.
           </p>
         </div>
 
