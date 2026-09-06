@@ -531,19 +531,19 @@ function LatestMatches({ matches }: { matches: HomeRecentMatch[] }) {
   return (
     <Link
       href="/matches"
-      className="group relative min-h-[296px] overflow-hidden rounded-[20px] border border-[#173d2b]/10 bg-[#6f2f91] p-4 text-white shadow-[0_18px_38px_rgba(74,31,97,0.18)] transition-all duration-300 hover:-translate-y-1 hover:bg-[#5e287b]"
+      className="group relative min-h-[296px] overflow-hidden rounded-[20px] border border-[#173d2b]/10 bg-white/80 p-4 text-[#173d2b] shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-[#173d2b]/25 hover:bg-white hover:shadow-[0_18px_38px_rgba(24,61,43,0.12)]"
       data-ball-target
     >
-      <div className="pointer-events-none absolute -right-12 -top-16 h-44 w-44 rounded-full border border-white/10" />
+      <div className="pointer-events-none absolute -right-12 -top-16 h-44 w-44 rounded-full border border-[#173d2b]/7" />
       <div className="relative flex min-h-[264px] flex-col">
         <div className="flex items-start justify-between gap-3">
           <div>
-            <p className="text-[10px] font-black uppercase tracking-[0.25em] text-[#dfff3f]">
+            <p className="text-[10px] font-black uppercase tracking-[0.25em] text-[#ad4529]">
               Актуальні результати
             </p>
             <h2 className="mt-1 text-xl font-black uppercase">Останні матчі</h2>
           </div>
-          <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-white/20 text-lg transition group-hover:translate-x-1">
+          <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-[#173d2b]/15 text-lg text-[#173d2b] transition group-hover:translate-x-1 group-hover:bg-[#173d2b] group-hover:text-white">
             →
           </span>
         </div>
@@ -560,27 +560,29 @@ function LatestMatches({ matches }: { matches: HomeRecentMatch[] }) {
             return (
               <div
                 key={match.id}
-                className="rounded-xl border border-white/10 bg-white/[0.08] px-3 py-2"
+                className="rounded-xl border border-[#173d2b]/8 bg-[#f4f0e5] px-3 py-2"
               >
-                <p className="truncate text-[9px] font-black uppercase tracking-[0.1em] text-white/45">
+                <p className="truncate text-[10px] font-black uppercase tracking-[0.1em] text-[#ad4529]/75">
                   {match.competition}
                 </p>
-                <div className="mt-1 flex min-w-0 items-center gap-2 text-[11px] font-bold">
+                <div className="mt-1 flex min-w-0 items-center gap-2 text-xs font-bold text-[#173d2b]">
                   <span className="min-w-0 flex-1 truncate">
                     {match.winnerId === match.player1Id ? "🏆 " : ""}
                     {match.player1.name} <b>№{match.player1.rank ?? "—"}</b>
-                    <span className="mx-1 text-white/35">—</span>
+                    <span className="mx-1 text-[#173d2b]/30">—</span>
                     {match.winnerId === match.player2Id ? "🏆 " : ""}
                     {match.player2.name} <b>№{match.player2.rank ?? "—"}</b>
                   </span>
-                  <span className="shrink-0 font-black text-[#dfff3f]">{score}</span>
+                  <span className="shrink-0 rounded-lg bg-[#173d2b] px-2 py-1 font-black text-white">
+                    {score}
+                  </span>
                 </div>
               </div>
             );
           })}
         </div>
 
-        <p className="mt-3 text-center text-[10px] font-black uppercase tracking-[0.12em] text-white/60">
+        <p className="mt-3 text-center text-[10px] font-black uppercase tracking-[0.12em] text-[#173d2b]/55">
           Натисніть, щоб переглянути всі
         </p>
       </div>
