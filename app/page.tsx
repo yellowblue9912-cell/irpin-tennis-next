@@ -1,5 +1,6 @@
 import HomePageClient, { type HomeRecentMatch } from "@/components/HomePageClient";
 import { isThirdSetTiebreak } from "@/lib/matches/tiebreak";
+import { getPlayers } from "@/lib/players/getPlayers";
 import { createClient } from "@/lib/supabase/server";
 
 type Player = { id: string; name: string; slug: string };
@@ -33,7 +34,13 @@ function setsOf(match: RawMatch): Array<[number, number]> {
 }
 
 export default async function HomePage() {
-  const supabase = await createClient();
+  const [supabase, rankedPlayers] = await Promise.all([
+    createClient(),
+    getPlayers(),
+  ]);
+  const playerRanks = new Map(
+    rankedPlayers.map((player, index) => [player.id, index + 1]),
+  );
   const [tournamentResult, leagueResult, ratingResult] = await Promise.all([
     supabase
       .from("matches")
@@ -93,8 +100,8 @@ export default async function HomePage() {
       id: `${prefix}-${row.id}`,
       competition,
       date,
-      player1,
-      player2,
+      player1: { ...player1, rank: playerRanks.get(player1.id) ?? null },
+      player2: { ...player2, rank: playerRanks.get(player2.id) ?? null },
       player1Id: player1.id,
       player2Id: player2.id,
       winnerId: one(row.winner)?.id ?? null,

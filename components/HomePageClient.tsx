@@ -162,8 +162,8 @@ export type HomeRecentMatch = {
   id: string;
   competition: string;
   date: string;
-  player1: { name: string; slug: string };
-  player2: { name: string; slug: string };
+  player1: { name: string; slug: string; rank: number | null };
+  player2: { name: string; slug: string; rank: number | null };
   winnerId: string | null;
   player1Id: string;
   player2Id: string;
@@ -611,19 +611,27 @@ function HomeMatchPlayer({
   player,
   winner,
 }: {
-  player: { name: string; slug: string };
+  player: { name: string; slug: string; rank: number | null };
   winner: boolean;
 }) {
   return (
-    <Link
-      href={`/players/${player.slug}`}
-      className={`min-w-0 truncate text-sm font-black transition hover:text-[#ad4529] sm:text-base ${
-        winner ? "text-[#173d2b]" : "text-[#173d2b]/62"
-      }`}
-    >
-      {winner ? "🏆 " : ""}
-      {player.name}
-    </Link>
+    <div className="flex min-w-0 items-center gap-2">
+      <Link
+        href={`/players/${player.slug}`}
+        className={`min-w-0 flex-1 truncate text-sm font-black transition hover:text-[#ad4529] sm:text-base ${
+          winner ? "text-[#173d2b]" : "text-[#173d2b]/62"
+        }`}
+      >
+        {winner ? "🏆 " : ""}
+        {player.name}
+      </Link>
+      <span
+        className="shrink-0 rounded-lg bg-[#f4f0e5] px-2 py-1 text-[11px] font-black text-[#173d2b]"
+        title={`Місце в загальному рейтингу: ${player.rank ?? "—"}`}
+      >
+        №{player.rank ?? "—"}
+      </span>
+    </div>
   );
 }
 
