@@ -297,11 +297,11 @@ export default function HomePage({
                   setActiveCard={setActiveCard}
                 />
               ))}
+
+              <LatestMatches matches={recentMatches.slice(0, 4)} />
             </div>
           </div>
         </section>
-
-        <LatestMatches matches={recentMatches} />
 
         {/* Community philosophy */}
         <section className="border-t border-[#173d2b]/10 bg-white/55">
@@ -529,135 +529,62 @@ export default function HomePage({
 
 function LatestMatches({ matches }: { matches: HomeRecentMatch[] }) {
   return (
-    <section className="border-t border-[#173d2b]/10 bg-[#f4f0e5]">
-      <div className="mx-auto w-full max-w-[1600px] px-5 py-8 sm:px-8 lg:py-10 xl:px-12">
-        <div className="flex items-end justify-between gap-4">
+    <Link
+      href="/matches"
+      className="group relative min-h-[296px] overflow-hidden rounded-[20px] border border-[#173d2b]/10 bg-[#6f2f91] p-4 text-white shadow-[0_18px_38px_rgba(74,31,97,0.18)] transition-all duration-300 hover:-translate-y-1 hover:bg-[#5e287b]"
+      data-ball-target
+    >
+      <div className="pointer-events-none absolute -right-12 -top-16 h-44 w-44 rounded-full border border-white/10" />
+      <div className="relative flex min-h-[264px] flex-col">
+        <div className="flex items-start justify-between gap-3">
           <div>
-            <p className="text-[10px] font-black uppercase tracking-[0.3em] text-[#ad4529]">
+            <p className="text-[10px] font-black uppercase tracking-[0.25em] text-[#dfff3f]">
               Актуальні результати
             </p>
-            <h2 className="mt-2 text-2xl font-black uppercase tracking-[-0.03em] text-[#173d2b] sm:text-3xl">
-              Останні матчі
-            </h2>
+            <h2 className="mt-1 text-xl font-black uppercase">Останні матчі</h2>
           </div>
-          <Link
-            href="/matches"
-            className="hidden rounded-full border border-[#173d2b]/15 px-5 py-2.5 text-xs font-black uppercase tracking-[0.08em] transition hover:bg-[#173d2b] hover:text-white sm:inline-flex"
-          >
-            Усі результати →
-          </Link>
+          <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-white/20 text-lg transition group-hover:translate-x-1">
+            →
+          </span>
         </div>
 
-        <div className="mt-5 grid gap-3 md:grid-cols-2 xl:grid-cols-3">
-          {matches.map((match) => (
-            <article
-              key={match.id}
-              className="rounded-[20px] border border-[#173d2b]/10 bg-white/75 p-4 shadow-sm"
-            >
-              <div className="flex items-start justify-between gap-3">
-                <p className="min-w-0 truncate text-[10px] font-black uppercase tracking-[0.14em] text-[#ad4529]">
+        <div className="mt-3 grid flex-1 content-center gap-2">
+          {matches.map((match) => {
+            const score = match.sets
+              .map((set, index) =>
+                index === 2 && match.thirdSetIsTiebreak
+                  ? `[${set[0]}:${set[1]}]`
+                  : `${set[0]}:${set[1]}`,
+              )
+              .join(" ");
+            return (
+              <div
+                key={match.id}
+                className="rounded-xl border border-white/10 bg-white/[0.08] px-3 py-2"
+              >
+                <p className="truncate text-[9px] font-black uppercase tracking-[0.1em] text-white/45">
                   {match.competition}
                 </p>
-                <time className="shrink-0 text-[11px] font-bold text-[#173d2b]/45">
-                  {new Intl.DateTimeFormat("uk-UA", {
-                    day: "2-digit",
-                    month: "2-digit",
-                    year: "numeric",
-                  }).format(new Date(`${match.date}T12:00:00`))}
-                </time>
+                <div className="mt-1 flex min-w-0 items-center gap-2 text-[11px] font-bold">
+                  <span className="min-w-0 flex-1 truncate">
+                    {match.winnerId === match.player1Id ? "🏆 " : ""}
+                    {match.player1.name} <b>№{match.player1.rank ?? "—"}</b>
+                    <span className="mx-1 text-white/35">—</span>
+                    {match.winnerId === match.player2Id ? "🏆 " : ""}
+                    {match.player2.name} <b>№{match.player2.rank ?? "—"}</b>
+                  </span>
+                  <span className="shrink-0 font-black text-[#dfff3f]">{score}</span>
+                </div>
               </div>
-
-              <div className="mt-4 grid grid-cols-[minmax(0,1fr)_auto] items-center gap-x-3 gap-y-2.5">
-                <HomeMatchPlayer
-                  player={match.player1}
-                  winner={match.winnerId === match.player1Id}
-                />
-                <HomeMatchScores
-                  scores={match.sets.map((set) => set[0])}
-                  thirdSetIsTiebreak={match.thirdSetIsTiebreak}
-                />
-                <HomeMatchPlayer
-                  player={match.player2}
-                  winner={match.winnerId === match.player2Id}
-                />
-                <HomeMatchScores
-                  scores={match.sets.map((set) => set[1])}
-                  thirdSetIsTiebreak={match.thirdSetIsTiebreak}
-                />
-              </div>
-            </article>
-          ))}
+            );
+          })}
         </div>
 
-        {matches.length === 0 && (
-          <div className="mt-5 rounded-[20px] border border-[#173d2b]/10 bg-white/75 p-7 text-center font-bold text-[#173d2b]/55">
-            Щойно з’являться нові результати, вони будуть показані тут.
-          </div>
-        )}
-
-        <Link
-          href="/matches"
-          className="mt-4 flex w-full items-center justify-center rounded-2xl bg-[#173d2b] px-5 py-3.5 text-sm font-black uppercase tracking-[0.08em] text-white sm:hidden"
-          style={{ color: "#ffffff" }}
-        >
-          Усі результати →
-        </Link>
+        <p className="mt-3 text-center text-[10px] font-black uppercase tracking-[0.12em] text-white/60">
+          Натисніть, щоб переглянути всі
+        </p>
       </div>
-    </section>
-  );
-}
-
-function HomeMatchPlayer({
-  player,
-  winner,
-}: {
-  player: { name: string; slug: string; rank: number | null };
-  winner: boolean;
-}) {
-  return (
-    <div className="flex min-w-0 items-center gap-2">
-      <Link
-        href={`/players/${player.slug}`}
-        className={`min-w-0 flex-1 truncate text-sm font-black transition hover:text-[#ad4529] sm:text-base ${
-          winner ? "text-[#173d2b]" : "text-[#173d2b]/62"
-        }`}
-      >
-        {winner ? "🏆 " : ""}
-        {player.name}
-      </Link>
-      <span
-        className="shrink-0 rounded-lg bg-[#f4f0e5] px-2 py-1 text-[11px] font-black text-[#173d2b]"
-        title={`Місце в загальному рейтингу: ${player.rank ?? "—"}`}
-      >
-        №{player.rank ?? "—"}
-      </span>
-    </div>
-  );
-}
-
-function HomeMatchScores({
-  scores,
-  thirdSetIsTiebreak,
-}: {
-  scores: number[];
-  thirdSetIsTiebreak: boolean;
-}) {
-  return (
-    <div className="flex gap-1.5">
-      {scores.map((score, index) => (
-        <span
-          key={`${index}-${score}`}
-          className={`flex h-8 min-w-8 items-center justify-center rounded-lg px-1.5 text-sm font-black ${
-            index === 2 && thirdSetIsTiebreak
-              ? "border-2 border-[#173d2b] bg-[#f4f0e5] text-[#173d2b]"
-              : "bg-[#173d2b] text-white"
-          }`}
-          title={index === 2 && thirdSetIsTiebreak ? "Матч-тайбрейк" : undefined}
-        >
-          {index === 2 && thirdSetIsTiebreak ? `[${score}]` : score}
-        </span>
-      ))}
-    </div>
+    </Link>
   );
 }
 
