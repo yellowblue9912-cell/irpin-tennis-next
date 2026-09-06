@@ -255,7 +255,7 @@ export default async function MatchesPage({
       type: "rating",
       competitionId: "rating",
       competitionTitle: "Рейтинговий матч",
-      competitionHref: "/rating",
+      competitionHref: null,
       date: match.played_at ?? match.confirmed_at?.slice(0, 10) ?? "",
       player1,
       player2,

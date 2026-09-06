@@ -9,7 +9,6 @@ const names: Record<string, string> = {
   tournaments: "Турніри",
   matches: "Останні матчі",
   courts: "Корти",
-  rating: "Як працює рейтинг",
   league: "Ліги",
   coaches: "Тренери",
   masters: "Masters",

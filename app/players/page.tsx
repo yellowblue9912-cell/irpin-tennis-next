@@ -31,15 +31,9 @@ export default async function PlayersPage() {
 
           <div className="mt-4 max-w-3xl md:mt-6">
             <p className="text-sm leading-6 text-white/70 md:text-base">
-              Рейтинг автоматично розраховується за останні 30 офіційних
-              матчів. Враховуються сила суперника та підсумковий рахунок.
+              Знайомтеся з учасниками спільноти, переглядайте їхні профілі та
+              останні зіграні матчі.
             </p>
-            <a
-              href="/rating"
-              className="mt-2 inline-block text-sm font-black text-[#d7f34c] transition hover:text-white"
-            >
-              Як працює рейтинг →
-            </a>
           </div>
         </div>
       </section>

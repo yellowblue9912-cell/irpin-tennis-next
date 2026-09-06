@@ -81,11 +81,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       changeFrequency: "monthly",
       priority: 0.8,
     },
-    {
-      url: `${baseUrl}/rating`,
-      changeFrequency: "monthly",
-      priority: 0.7,
-    },
   ];
 
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;

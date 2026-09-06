@@ -11,7 +11,6 @@ const menuItems = [
   { label: "Останні матчі", href: "/matches" },
   { label: "Корти", href: "/courts" },
   { label: "Тренери", href: "/coaches" },
-  { label: "Про рейтинг", href: "/rating" },
 ];
 
 // Встав сюди справжнє посилання на Telegram
