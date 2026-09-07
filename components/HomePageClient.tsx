@@ -531,11 +531,11 @@ function LatestMatches({ matches }: { matches: HomeRecentMatch[] }) {
   return (
     <Link
       href="/matches"
-      className="group relative min-h-[296px] overflow-hidden rounded-[20px] border border-[#173d2b]/10 bg-white/80 p-4 text-[#173d2b] shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-[#173d2b]/25 hover:bg-white hover:shadow-[0_18px_38px_rgba(24,61,43,0.12)]"
+      className="group relative overflow-hidden rounded-[20px] border border-[#173d2b]/10 bg-white/80 p-4 text-[#173d2b] shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-[#173d2b]/25 hover:bg-white hover:shadow-[0_18px_38px_rgba(24,61,43,0.12)] xl:h-[296px] xl:min-h-[296px]"
       data-ball-target
     >
       <div className="pointer-events-none absolute -right-12 -top-16 h-44 w-44 rounded-full border border-[#173d2b]/7" />
-      <div className="relative flex min-h-[264px] flex-col">
+      <div className="relative flex min-h-[264px] flex-col xl:h-[264px] xl:min-h-0">
         <div className="flex items-start justify-between gap-3">
           <div>
             <p className="text-[10px] font-black uppercase tracking-[0.25em] text-[#ad4529]">
@@ -548,7 +548,7 @@ function LatestMatches({ matches }: { matches: HomeRecentMatch[] }) {
           </span>
         </div>
 
-        <div className="mt-3 grid flex-1 content-center gap-2">
+        <div className="mt-3 grid flex-1 content-center gap-2 xl:hidden">
           {matches.map((match) => {
             return (
               <div
@@ -601,7 +601,49 @@ function LatestMatches({ matches }: { matches: HomeRecentMatch[] }) {
           })}
         </div>
 
-        <p className="mt-3 text-center text-[10px] font-black uppercase tracking-[0.12em] text-[#173d2b]/55">
+        <div className="mt-3 hidden flex-1 content-center gap-2 xl:grid">
+          {matches.map((match) => {
+            const score = match.sets
+              .map((set, index) =>
+                index === 2 && match.thirdSetIsTiebreak
+                  ? `[${set[0]}:${set[1]}]`
+                  : `${set[0]}:${set[1]}`,
+              )
+              .join(" ");
+            return (
+              <div
+                key={`desktop-${match.id}`}
+                className="rounded-xl border border-[#173d2b]/8 bg-[#f4f0e5] px-3 py-1.5"
+              >
+                <div className="flex min-w-0 items-center justify-between gap-2">
+                  <p className="min-w-0 truncate text-[8px] font-black uppercase tracking-[0.08em] text-[#ad4529]/75">
+                    {match.competition}
+                  </p>
+                  <time className="shrink-0 text-[8px] font-bold text-[#173d2b]/40">
+                    {new Intl.DateTimeFormat("uk-UA", {
+                      day: "2-digit",
+                      month: "2-digit",
+                    }).format(new Date(`${match.date}T12:00:00`))}
+                  </time>
+                </div>
+                <div className="mt-0.5 flex min-w-0 items-center gap-2 text-[10px] font-bold leading-tight text-[#173d2b]">
+                  <span className="min-w-0 flex-1 truncate">
+                    {match.winnerId === match.player1Id ? "🏆 " : ""}
+                    {match.player1.name} №{match.player1.rank ?? "—"}
+                    <span className="mx-1 text-[#173d2b]/30">—</span>
+                    {match.winnerId === match.player2Id ? "🏆 " : ""}
+                    {match.player2.name} №{match.player2.rank ?? "—"}
+                  </span>
+                  <b className="shrink-0 rounded-md bg-[#173d2b] px-1.5 py-1 text-[9px] font-black text-white">
+                    {score}
+                  </b>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+
+        <p className="mt-3 text-center text-[10px] font-black uppercase tracking-[0.12em] text-[#173d2b]/55 xl:mt-2 xl:text-[9px]">
           Натисніть, щоб переглянути всі
         </p>
       </div>
