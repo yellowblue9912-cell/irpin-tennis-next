@@ -550,32 +550,51 @@ function LatestMatches({ matches }: { matches: HomeRecentMatch[] }) {
 
         <div className="mt-3 grid flex-1 content-center gap-2">
           {matches.map((match) => {
-            const score = match.sets
-              .map((set, index) =>
-                index === 2 && match.thirdSetIsTiebreak
-                  ? `[${set[0]}:${set[1]}]`
-                  : `${set[0]}:${set[1]}`,
-              )
-              .join(" ");
             return (
               <div
                 key={match.id}
                 className="rounded-xl border border-[#173d2b]/8 bg-[#f4f0e5] px-3 py-2"
               >
-                <p className="truncate text-[10px] font-black uppercase tracking-[0.1em] text-[#ad4529]/75">
-                  {match.competition}
-                </p>
-                <div className="mt-1 flex min-w-0 items-center gap-2 text-xs font-bold text-[#173d2b]">
-                  <span className="min-w-0 flex-1 truncate">
-                    {match.winnerId === match.player1Id ? "🏆 " : ""}
-                    {match.player1.name} <b>№{match.player1.rank ?? "—"}</b>
-                    <span className="mx-1 text-[#173d2b]/30">—</span>
-                    {match.winnerId === match.player2Id ? "🏆 " : ""}
-                    {match.player2.name} <b>№{match.player2.rank ?? "—"}</b>
+                <div className="flex min-w-0 items-center justify-between gap-2">
+                  <p className="min-w-0 truncate text-[9px] font-black uppercase tracking-[0.09em] text-[#ad4529]/75 sm:text-[10px]">
+                    {match.competition}
+                  </p>
+                  <time className="shrink-0 text-[9px] font-bold text-[#173d2b]/40">
+                    {new Intl.DateTimeFormat("uk-UA", {
+                      day: "2-digit",
+                      month: "2-digit",
+                    }).format(new Date(`${match.date}T12:00:00`))}
+                  </time>
+                </div>
+
+                <div className="mt-1.5 grid grid-cols-[minmax(0,1fr)_auto] items-center gap-x-2 gap-y-1 text-[11px] font-bold leading-tight text-[#173d2b] sm:text-xs">
+                  <span className="flex min-w-0 items-center gap-1.5">
+                    <span className="min-w-0 break-words">
+                      {match.winnerId === match.player1Id ? "🏆 " : ""}
+                      {match.player1.name}
+                    </span>
+                    <b className="shrink-0 rounded bg-white/75 px-1.5 py-0.5 text-[9px]">
+                      №{match.player1.rank ?? "—"}
+                    </b>
                   </span>
-                  <span className="shrink-0 rounded-lg bg-[#173d2b] px-2 py-1 font-black text-white">
-                    {score}
+                  <CompactScores
+                    scores={match.sets.map((set) => set[0])}
+                    thirdSetIsTiebreak={match.thirdSetIsTiebreak}
+                  />
+
+                  <span className="flex min-w-0 items-center gap-1.5">
+                    <span className="min-w-0 break-words">
+                      {match.winnerId === match.player2Id ? "🏆 " : ""}
+                      {match.player2.name}
+                    </span>
+                    <b className="shrink-0 rounded bg-white/75 px-1.5 py-0.5 text-[9px]">
+                      №{match.player2.rank ?? "—"}
+                    </b>
                   </span>
+                  <CompactScores
+                    scores={match.sets.map((set) => set[1])}
+                    thirdSetIsTiebreak={match.thirdSetIsTiebreak}
+                  />
                 </div>
               </div>
             );
@@ -587,6 +606,28 @@ function LatestMatches({ matches }: { matches: HomeRecentMatch[] }) {
         </p>
       </div>
     </Link>
+  );
+}
+
+function CompactScores({
+  scores,
+  thirdSetIsTiebreak,
+}: {
+  scores: number[];
+  thirdSetIsTiebreak: boolean;
+}) {
+  return (
+    <span className="flex shrink-0 gap-1">
+      {scores.map((score, index) => (
+        <b
+          key={`${index}-${score}`}
+          className="flex h-6 min-w-6 items-center justify-center rounded-md bg-[#173d2b] px-1 text-[10px] font-black text-white"
+          title={index === 2 && thirdSetIsTiebreak ? "Матч-тайбрейк" : undefined}
+        >
+          {index === 2 && thirdSetIsTiebreak ? `[${score}]` : score}
+        </b>
+      ))}
+    </span>
   );
 }
 
