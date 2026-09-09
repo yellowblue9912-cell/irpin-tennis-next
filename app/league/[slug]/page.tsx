@@ -33,6 +33,9 @@ type StandingRow = StandingRowFromDatabase & {
 
 type LeagueMatchFromDatabase = {
   id: string;
+  player1_id: string;
+  player2_id: string;
+  winner_id: string | null;
   played_at: string | null;
   notes: string | null;
   created_at: string;
@@ -85,6 +88,15 @@ const leagueConfiguration: Record<
     pageTitle: "ITL Ladies",
     shortTitle: "Ladies",
   },
+};
+
+type LeagueMatch = Omit<
+  LeagueMatchFromDatabase,
+  "player1" | "player2" | "winner"
+> & {
+  player1: Player;
+  player2: Player;
+  winner: Player;
 };
 
 export async function generateMetadata({
@@ -217,6 +229,67 @@ function buildSets(match: LeagueMatchFromDatabase) {
     }));
 }
 
+function sortStandings(
+  standings: StandingRow[],
+  matches: LeagueMatch[],
+): StandingRow[] {
+  const headToHeadWins = new Map<string, number>();
+  const standingsByPoints = new Map<number, StandingRow[]>();
+
+  for (const standing of standings) {
+    const standingsGroup = standingsByPoints.get(standing.points) ?? [];
+    standingsGroup.push(standing);
+    standingsByPoints.set(standing.points, standingsGroup);
+  }
+
+  for (const standingsGroup of standingsByPoints.values()) {
+    if (standingsGroup.length < 2) {
+      continue;
+    }
+
+    const tiedPlayerIds = new Set(
+      standingsGroup.map((standing) => standing.player_id),
+    );
+
+    for (const match of matches) {
+      if (
+        tiedPlayerIds.has(match.player1_id) &&
+        tiedPlayerIds.has(match.player2_id) &&
+        match.winner_id
+      ) {
+        headToHeadWins.set(
+          match.winner_id,
+          (headToHeadWins.get(match.winner_id) ?? 0) + 1,
+        );
+      }
+    }
+  }
+
+  return standings.toSorted((a, b) => {
+    if (b.points !== a.points) {
+      return b.points - a.points;
+    }
+
+    const headToHeadDifference =
+      (headToHeadWins.get(b.player_id) ?? 0) -
+      (headToHeadWins.get(a.player_id) ?? 0);
+
+    if (headToHeadDifference !== 0) {
+      return headToHeadDifference;
+    }
+
+    if (b.sets_difference !== a.sets_difference) {
+      return b.sets_difference - a.sets_difference;
+    }
+
+    if (b.games_difference !== a.games_difference) {
+      return b.games_difference - a.games_difference;
+    }
+
+    return a.player.name.localeCompare(b.player.name, "uk-UA");
+  });
+}
+
 function getPublicMatchNote(notes: string | null) {
   return (
     notes
@@ -345,6 +418,9 @@ export default async function LeaguePage({ params }: PageProps) {
       .select(
         `
           id,
+          player1_id,
+          player2_id,
+          winner_id,
           played_at,
           notes,
           created_at,
@@ -407,10 +483,22 @@ export default async function LeaguePage({ params }: PageProps) {
     players.map((player) => [player.id, player]),
   );
 
-  const standings: StandingRow[] = (
-    (leaguePlayersData ?? []) as StandingRowFromDatabase[]
-  )
-    .map((row) => {
+  const matches = ((matchesData ?? []) as unknown as LeagueMatchFromDatabase[])
+    .map((match) => ({
+      ...match,
+      player1: normalizePlayer(match.player1),
+      player2: normalizePlayer(match.player2),
+      winner: normalizePlayer(match.winner),
+    }))
+    .filter(
+      (match): match is LeagueMatch =>
+        Boolean(match.player1) &&
+        Boolean(match.player2) &&
+        Boolean(match.winner),
+    );
+
+  const standings = sortStandings(
+    ((leaguePlayersData ?? []) as StandingRowFromDatabase[]).map((row) => {
       const player = playersMap.get(row.player_id);
 
       if (!player) {
@@ -421,51 +509,9 @@ export default async function LeaguePage({ params }: PageProps) {
         ...row,
         player,
       };
-    })
-    .filter((row): row is StandingRow => row !== null)
-    .sort((a, b) => {
-      if (b.points !== a.points) {
-        return b.points - a.points;
-      }
-
-      if (b.sets_difference !== a.sets_difference) {
-        return b.sets_difference - a.sets_difference;
-      }
-
-      if (b.games_difference !== a.games_difference) {
-        return b.games_difference - a.games_difference;
-      }
-
-      return a.player.name.localeCompare(
-        b.player.name,
-        "uk-UA",
-      );
-    });
-
-  const matches = (
-    (matchesData ?? []) as unknown as LeagueMatchFromDatabase[]
-  )
-    .map((match) => ({
-      ...match,
-      player1: normalizePlayer(match.player1),
-      player2: normalizePlayer(match.player2),
-      winner: normalizePlayer(match.winner),
-    }))
-    .filter(
-      (
-        match,
-      ): match is Omit<
-        LeagueMatchFromDatabase,
-        "player1" | "player2" | "winner"
-      > & {
-        player1: Player;
-        player2: Player;
-        winner: Player;
-      } =>
-        Boolean(match.player1) &&
-        Boolean(match.player2) &&
-        Boolean(match.winner),
-    );
+    }).filter((row): row is StandingRow => row !== null),
+    matches,
+  );
 
   const seasonProgress = getSeasonTimeProgress(
     season.start_date,
@@ -574,7 +620,7 @@ export default async function LeaguePage({ params }: PageProps) {
 
             <p className="max-w-md text-sm leading-6 text-slate-500">
               Перемога — 2 бали, поразка — 1 бал. При рівності балів
-              враховується різниця сетів, а потім різниця геймів.
+              враховуються особисті зустрічі, потім різниця сетів і геймів.
             </p>
           </div>
 
