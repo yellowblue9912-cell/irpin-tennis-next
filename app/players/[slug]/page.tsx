@@ -431,7 +431,13 @@ function TournamentCard({
 
         <SmallStat
           label={isLeague ? "Статус" : "Місце"}
-          value={isLeague ? "Учасник" : tournament.place ?? "—"}
+          value={
+            isLeague
+              ? tournament.place
+                ? `${tournament.place} місце`
+                : "Учасник"
+              : tournament.place ?? "—"
+          }
         />
       </div>
     </div>
@@ -547,7 +553,7 @@ function PlaceBadge({
   place: number | null;
   isLeague: boolean;
 }) {
-  if (isLeague) {
+  if (isLeague && place === null) {
     return (
       <span className="rounded-full bg-[#123f2d] px-3 py-1 text-sm font-black text-white">
         Ліга

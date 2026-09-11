@@ -3,6 +3,7 @@ import Link from "next/link";
 import type { Metadata } from "next";
 import { createClient } from "@/lib/supabase/server";
 import { isThirdSetTiebreak } from "@/lib/matches/tiebreak";
+import { sortLeagueStandings } from "@/lib/league/standings";
 
 type PageProps = {
   params: Promise<{
@@ -229,67 +230,6 @@ function buildSets(match: LeagueMatchFromDatabase) {
     }));
 }
 
-function sortStandings(
-  standings: StandingRow[],
-  matches: LeagueMatch[],
-): StandingRow[] {
-  const headToHeadWins = new Map<string, number>();
-  const standingsByPoints = new Map<number, StandingRow[]>();
-
-  for (const standing of standings) {
-    const standingsGroup = standingsByPoints.get(standing.points) ?? [];
-    standingsGroup.push(standing);
-    standingsByPoints.set(standing.points, standingsGroup);
-  }
-
-  for (const standingsGroup of standingsByPoints.values()) {
-    if (standingsGroup.length < 2) {
-      continue;
-    }
-
-    const tiedPlayerIds = new Set(
-      standingsGroup.map((standing) => standing.player_id),
-    );
-
-    for (const match of matches) {
-      if (
-        tiedPlayerIds.has(match.player1_id) &&
-        tiedPlayerIds.has(match.player2_id) &&
-        match.winner_id
-      ) {
-        headToHeadWins.set(
-          match.winner_id,
-          (headToHeadWins.get(match.winner_id) ?? 0) + 1,
-        );
-      }
-    }
-  }
-
-  return standings.toSorted((a, b) => {
-    if (b.points !== a.points) {
-      return b.points - a.points;
-    }
-
-    const headToHeadDifference =
-      (headToHeadWins.get(b.player_id) ?? 0) -
-      (headToHeadWins.get(a.player_id) ?? 0);
-
-    if (headToHeadDifference !== 0) {
-      return headToHeadDifference;
-    }
-
-    if (b.sets_difference !== a.sets_difference) {
-      return b.sets_difference - a.sets_difference;
-    }
-
-    if (b.games_difference !== a.games_difference) {
-      return b.games_difference - a.games_difference;
-    }
-
-    return a.player.name.localeCompare(b.player.name, "uk-UA");
-  });
-}
-
 function getPublicMatchNote(notes: string | null) {
   return (
     notes
@@ -497,7 +437,7 @@ export default async function LeaguePage({ params }: PageProps) {
         Boolean(match.winner),
     );
 
-  const standings = sortStandings(
+  const standings = sortLeagueStandings(
     ((leaguePlayersData ?? []) as StandingRowFromDatabase[]).map((row) => {
       const player = playersMap.get(row.player_id);
 
@@ -511,6 +451,7 @@ export default async function LeaguePage({ params }: PageProps) {
       };
     }).filter((row): row is StandingRow => row !== null),
     matches,
+    (a, b) => a.player.name.localeCompare(b.player.name, "uk-UA"),
   );
 
   const seasonProgress = getSeasonTimeProgress(

@@ -22,6 +22,11 @@ const navigation = [
     icon: "🎾",
   },
   {
+    href: "/admin/leagues",
+    label: "Ліги",
+    icon: "🥇",
+  },
+  {
     href: "/admin/rating",
     label: "Рейтинг",
     icon: "📈",

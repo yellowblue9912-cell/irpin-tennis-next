@@ -2,6 +2,7 @@ import { createClient } from "../supabase/server";
 import { getPlayerName, getPlayerPhoto } from "./getPlayerPhoto";
 import { decodePlayerSlug } from "./decodePlayerSlug";
 import { isThirdSetTiebreak } from "../matches/tiebreak";
+import { sortLeagueStandings } from "../league/standings";
 
 export type ProfilePlayer = {
   id: string;
@@ -144,10 +145,12 @@ type LeagueSeasonRow = {
   id: string;
   title: string;
   start_date: string;
+  is_active: boolean;
 };
 
 type LeaguePlayerRow = {
   season_id: string;
+  player_id: string;
   matches_played: number;
   wins: number;
   losses: number;
@@ -280,6 +283,7 @@ export async function getPlayerProfile(
       .select(
         `
           season_id,
+          player_id,
           matches_played,
           wins,
           losses,
@@ -413,7 +417,7 @@ export async function getPlayerProfile(
     const { data: leagueSeasonsData, error: leagueSeasonsError } =
       await supabase
         .from("league_seasons")
-        .select("id, title, start_date")
+        .select("id, title, start_date, is_active")
         .in("id", leagueSeasonIds);
 
     if (leagueSeasonsError) {
@@ -449,6 +453,53 @@ export async function getPlayerProfile(
         (opponent) => [opponent.id, opponent],
       ),
     );
+  }
+
+  const completedLeaguePlaces = new Map<string, number>();
+  const completedLeagueSeasonIds = Array.from(leagueSeasonsMap.values())
+    .filter((season) => !season.is_active)
+    .map((season) => season.id);
+
+  if (completedLeagueSeasonIds.length > 0) {
+    const [standingsResult, matchesResult] = await Promise.all([
+      supabase
+        .from("league_players")
+        .select(
+          "season_id, player_id, points, sets_difference, games_difference",
+        )
+        .in("season_id", completedLeagueSeasonIds),
+      supabase
+        .from("league_matches")
+        .select("season_id, player1_id, player2_id, winner_id")
+        .in("season_id", completedLeagueSeasonIds),
+    ]);
+
+    if (standingsResult.error || matchesResult.error) {
+      console.error(
+        "Completed league standings loading error:",
+        standingsResult.error ?? matchesResult.error,
+      );
+    } else {
+      for (const seasonId of completedLeagueSeasonIds) {
+        const seasonStandings = (standingsResult.data ?? []).filter(
+          (standing) => standing.season_id === seasonId,
+        );
+        const seasonMatches = (matchesResult.data ?? []).filter(
+          (match) => match.season_id === seasonId,
+        );
+        const sortedStandings = sortLeagueStandings(
+          seasonStandings,
+          seasonMatches,
+        );
+
+        sortedStandings.forEach((standing, index) => {
+          completedLeaguePlaces.set(
+            `${seasonId}:${standing.player_id}`,
+            index + 1,
+          );
+        });
+      }
+    }
   }
 
   const { data: playerRatingHistoryData, error: ratingHistoryError } =
@@ -681,7 +732,9 @@ export async function getPlayerProfile(
         type: "league" as const,
         tournament_date: season.start_date,
         location: "Ліга ITL",
-        place: null,
+        place: season.is_active
+          ? null
+          : (completedLeaguePlaces.get(`${season.id}:${player.id}`) ?? null),
         wins: row?.wins ?? calculatedWins,
         losses: row?.losses ?? calculatedLosses,
         games_won: 0,
@@ -890,13 +943,11 @@ export async function getPlayerProfile(
       : 0;
 
   const titles = tournaments.filter(
-    (tournament) =>
-      tournament.type === "tournament" && tournament.place === 1,
+    (tournament) => tournament.place === 1,
   ).length;
 
   const podiums = tournaments.filter(
     (tournament) =>
-      tournament.type === "tournament" &&
       tournament.place !== null &&
       tournament.place <= 3,
   ).length;
