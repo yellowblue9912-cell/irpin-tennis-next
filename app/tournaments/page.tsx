@@ -31,7 +31,7 @@ type TournamentPlayer = {
   tournament_id: string;
 };
 
-type ActiveLeagueSeason = {
+type LeagueSeason = {
   id: string;
   title: string;
   start_date: string;
@@ -125,11 +125,10 @@ export default async function TournamentsPage({
       .from("tournament_players")
       .select("tournament_id");
 
-  const { data: activeLeagueSeasonsData, error: leagueSeasonsError } =
+  const { data: leagueSeasonsData, error: leagueSeasonsError } =
     await supabase
       .from("league_seasons")
       .select("id, title, start_date, end_date, is_active")
-      .eq("is_active", true)
       .order("start_date", { ascending: false });
 
   const { data: leaguePlayersData, error: leaguePlayersError } =
@@ -148,7 +147,7 @@ export default async function TournamentsPage({
 
   if (leagueSeasonsError) {
     console.error(
-      "Помилка завантаження активних сезонів ліги:",
+      "Помилка завантаження сезонів ліги:",
       leagueSeasonsError,
     );
   }
@@ -163,8 +162,7 @@ export default async function TournamentsPage({
   const tournaments = (tournamentsData ?? []) as Tournament[];
   const tournamentPlayers =
     (tournamentPlayersData ?? []) as TournamentPlayer[];
-  const activeLeagueSeasons =
-    (activeLeagueSeasonsData ?? []) as ActiveLeagueSeason[];
+  const leagueSeasons = (leagueSeasonsData ?? []) as LeagueSeason[];
   const leaguePlayers = (leaguePlayersData ?? []) as LeaguePlayer[];
 
   const participantCounts = tournamentPlayers.reduce<
@@ -209,15 +207,15 @@ export default async function TournamentsPage({
     const status = tournament.status?.toLowerCase().trim() ?? "";
     const title = tournament.title.toLowerCase();
 
+    if (["finished", "completed", "closed"].includes(status)) {
+      return "finished";
+    }
+
     if (
       ["active", "live", "ongoing", "in_progress"].includes(status) ||
       title.includes("тенісна ліга")
     ) {
       return "active";
-    }
-
-    if (["finished", "completed", "closed"].includes(status)) {
-      return "finished";
     }
 
     const tournamentDate = new Date(
@@ -238,7 +236,11 @@ export default async function TournamentsPage({
   const visibleTournaments = showAll
     ? filteredTournaments
     : filteredTournaments.slice(0, 5);
-  const season2IsVisible = selectedTab === "upcoming";
+  const season2Tab: TournamentTab = "active";
+  const season2IsVisible = selectedTab === season2Tab;
+  const visibleLeagueSeasons = leagueSeasons.filter(
+    (season) => (season.is_active ? "active" : "finished") === selectedTab,
+  );
 
   return (
     <main className="min-h-screen bg-[#f6f0e5] text-[#123f2d]">
@@ -280,8 +282,10 @@ export default async function TournamentsPage({
             ).length;
             const count =
               tournamentCount +
-              (tab.id === "active" ? activeLeagueSeasons.length : 0) +
-              (tab.id === "upcoming" ? 1 : 0);
+              leagueSeasons.filter(
+                (season) => (season.is_active ? "active" : "finished") === tab.id,
+              ).length +
+              (tab.id === season2Tab ? 1 : 0);
 
             return (
               <Link
@@ -320,12 +324,12 @@ export default async function TournamentsPage({
         )}
 
         {visibleTournaments.length > 0 || season2IsVisible ||
-        (selectedTab === "active" && activeLeagueSeasons.length > 0) ? (
+        visibleLeagueSeasons.length > 0 ? (
           <>
           <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
             {season2IsVisible && (
               <Link href="/tournaments/itl-season-2" className="group rounded-[24px] border-2 border-[#d7f34c] bg-white p-5 text-[#123f2d] shadow-sm transition hover:-translate-y-1 hover:shadow-xl sm:p-6" style={{ backgroundColor: "#ffffff", color: "#123f2d" }}>
-                <span className="rounded-full bg-[#d7f34c] px-4 py-2 text-xs font-black uppercase text-[#123f2d]">Відкрита реєстрація</span>
+                <span className="rounded-full bg-[#d7f34c] px-4 py-2 text-xs font-black uppercase text-[#123f2d]">Активна ліга</span>
                 <p className="mt-6 text-xs font-black uppercase tracking-[0.2em] text-[#ad4529]">Ірпінська тенісна ліга</p>
                 <h2 className="mt-2 text-3xl font-black uppercase leading-tight" style={{ color: "#123f2d" }}>ITL — сезон 2</h2>
                 <p className="mt-4 leading-7 text-[#123f2d]/70">Загальна ліга з розподілом за рівнем та окрема Ladies League.</p>
@@ -333,8 +337,7 @@ export default async function TournamentsPage({
                 <div className="mt-5 flex items-center justify-between border-t border-[#123f2d]/15 pt-4" style={{ color: "#123f2d" }}><span className="font-black">Опис і реєстрація</span><span className="text-2xl">→</span></div>
               </Link>
             )}
-            {selectedTab === "active" &&
-              activeLeagueSeasons.map((season) => (
+            {visibleLeagueSeasons.map((season) => (
                 <Link
                   key={`league-${season.id}`}
                   href={getLeagueHref(season.title)}
@@ -342,7 +345,7 @@ export default async function TournamentsPage({
                 >
                   <div className="flex flex-wrap items-start justify-between gap-4">
                     <span className="rounded-full bg-[#d7f34c] px-4 py-2 text-xs font-black uppercase tracking-wide text-[#123f2d]">
-                      Активна ліга
+                      {season.is_active ? "Активна ліга" : "Сезон завершено"}
                     </span>
                     <span className="text-sm font-bold text-[#123f2d]/60">
                       {formatTournamentDate(season.start_date)} —{" "}
