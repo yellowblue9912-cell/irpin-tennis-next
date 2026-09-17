@@ -468,9 +468,6 @@ function MatchCard({
   const effectiveRatingChange = ratingAfter - ratingBefore;
   const roundedEffectiveChange =
     Math.abs(effectiveRatingChange) < 0.005 ? 0 : effectiveRatingChange;
-  const rollingWindowAdjusted =
-    hasRatingDetails &&
-    Math.abs(effectiveRatingChange - ratingChange) >= 0.0005;
   const formattedRatingChange =
     !hasRatingDetails
       ? ""
@@ -525,13 +522,9 @@ function MatchCard({
             </span>
           </p>
 
-          {rollingWindowAdjusted && (
-            <p className="mt-1 text-[11px] font-semibold text-[#123f2d]/55">
-              Зміна за цей матч: {ratingChange > 0 ? "+" : ""}
-              {formatRating(ratingChange)}. Підсумковий рейтинг враховує
-              останні 30 матчів, тому одночасно випав найстаріший результат.
-            </p>
-          )}
+          <p className="mt-1 text-[11px] font-semibold text-[#123f2d]/55">
+            Рейтинг враховує всі зіграні рейтингові матчі без обмеження за кількістю.
+          </p>
 
           <p className="mt-1 text-xs font-semibold text-[#123f2d]/65">
             {match.opponent_rating_before !== null &&
