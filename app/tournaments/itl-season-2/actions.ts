@@ -4,9 +4,17 @@ import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
 import { createAdminSupabaseClient } from "@/lib/supabase/admin";
+import { getSeason2Groups } from "@/lib/league/season2";
 
 const RETURN_PATH = "/tournaments/itl-season-2";
 const REGISTRATION_DEADLINE = new Date("2026-09-20T20:59:59Z");
+
+async function checkRosterUnlocked(playerId: string) {
+  const groups = await getSeason2Groups();
+  if (groups.some((group) => group.participants.some((player) => player.id === playerId))) {
+    redirect(`${RETURN_PATH}?error=roster_locked`);
+  }
+}
 
 export async function registerForSeason2(formData: FormData) {
   const division = String(formData.get("division") ?? "");
@@ -34,6 +42,8 @@ export async function registerForSeason2(formData: FormData) {
     redirect(`${RETURN_PATH}?error=no_player_profile`);
   }
 
+  await checkRosterUnlocked(player.id);
+
   const { data: existingRegistration } = await admin
     .from("itl_season_2_registrations")
     .select("division")
@@ -58,6 +68,7 @@ export async function registerForSeason2(formData: FormData) {
   }
 
   revalidatePath(RETURN_PATH);
+  revalidatePath(`${RETURN_PATH}/participants`);
   revalidatePath("/tournaments");
   redirect(`${RETURN_PATH}?registered=${division}`);
 }
@@ -70,6 +81,9 @@ export async function cancelSeason2Registration() {
   }
 
   const admin = createAdminSupabaseClient();
+  const { data: player, error: playerError } = await admin.from("players").select("id").eq("user_id", data.user.id).maybeSingle();
+  if (playerError || !player) redirect(`${RETURN_PATH}?error=cancellation_failed`);
+  await checkRosterUnlocked(player.id);
   const { error } = await admin
     .from("itl_season_2_registrations")
     .delete()
@@ -80,6 +94,7 @@ export async function cancelSeason2Registration() {
   }
 
   revalidatePath(RETURN_PATH);
+  revalidatePath(`${RETURN_PATH}/participants`);
   revalidatePath("/tournaments");
   redirect(`${RETURN_PATH}?cancelled=1`);
 }

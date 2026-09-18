@@ -4,6 +4,7 @@ import type { Metadata } from "next";
 import Footer from "@/components/Footer";
 import LazyVideo from "@/components/LazyVideo";
 import { createClient } from "@/lib/supabase/server";
+import { getLeagueHref } from "@/lib/league/configuration";
 import {
   getTournamentCover,
   getTournamentVideo,
@@ -181,20 +182,6 @@ export default async function TournamentsPage({
     {},
   );
 
-  function getLeagueHref(title: string) {
-    const normalizedTitle = title.toLowerCase();
-
-    if (normalizedTitle.includes("challenger")) {
-      return "/league/challenger";
-    }
-
-    if (normalizedTitle.includes("ladies")) {
-      return "/league/ladies";
-    }
-
-    return "/league/masters";
-  }
-
   const selectedTab: TournamentTab =
     params.tab === "upcoming" || params.tab === "finished"
       ? params.tab
@@ -237,7 +224,8 @@ export default async function TournamentsPage({
     ? filteredTournaments
     : filteredTournaments.slice(0, 5);
   const season2Tab: TournamentTab = "active";
-  const season2IsVisible = selectedTab === season2Tab;
+  const season2IsFormed = leagueSeasons.some((season) => season.title.endsWith("— Season 2"));
+  const season2IsVisible = selectedTab === season2Tab && !season2IsFormed;
   const visibleLeagueSeasons = leagueSeasons.filter(
     (season) => (season.is_active ? "active" : "finished") === selectedTab,
   );
@@ -285,7 +273,7 @@ export default async function TournamentsPage({
               leagueSeasons.filter(
                 (season) => (season.is_active ? "active" : "finished") === tab.id,
               ).length +
-              (tab.id === season2Tab ? 1 : 0);
+              (tab.id === season2Tab && !season2IsFormed ? 1 : 0);
 
             return (
               <Link

@@ -2,6 +2,7 @@ import HomePageClient, { type HomeRecentMatch } from "@/components/HomePageClien
 import { isThirdSetTiebreak } from "@/lib/matches/tiebreak";
 import { getPlayers } from "@/lib/players/getPlayers";
 import { createClient } from "@/lib/supabase/server";
+import { getSeason2Groups } from "@/lib/league/season2";
 
 type Player = { id: string; name: string; slug: string };
 type RawMatch = {
@@ -34,9 +35,10 @@ function setsOf(match: RawMatch): Array<[number, number]> {
 }
 
 export default async function HomePage() {
-  const [supabase, rankedPlayers] = await Promise.all([
+  const [supabase, rankedPlayers, leagueGroups] = await Promise.all([
     createClient(),
     getPlayers(),
+    getSeason2Groups(),
   ]);
   const playerRanks = new Map(
     rankedPlayers.map((player, index) => [player.id, index + 1]),
@@ -135,5 +137,7 @@ export default async function HomePage() {
 
   matches.sort((a, b) => b.date.localeCompare(a.date));
 
-  return <HomePageClient recentMatches={matches.slice(0, 6)} />;
+  return <HomePageClient recentMatches={matches.slice(0, 6)} leagues={leagueGroups.filter((group) => group.isActive).map((group) => ({
+    name: group.shortTitle, href: `/league/${group.slug}`, label: `${group.participants.length} учасників · Сезон 2`,
+  }))} />;
 }

@@ -30,24 +30,6 @@ const mainCards = [
   },
 ];
 
-const leagues = [
-  {
-    name: "Masters",
-    href: "/league/masters",
-    label: "Досвідчені гравці",
-  },
-  {
-    name: "Challenger",
-    href: "/league/challenger",
-    label: "Розвиток і конкуренція",
-  },
-  {
-    name: "Ladies",
-    href: "/league/ladies",
-    label: "Ліга для дівчат",
-  },
-];
-
 type TennisBallProps = {
   className?: string;
   size?: number;
@@ -173,8 +155,10 @@ export type HomeRecentMatch = {
 
 export default function HomePage({
   recentMatches,
+  leagues,
 }: {
   recentMatches: HomeRecentMatch[];
+  leagues: Array<{ name: string; href: string; label: string }>;
 }) {
   const [activeCard, setActiveCard] = useState<string | null>(null);
 
@@ -252,17 +236,17 @@ export default function HomePage({
                   <div className="mb-3 flex shrink-0 items-start justify-center gap-4 text-center sm:mb-0 sm:w-[116px] xl:mb-3 xl:w-auto">
                     <div>
                       <span className="text-[10px] font-black uppercase tracking-[0.3em] text-[#dfff3f]">
-                        Наші ліги
+                        Актуальні ліги
                       </span>
 
                       <h2 className="mt-1 text-xl font-black uppercase tracking-[-0.04em] text-white">
-                        Ліги
+                        ITL · Сезон 2
                       </h2>
                     </div>
 
                   </div>
 
-                  <div className="grid flex-1 grid-cols-1 gap-2 sm:grid-cols-3 xl:grid-cols-1">
+                  <div className="grid flex-1 grid-cols-1 gap-2 sm:grid-cols-2 xl:grid-cols-1">
                     {leagues.map((league) => (
                       <Link
                         key={league.href}

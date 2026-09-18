@@ -187,9 +187,9 @@ export async function createLeagueMatch(formData: FormData) {
     .in("id", [player1Id, player2Id]);
 
   revalidatePath("/league");
-  revalidatePath("/league/masters");
-  revalidatePath("/league/challenger");
-  revalidatePath("/league/ladies");
+  revalidatePath("/league/[slug]", "page");
+  revalidatePath("/");
+  revalidatePath("/tournaments");
   revalidatePath("/players");
   for (const player of playerRows ?? []) {
     revalidatePath(`/players/${player.slug}`);

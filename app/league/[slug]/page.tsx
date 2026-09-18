@@ -4,6 +4,7 @@ import type { Metadata } from "next";
 import { createClient } from "@/lib/supabase/server";
 import { isThirdSetTiebreak } from "@/lib/matches/tiebreak";
 import { sortLeagueStandings } from "@/lib/league/standings";
+import { getLeagueConfiguration } from "@/lib/league/configuration";
 
 type PageProps = {
   params: Promise<{
@@ -64,33 +65,6 @@ type LeagueSeason = {
   is_active: boolean;
 };
 
-const leagueConfiguration: Record<
-  string,
-  {
-    seasonTitle: string;
-    pageTitle: string;
-    shortTitle: string;
-  }
-> = {
-  masters: {
-    seasonTitle: "ITL Masters — Season 1",
-    pageTitle: "ITL Masters",
-    shortTitle: "Masters",
-  },
-
-  challenger: {
-    seasonTitle: "ITL Challenger — Season 1",
-    pageTitle: "ITL Challenger",
-    shortTitle: "Challenger",
-  },
-
-  ladies: {
-    seasonTitle: "ITL Ladies — Season 1",
-    pageTitle: "ITL Ladies",
-    shortTitle: "Ladies",
-  },
-};
-
 type LeagueMatch = Omit<
   LeagueMatchFromDatabase,
   "player1" | "player2" | "winner"
@@ -104,7 +78,7 @@ export async function generateMetadata({
   params,
 }: PageProps): Promise<Metadata> {
   const { slug } = await params;
-  const configuration = leagueConfiguration[slug];
+  const configuration = getLeagueConfiguration(slug);
 
   if (!configuration) {
     return {
@@ -286,7 +260,7 @@ function dayWord(days: number) {
 export default async function LeaguePage({ params }: PageProps) {
   const { slug } = await params;
 
-  const configuration = leagueConfiguration[slug];
+  const configuration = getLeagueConfiguration(slug);
 
   if (!configuration) {
     notFound();
@@ -464,7 +438,7 @@ export default async function LeaguePage({ params }: PageProps) {
       <div className="mx-auto w-full max-w-7xl px-3 py-4 sm:px-6 sm:py-8 lg:px-8">
         <div className="mb-4 sm:mb-6">
           <Link
-            href="/league"
+            href={configuration.seasonNumber === 2 ? "/tournaments/itl-season-2/participants" : "/tournaments?tab=finished"}
             className="inline-flex items-center gap-2 text-sm font-semibold text-slate-500 transition hover:text-slate-900"
           >
             <span aria-hidden="true">←</span>
@@ -480,7 +454,7 @@ export default async function LeaguePage({ params }: PageProps) {
             <div className="relative">
               <div className="mb-4 flex flex-wrap items-center gap-3">
                 <span className="rounded-full bg-emerald-400/15 px-3 py-1 text-xs font-bold uppercase tracking-wider text-emerald-300">
-                  Season 1
+                  Season {configuration.seasonNumber}
                 </span>
 
                 {season.is_active ? (
@@ -632,10 +606,10 @@ export default async function LeaguePage({ params }: PageProps) {
                             <td className="px-1.5 py-3 text-center sm:px-3 md:px-5 md:py-4">
                               <span
                                 className={`inline-flex h-7 min-w-7 items-center justify-center rounded-full px-1 text-xs font-black sm:h-8 sm:min-w-8 md:h-9 md:min-w-9 md:px-2 md:text-sm ${getPositionClass(
-                                  position,
+                                  !season.is_active ? position : 0,
                                 )}`}
                               >
-                                {getPositionIcon(position)}
+                                {!season.is_active ? getPositionIcon(position) : position}
                               </span>
                             </td>
 

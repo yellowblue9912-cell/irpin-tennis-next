@@ -2,11 +2,13 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import { createAdminSupabaseClient } from "@/lib/supabase/admin";
+import { getSeason2Groups } from "@/lib/league/season2";
+import Season2LeagueCards from "@/components/Season2LeagueCards";
 import { cancelSeason2Registration, registerForSeason2 } from "./actions";
 
 export const metadata: Metadata = {
   title: "Ірпінська тенісна ліга — сезон 2 | Irpin Tennis",
-  description: "Реєстрація до загальної та жіночої ліг другого сезону ITL.",
+  description: "Masters, Challenger, Futures A, Futures B та Ladies: склади, таблиці й матчі другого сезону ITL.",
 };
 
 type PageProps = {
@@ -20,6 +22,7 @@ const messages: Record<string, string> = {
   cancellation_failed: "Не вдалося скасувати реєстрацію. Спробуйте ще раз.",
   already_registered: "Ви вже зареєстровані в одній із ліг. Спочатку скасуйте поточну заявку, якщо хочете змінити вибір.",
   invalid_division: "Оберіть правильний розділ ліги.",
+  roster_locked: "Ви вже у затвердженому складі ліги. Для зміни участі зверніться до організатора.",
 };
 
 export default async function Season2Page({ searchParams }: PageProps) {
@@ -27,6 +30,7 @@ export default async function Season2Page({ searchParams }: PageProps) {
   const supabase = await createClient();
   const { data } = await supabase.auth.getUser();
   const admin = createAdminSupabaseClient();
+  const groups = await getSeason2Groups();
   let playerId: string | null = null;
 
   if (data.user) {
@@ -40,6 +44,8 @@ export default async function Season2Page({ searchParams }: PageProps) {
     .order("created_at", { ascending: true });
 
   const currentRegistration = (registrations ?? []).find((item) => item.player_id === playerId)?.division ?? null;
+  const myGroups = groups.filter((group) => group.participants.some((player) => player.id === playerId));
+  const rosterLocked = myGroups.length > 0;
   const counts = (registrations ?? []).reduce<Record<string, number>>((result, item) => {
     result[item.division] = (result[item.division] ?? 0) + 1;
     return result;
@@ -49,19 +55,29 @@ export default async function Season2Page({ searchParams }: PageProps) {
       <section className="bg-[#123f2d] text-white">
         <div className="mx-auto max-w-6xl px-4 py-4 sm:px-6 sm:py-6">
           <div className="flex flex-wrap items-center gap-2">
-            <span className="rounded-full bg-[#d7f34c] px-3 py-1 text-[10px] font-black uppercase text-[#123f2d]">Відкрита реєстрація</span>
+            <span className="rounded-full bg-[#d7f34c] px-3 py-1 text-[10px] font-black uppercase text-[#123f2d]">Склади ліг сформовані</span>
             <span className="text-xs font-bold text-white/70">до 20 вересня · безкоштовно</span>
           </div>
           <h1 className="mt-2 max-w-4xl text-2xl font-black uppercase leading-tight sm:text-3xl">
             Ірпінська тенісна ліга — сезон 2
           </h1>
           <p className="mt-2 max-w-4xl text-xs leading-5 text-white/75 sm:text-sm">
-            Оберіть загальну або жіночу лігу. Після завершення реєстрації учасників розподілять за рівнем.
+            П’ять окремих ліг із закріпленими складами. Нові заявки до 20 вересня розглядає організатор — автоматичного перерозподілу немає.
           </p>
         </div>
       </section>
 
       <div className="mx-auto max-w-6xl px-3 py-4 sm:px-6 sm:py-6">
+        <section className="mb-5" aria-label="Ліги другого сезону">
+          <Season2LeagueCards groups={groups} />
+        </section>
+        {rosterLocked && (
+          <div className="mb-5 rounded-2xl bg-white p-4">
+            <p className="font-black">Ваші ліги:</p>
+            <div className="mt-2 flex flex-wrap gap-2">{myGroups.map((group) => <Link key={group.id} href={`/league/${group.slug}`} className="rounded-full bg-[#d7f34c] px-4 py-2 font-bold">{group.shortTitle} →</Link>)}</div>
+            <p className="mt-3 text-sm">Для зміни участі у затверджених лігах зверніться до організатора.</p>
+          </div>
+        )}
         {(params.registered || params.cancelled || params.error) && (
           <div className="mb-7 rounded-2xl bg-white p-5 font-bold shadow-sm">
             {params.registered
@@ -75,19 +91,21 @@ export default async function Season2Page({ searchParams }: PageProps) {
         <section className="grid grid-cols-2 gap-3 sm:gap-5">
           <RegistrationCard
             title="Загальна ліга"
-            description="Для всіх гравців. Після реєстрації учасників розподілять по дивізіонах за рівнем."
+            description="Masters, Challenger, Futures A і Futures B. Нові заявки розглядає організатор."
             division="general"
             count={counts.general ?? 0}
             isLoggedIn={Boolean(data.user)}
             currentRegistration={currentRegistration}
+            rosterLocked={rosterLocked}
           />
           <RegistrationCard
             title="Ladies League"
-            description="Окремий жіночий залік. Дівчата обирають участь або в жіночій, або в загальній лізі."
+            description="Окремий жіночий залік. За погодженням з організатором можна грати також у загальній лізі."
             division="women"
-            count={counts.women ?? 0}
+            count={groups.find((group) => group.shortTitle === "Ladies")?.participants.length ?? counts.women ?? 0}
             isLoggedIn={Boolean(data.user)}
             currentRegistration={currentRegistration}
+            rosterLocked={rosterLocked}
           />
         </section>
 
@@ -104,13 +122,13 @@ export default async function Season2Page({ searchParams }: PageProps) {
             <span className="rounded-full bg-[#d7f34c] px-3 py-1 text-[10px] font-black uppercase">Участь безкоштовна</span>
           </div>
           <p className="mt-3 text-xs leading-5 text-[#123f2d]/65 sm:text-sm">
-            Сезон для гравців різного рівня. Після завершення реєстрації учасників розподілять за рейтингом і складом заявок.
+            Склади затверджено. Кожен грає з кожним у межах своєї ліги; результати та таблиці ведуться окремо для кожної ліги.
           </p>
           <div className="mt-3 grid grid-cols-2 gap-2 text-xs sm:grid-cols-4 sm:text-sm">
             <div className="rounded-xl bg-[#f6f0e5] p-3"><strong className="block">21.09–28.12</strong><span className="text-[#123f2d]/55">Дати сезону</span></div>
-            <div className="rounded-xl bg-[#f6f0e5] p-3"><strong className="block">4 ліги</strong><span className="text-[#123f2d]/55">Masters, Challenger, Futures, Ladies</span></div>
-            <div className="rounded-xl bg-[#f6f0e5] p-3"><strong className="block">10 гравців</strong><span className="text-[#123f2d]/55">У кожній лізі</span></div>
-            <div className="rounded-xl bg-[#f6f0e5] p-3"><strong className="block">9 матчів</strong><span className="text-[#123f2d]/55">Кожен з кожним</span></div>
+            <div className="rounded-xl bg-[#f6f0e5] p-3"><strong className="block">5 ліг</strong><span className="text-[#123f2d]/55">Masters, Challenger, Futures A, Futures B, Ladies</span></div>
+            <div className="rounded-xl bg-[#f6f0e5] p-3"><strong className="block">Окремі склади</strong><span className="text-[#123f2d]/55">Кількість учасників — на сторінці кожної ліги</span></div>
+            <div className="rounded-xl bg-[#f6f0e5] p-3"><strong className="block">Кожен з кожним</strong><span className="text-[#123f2d]/55">Один матч із кожним суперником своєї ліги</span></div>
           </div>
         </section>
       </div>
@@ -118,8 +136,8 @@ export default async function Season2Page({ searchParams }: PageProps) {
   );
 }
 
-function RegistrationCard({ title, description, division, count, isLoggedIn, currentRegistration }: {
-  title: string; description: string; division: "general" | "women"; count: number; isLoggedIn: boolean; currentRegistration: string | null;
+function RegistrationCard({ title, description, division, count, isLoggedIn, currentRegistration, rosterLocked }: {
+  title: string; description: string; division: "general" | "women"; count: number; isLoggedIn: boolean; currentRegistration: string | null; rosterLocked: boolean;
 }) {
   const isRegistered = currentRegistration === division;
   const hasOtherRegistration = Boolean(currentRegistration && !isRegistered);
@@ -130,7 +148,9 @@ function RegistrationCard({ title, description, division, count, isLoggedIn, cur
       <h2 className="mt-1 text-base font-black uppercase leading-tight sm:text-2xl">{title}</h2>
       <p className="mt-2 text-[11px] leading-4 text-[#123f2d]/65 sm:text-sm sm:leading-6">{description}</p>
       <p className="mt-3 text-xs font-bold sm:text-sm">Учасників: {count}</p>
-      {isRegistered ? (
+      {rosterLocked ? (
+        <p className="mt-3 rounded-xl bg-[#f6f0e5] p-3 text-xs font-bold">Ваш склад закріплено. Ваші ліги наведені вище.</p>
+      ) : isRegistered ? (
         <div className="mt-3">
           <div className="rounded-xl px-2 py-2.5 text-center text-[11px] font-black sm:text-sm" style={{ backgroundColor: "#d7f34c", color: "#123f2d" }}>Ви зареєстровані ✓</div>
           <form action={cancelSeason2Registration} className="mt-2">

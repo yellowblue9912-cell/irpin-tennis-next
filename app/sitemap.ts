@@ -1,10 +1,12 @@
 import type { MetadataRoute } from "next";
 import { createClient } from "@supabase/supabase-js";
+import { season2Leagues } from "@/lib/league/configuration";
 
 const baseUrl = "https://www.irpintennis.com";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const staticPages: MetadataRoute.Sitemap = [
+    ...season2Leagues.map((league) => ({ url: `${baseUrl}/league/${league.slug}`, changeFrequency: "daily" as const, priority: 0.85 })),
     { url: baseUrl, changeFrequency: "weekly", priority: 1 },
     {
       url: `${baseUrl}/players`,

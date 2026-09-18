@@ -3,6 +3,7 @@ import { getPlayerName, getPlayerPhoto } from "./getPlayerPhoto";
 import { decodePlayerSlug } from "./decodePlayerSlug";
 import { isThirdSetTiebreak } from "../matches/tiebreak";
 import { sortLeagueStandings } from "../league/standings";
+import { getLeagueHref } from "../league/configuration";
 
 export type ProfilePlayer = {
   id: string;
@@ -716,19 +717,14 @@ export async function getPlayerProfile(
         return playerGames - opponentGames;
       };
 
-      const lowerTitle = season.title.toLowerCase();
-
-      const leagueSlug = lowerTitle.includes("challenger")
-        ? "challenger"
-        : lowerTitle.includes("ladies")
-          ? "ladies"
-          : "masters";
+      const leagueHref = getLeagueHref(season.title);
+      const leagueSlug = leagueHref.split("/").at(-1) ?? "";
 
       return {
         id: `league-${season.id}`,
         title: season.title,
         slug: leagueSlug,
-        href: `/league/${leagueSlug}`,
+        href: leagueHref,
         type: "league" as const,
         tournament_date: season.start_date,
         location: "Ліга ITL",
