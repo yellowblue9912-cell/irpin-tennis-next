@@ -175,7 +175,7 @@ export default function HomePage({
           <div className="pointer-events-none absolute -left-10 top-24 h-56 w-56 rounded-full border border-[#173d2b]/7" />
           <div className="pointer-events-none absolute -right-36 bottom-0 h-96 w-96 rounded-full border border-[#173d2b]/7" />
 
-          <div className="relative mx-auto flex w-full max-w-[1600px] flex-col px-5 py-6 sm:px-8 lg:py-7 xl:px-12">
+          <div className="relative mx-auto flex w-full max-w-7xl flex-col px-5 py-6 sm:px-8 lg:py-7">
             {/* Compact title */}
             <div className="mb-5 flex items-end justify-between gap-6 lg:mb-6">
               <div className="flex items-center gap-4">
@@ -209,8 +209,9 @@ export default function HomePage({
             </div>
 
             {/* Main navigation grid */}
-            <div className="grid grid-cols-1 items-stretch gap-3 md:grid-cols-2 xl:grid-cols-3">
-              {mainCards.slice(0, 2).map((card) => (
+            <div className="grid grid-cols-1 items-stretch gap-3 lg:grid-cols-3">
+              <div className="grid grid-cols-2 gap-3 lg:col-span-2">
+              {mainCards.map((card) => (
                 <NavigationCard
                   key={card.href}
                   card={card}
@@ -218,10 +219,11 @@ export default function HomePage({
                   setActiveCard={setActiveCard}
                 />
               ))}
+              </div>
 
               {/* League card */}
               <article
-                className={`group relative min-h-[296px] overflow-hidden rounded-[20px] border p-4 transition-all duration-500 md:col-span-2 xl:col-span-1 ${
+                className={`group relative overflow-hidden rounded-[20px] border p-4 transition-all duration-500 ${
                   activeCard === "Ліги"
                     ? "-translate-y-1 border-[#6f2f91]/40 bg-[#6f2f91] shadow-[0_24px_55px_rgba(74,31,97,0.22)]"
                     : "border-[#173d2b]/10 bg-[#173d2b]"
@@ -232,8 +234,8 @@ export default function HomePage({
               >
                 <div className="pointer-events-none absolute -right-10 -top-12 h-40 w-40 rounded-full border border-white/10" />
 
-                <div className="relative flex min-h-[264px] flex-col justify-center sm:flex-row sm:items-center sm:gap-4 xl:flex-col xl:items-stretch xl:gap-0">
-                  <div className="mb-3 flex shrink-0 items-start justify-center gap-4 text-center sm:mb-0 sm:w-[116px] xl:mb-3 xl:w-auto">
+                <div className="relative flex h-full flex-col justify-center">
+                  <div className="mb-3 text-center">
                     <div>
                       <span className="text-[10px] font-black uppercase tracking-[0.3em] text-[#dfff3f]">
                         Актуальні ліги
@@ -246,20 +248,20 @@ export default function HomePage({
 
                   </div>
 
-                  <div className="grid flex-1 grid-cols-1 gap-2 sm:grid-cols-2 xl:grid-cols-1">
+                  <div className="grid grid-cols-1 gap-2">
                     {leagues.map((league) => (
                       <Link
                         key={league.href}
                         href={league.href}
-                        className="group/league grid grid-cols-[1fr_auto] items-center rounded-xl border border-white/10 bg-white/[0.07] px-3.5 py-2.5 text-center transition hover:border-[#dfff3f]/50 hover:bg-[#dfff3f]"
+                        className="group/league grid grid-cols-[minmax(0,1fr)_auto] items-center gap-3 rounded-xl border border-white/10 bg-white/[0.07] px-3.5 py-2 text-left transition hover:border-[#dfff3f]/50 hover:bg-[#dfff3f]"
                         data-ball-target
                       >
-                        <div className="pl-5">
+                        <div className="flex min-w-0 items-center justify-between gap-2">
                           <div className="text-sm font-black uppercase text-white transition group-hover/league:text-[#173d2b]">
                             {league.name}
                           </div>
 
-                          <div className="mt-0.5 text-[10px] font-semibold text-white/45 transition group-hover/league:text-[#173d2b]/60">
+                          <div className="shrink-0 text-[10px] font-semibold text-white/65 transition group-hover/league:text-[#173d2b]/60">
                             {league.label}
                           </div>
                         </div>
@@ -273,15 +275,6 @@ export default function HomePage({
                 </div>
               </article>
 
-              {mainCards.slice(2).map((card) => (
-                <NavigationCard
-                  key={card.href}
-                  card={card}
-                  activeCard={activeCard}
-                  setActiveCard={setActiveCard}
-                />
-              ))}
-
               <LatestMatches matches={recentMatches.slice(0, 4)} />
             </div>
           </div>
@@ -289,7 +282,7 @@ export default function HomePage({
 
         {/* Community philosophy */}
         <section className="border-t border-[#173d2b]/10 bg-white/55">
-          <div className="mx-auto grid w-full max-w-[1600px] gap-5 px-5 py-8 sm:px-8 lg:grid-cols-[1.15fr_1fr] lg:items-center lg:gap-10 lg:py-10 xl:px-12">
+          <div className="mx-auto grid w-full max-w-7xl gap-5 px-5 py-8 sm:px-8 lg:grid-cols-[1.15fr_1fr] lg:items-center lg:gap-10 lg:py-10">
             <div>
               <p className="text-[10px] font-black uppercase tracking-[0.3em] text-[#ad4529]">
                 Наша філософія
@@ -349,7 +342,7 @@ export default function HomePage({
           <div className="pointer-events-none absolute -bottom-24 left-1/3 h-48 w-48 rounded-full border border-white/5" />
           <div className="pointer-events-none absolute -right-10 -top-20 h-44 w-44 rounded-full bg-[#1495e8]/10" />
 
-          <div className="relative mx-auto flex min-h-[88px] max-w-[1600px] flex-col items-center justify-between gap-4 px-5 py-5 sm:flex-row sm:px-8 xl:px-12">
+          <div className="relative mx-auto flex min-h-[88px] max-w-7xl flex-col items-center justify-between gap-4 px-5 py-5 sm:flex-row sm:px-8">
             <div className="flex items-center gap-3">
               <TennisBall size={30} />
 
@@ -515,11 +508,11 @@ function LatestMatches({ matches }: { matches: HomeRecentMatch[] }) {
   return (
     <Link
       href="/matches"
-      className="group relative overflow-hidden rounded-[20px] border border-[#173d2b]/10 bg-white/80 p-4 text-[#173d2b] shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-[#173d2b]/25 hover:bg-white hover:shadow-[0_18px_38px_rgba(24,61,43,0.12)] xl:h-[296px] xl:min-h-[296px]"
+      className="group relative overflow-hidden rounded-[20px] border border-[#173d2b]/10 bg-white/80 p-4 text-[#173d2b] shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-[#173d2b]/25 hover:bg-white hover:shadow-[0_18px_38px_rgba(24,61,43,0.12)] lg:col-span-3"
       data-ball-target
     >
       <div className="pointer-events-none absolute -right-12 -top-16 h-44 w-44 rounded-full border border-[#173d2b]/7" />
-      <div className="relative flex min-h-[264px] flex-col xl:h-[264px] xl:min-h-0">
+      <div className="relative flex flex-col">
         <div className="flex items-start justify-between gap-3">
           <div>
             <p className="text-[10px] font-black uppercase tracking-[0.25em] text-[#ad4529]">
@@ -532,7 +525,7 @@ function LatestMatches({ matches }: { matches: HomeRecentMatch[] }) {
           </span>
         </div>
 
-        <div className="mt-3 grid flex-1 content-center gap-2 xl:hidden">
+        <div className="mt-3 grid gap-2 sm:grid-cols-2 xl:hidden">
           {matches.map((match) => {
             return (
               <div
@@ -585,7 +578,7 @@ function LatestMatches({ matches }: { matches: HomeRecentMatch[] }) {
           })}
         </div>
 
-        <div className="mt-3 hidden flex-1 content-center gap-2 xl:grid">
+        <div className="mt-3 hidden grid-cols-2 gap-2 xl:grid">
           {matches.map((match) => {
             const score = match.sets
               .map((set, index) =>
@@ -712,7 +705,7 @@ function NavigationCard({
   return (
     <Link
       href={card.href}
-      className={`group relative min-h-[116px] overflow-hidden rounded-[20px] border p-4 transition-all duration-500 sm:min-h-[132px] xl:min-h-[296px] ${
+      className={`group relative flex min-h-[116px] items-center overflow-hidden rounded-[20px] border p-4 transition-all duration-500 sm:min-h-[132px] ${
         isActive
           ? `-translate-y-1 border-transparent ${
               activeBackgrounds[card.accent]
@@ -729,10 +722,10 @@ function NavigationCard({
         }`}
       />
 
-      <div className="relative flex min-h-[82px] flex-col justify-center text-center sm:min-h-[98px] xl:min-h-[262px]">
+      <div className="relative flex w-full min-h-[82px] flex-col justify-center text-center sm:min-h-[98px]">
         <div className="absolute right-0 top-0 flex items-start justify-end">
           <span
-            className={`flex h-9 w-9 items-center justify-center rounded-full border text-lg transition-all duration-300 group-hover:rotate-[-12deg] ${
+            className={`flex h-7 w-7 items-center justify-center rounded-full border text-base transition-all duration-300 group-hover:rotate-[-12deg] sm:h-9 sm:w-9 sm:text-lg ${
               isActive
                 ? "border-white/20 bg-white/10 text-white"
                 : "border-[#173d2b]/10 text-[#173d2b]"
@@ -742,9 +735,9 @@ function NavigationCard({
           </span>
         </div>
 
-        <div className="px-8">
+        <div className="pt-7 sm:px-8 sm:pt-0">
           <h2
-            className={`text-xl font-black uppercase tracking-[-0.04em] transition sm:text-2xl ${
+            className={`text-base font-black uppercase tracking-[-0.04em] transition sm:text-2xl ${
               isActive ? "text-white" : "text-[#173d2b]"
             }`}
           >
@@ -752,7 +745,7 @@ function NavigationCard({
           </h2>
 
           <p
-            className={`mt-1 text-xs font-semibold transition ${
+            className={`mt-1 text-[11px] font-semibold transition sm:text-xs ${
               isActive ? "text-white/60" : "text-[#173d2b]/50"
             }`}
           >

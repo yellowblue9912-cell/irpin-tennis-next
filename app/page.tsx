@@ -138,6 +138,6 @@ export default async function HomePage() {
   matches.sort((a, b) => b.date.localeCompare(a.date));
 
   return <HomePageClient recentMatches={matches.slice(0, 6)} leagues={leagueGroups.filter((group) => group.isActive).map((group) => ({
-    name: group.shortTitle, href: `/league/${group.slug}`, label: `${group.participants.length} учасників · Сезон 2`,
+    name: group.shortTitle, href: `/league/${group.slug}`, label: `${group.participants.length} учасників`,
   }))} />;
 }

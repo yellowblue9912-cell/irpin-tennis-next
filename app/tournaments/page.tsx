@@ -4,7 +4,7 @@ import type { Metadata } from "next";
 import Footer from "@/components/Footer";
 import LazyVideo from "@/components/LazyVideo";
 import { createClient } from "@/lib/supabase/server";
-import { getLeagueHref } from "@/lib/league/configuration";
+import { compareLeagueSeasons, getLeagueHref } from "@/lib/league/configuration";
 import {
   getTournamentCover,
   getTournamentVideo,
@@ -228,7 +228,7 @@ export default async function TournamentsPage({
   const season2IsVisible = selectedTab === season2Tab && !season2IsFormed;
   const visibleLeagueSeasons = leagueSeasons.filter(
     (season) => (season.is_active ? "active" : "finished") === selectedTab,
-  );
+  ).sort(compareLeagueSeasons);
 
   return (
     <main className="min-h-screen bg-[#f6f0e5] text-[#123f2d]">

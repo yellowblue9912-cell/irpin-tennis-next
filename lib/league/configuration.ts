@@ -47,3 +47,16 @@ export function getLeagueHref(title: string) {
   const league = leagueConfigurations.find((item) => item.seasonTitle === title);
   return league ? `/league/${league.slug}` : "/league";
 }
+
+// Keep divisions in sporting order instead of relying on database row order.
+// Seasons stay newest-first; unknown league names follow the known divisions.
+export function compareLeagueSeasons(a: { title: string; start_date: string }, b: { title: string; start_date: string }) {
+  const dateOrder = b.start_date.localeCompare(a.start_date);
+  if (dateOrder) return dateOrder;
+  const rank = (title: string) => {
+    const configuration = leagueConfigurations.find((league) => league.seasonTitle === title);
+    const index = divisions.findIndex((division) => division.name === configuration?.shortTitle);
+    return index < 0 ? divisions.length : index;
+  };
+  return rank(a.title) - rank(b.title) || a.title.localeCompare(b.title, "uk-UA");
+}
