@@ -452,6 +452,16 @@ function MatchCard({
   playerName: string;
 }) {
   const score = formatScore(match);
+  const matchDate = match.tournament_date?.slice(0, 10);
+  const parsedDate = matchDate ? new Date(`${matchDate}T12:00:00Z`) : null;
+  const formattedMatchDate = parsedDate && Number.isFinite(parsedDate.getTime())
+    ? new Intl.DateTimeFormat("uk-UA", {
+        day: "2-digit",
+        month: "2-digit",
+        year: "numeric",
+        timeZone: "UTC",
+      }).format(parsedDate)
+    : null;
   const ratingBefore = Number(match.rating_before);
   const ratingAfter = Number(match.rating_after);
   const ratingChange = Number(match.rating_change);
@@ -477,9 +487,18 @@ function MatchCard({
     <div className="rounded-2xl border border-[#123f2d]/10 p-4">
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <p className="mb-1 text-xs font-black uppercase tracking-[0.12em] text-[#123f2d]/70">
-            {match.tournament_title}
-          </p>
+          <div className="mb-1 flex flex-wrap items-center gap-x-3 gap-y-1">
+            <p className="text-xs font-black uppercase tracking-[0.12em] text-[#123f2d]/70">
+              {match.tournament_title}
+            </p>
+            {formattedMatchDate ? (
+              <time dateTime={matchDate} className="whitespace-nowrap text-xs font-semibold text-[#123f2d]/60">
+                Дата: {formattedMatchDate}
+              </time>
+            ) : (
+              <span className="text-xs text-[#123f2d]/60">Дату не вказано</span>
+            )}
+          </div>
 
           <Link
             href={`/players/${match.opponent_slug}`}
