@@ -522,13 +522,6 @@ function MatchCard({
             </span>
           </p>
 
-          <p className="mt-1 text-[11px] font-semibold text-[#123f2d]/55">
-            Рейтинг враховує всі зіграні рейтингові матчі без обмеження за кількістю.
-            {" "}Якщо різниця рейтингу перед матчем понад 0,50 і перемагає сильніший:
-            +0,01 переможцю та −0,01 переможеному. За перемогу слабшого або різницю
-            до 0,50 включно діє звичайна формула.
-          </p>
-
           <p className="mt-1 text-xs font-semibold text-[#123f2d]/65">
             {match.opponent_rating_before !== null &&
             Number.isFinite(opponentRatingBefore)
