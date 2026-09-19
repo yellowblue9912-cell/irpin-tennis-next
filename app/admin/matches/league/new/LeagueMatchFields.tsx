@@ -13,7 +13,10 @@ export default function LeagueMatchFields({ seasons, players, memberships, initi
   initialSeasonId: string;
   today: string;
 }) {
-  const [seasonId, setSeasonId] = useState(initialSeasonId);
+  const activeSeasons = seasons.filter((season) => season.is_active);
+  const [seasonId, setSeasonId] = useState(
+    activeSeasons.some((season) => season.id === initialSeasonId) ? initialSeasonId : "",
+  );
   const [playerIds, setPlayerIds] = useState(["", ""]);
   const members = new Set(memberships.filter((row) => row.season_id === seasonId).map((row) => row.player_id));
   const leaguePlayers = players.filter((player) => members.has(player.id));
@@ -32,13 +35,9 @@ export default function LeagueMatchFields({ seasons, players, memberships, initi
               setSeasonId(nextSeason);
               setPlayerIds(["", ""]);
             }}>
-            <option value="" disabled>Оберіть сезон</option>
-            {[true, false].map((active) => (
-              <optgroup key={String(active)} label={active ? "Активні ліги" : "Завершені сезони"}>
-                {seasons.filter((season) => season.is_active === active).map((season) => (
-                  <option key={season.id} value={season.id}>{season.title}</option>
-                ))}
-              </optgroup>
+            <option value="" disabled>Оберіть лігу</option>
+            {activeSeasons.map((season) => (
+              <option key={season.id} value={season.id}>{season.title}</option>
             ))}
           </select>
         </label>
