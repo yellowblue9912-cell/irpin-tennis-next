@@ -1,3 +1,5 @@
+import Link from "next/link";
+import { compareLeagueSeasons } from "@/lib/league/configuration";
 import { createAdminSupabaseClient } from "@/lib/supabase/admin";
 import { finishLeagueSeason } from "./actions";
 
@@ -19,6 +21,9 @@ export default async function AdminLeaguesPage({ searchParams }: PageProps) {
     ]);
 
   if (error) throw new Error(`Не вдалося завантажити ліги: ${error.message}`);
+  const orderedSeasons = [...(seasons ?? [])].sort(
+    (a, b) => Number(b.is_active) - Number(a.is_active) || compareLeagueSeasons(a, b),
+  );
 
   return (
     <main>
@@ -34,7 +39,7 @@ export default async function AdminLeaguesPage({ searchParams }: PageProps) {
       )}
 
       <section className="mt-7 grid gap-4">
-        {(seasons ?? []).map((season) => {
+        {orderedSeasons.map((season) => {
           const participantCount = (participants ?? []).filter(
             (item) => item.season_id === season.id,
           ).length;
@@ -68,15 +73,23 @@ export default async function AdminLeaguesPage({ searchParams }: PageProps) {
                 </div>
 
                 {season.is_active && (
-                  <form action={finishLeagueSeason}>
-                    <input type="hidden" name="season_id" value={season.id} />
-                    <button
-                      disabled={!isComplete}
-                      className="rounded-full bg-[#123f2d] px-5 py-3 text-sm font-black text-white transition hover:bg-[#ad4529] disabled:cursor-not-allowed disabled:opacity-35"
+                  <div className="flex flex-col gap-3">
+                    <Link
+                      href={`/admin/matches/league/new?season=${season.id}`}
+                      className="rounded-full bg-[#d7f34c] px-5 py-3 text-center text-sm font-black text-[#123f2d]"
                     >
-                      Завершити сезон і присудити нагороди
-                    </button>
-                  </form>
+                      Внести результат
+                    </Link>
+                    <form action={finishLeagueSeason}>
+                      <input type="hidden" name="season_id" value={season.id} />
+                      <button
+                        disabled={!isComplete}
+                        className="rounded-full bg-[#123f2d] px-5 py-3 text-sm font-black text-white transition hover:bg-[#ad4529] disabled:cursor-not-allowed disabled:opacity-35"
+                      >
+                        Завершити сезон і присудити нагороди
+                      </button>
+                    </form>
+                  </div>
                 )}
               </div>
             </article>

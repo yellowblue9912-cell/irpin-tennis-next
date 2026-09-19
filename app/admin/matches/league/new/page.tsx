@@ -1,35 +1,30 @@
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
+import { compareLeagueSeasons } from "@/lib/league/configuration";
 import { createLeagueMatch } from "./actions";
+import LeagueMatchFields from "./LeagueMatchFields";
 
-type SeasonRow = {
-  id: string;
-  title: string;
-  is_active: boolean;
-};
-
-type PlayerRow = {
-  id: string;
-  name: string;
-  rating: number;
-};
-
-export default async function NewLeagueMatchPage() {
+export default async function NewLeagueMatchPage({ searchParams }: {
+  searchParams: Promise<{ season?: string }>;
+}) {
+  const { season: requestedSeason } = await searchParams;
   const supabase = await createClient();
-  const [{ data: seasonsData }, { data: playersData }] = await Promise.all([
-    supabase
-      .from("league_seasons")
-      .select("id, title, is_active")
-      .order("start_date", { ascending: false }),
-    supabase
-      .from("players")
-      .select("id, name, rating")
-      .eq("is_active", true)
-      .order("name", { ascending: true }),
+  const [seasonResult, playerResult, membershipResult] = await Promise.all([
+    supabase.from("league_seasons").select("id, title, start_date, is_active"),
+    supabase.from("players").select("id, name, rating").order("name"),
+    supabase.from("league_players").select("season_id, player_id"),
   ]);
-
-  const seasons = (seasonsData ?? []) as SeasonRow[];
-  const players = (playersData ?? []) as PlayerRow[];
+  const queryError = seasonResult.error ?? playerResult.error ?? membershipResult.error;
+  if (queryError) throw new Error("Не вдалося завантажити ліги та їхні склади");
+  const seasons = (seasonResult.data ?? []).sort((a, b) =>
+    Number(b.is_active) - Number(a.is_active) || compareLeagueSeasons(a, b));
+  const membershipsData = membershipResult.data;
+  const memberIds = new Set((membershipsData ?? []).map((row) => row.player_id));
+  const players = (playerResult.data ?? []).filter((player) => memberIds.has(player.id));
+  const selectedSeason = seasons.some((season) => season.id === requestedSeason) ? requestedSeason! : "";
+  const today = new Intl.DateTimeFormat("en-CA", {
+    timeZone: "Europe/Kyiv", year: "numeric", month: "2-digit", day: "2-digit",
+  }).format(new Date());
   const inputClass =
     "w-full rounded-2xl border border-[#123f2d]/15 bg-[#f6f0e5] px-4 py-3 outline-none transition focus:border-[#123f2d]";
 
@@ -59,59 +54,7 @@ export default async function NewLeagueMatchPage() {
         action={createLeagueMatch}
         className="mt-8 max-w-4xl rounded-[28px] bg-white p-7 shadow-sm md:p-9"
       >
-        <div className="grid gap-6 md:grid-cols-2">
-          <label className="block text-sm font-black uppercase tracking-wide">
-            Ліга та сезон
-            <select
-              name="season_id"
-              required
-              defaultValue=""
-              className={`${inputClass} mt-2 normal-case`}
-            >
-              <option value="" disabled>Оберіть сезон</option>
-              {seasons.map((season) => (
-                <option key={season.id} value={season.id}>
-                  {season.title}{season.is_active ? " · активний" : ""}
-                </option>
-              ))}
-            </select>
-          </label>
-
-          <label className="block text-sm font-black uppercase tracking-wide">
-            Дата матчу
-            <input
-              name="played_at"
-              type="date"
-              required
-              defaultValue={new Date().toISOString().slice(0, 10)}
-              className={`${inputClass} mt-2 normal-case`}
-            />
-          </label>
-        </div>
-
-        <div className="mt-6 grid gap-6 md:grid-cols-2">
-          {(["player1_id", "player2_id"] as const).map((name, index) => (
-            <label
-              key={name}
-              className="block text-sm font-black uppercase tracking-wide"
-            >
-              Гравець {index + 1}
-              <select
-                name={name}
-                required
-                defaultValue=""
-                className={`${inputClass} mt-2 normal-case`}
-              >
-                <option value="" disabled>Оберіть гравця</option>
-                {players.map((player) => (
-                  <option key={player.id} value={player.id}>
-                    {player.name} · {Number(player.rating).toFixed(2)}
-                  </option>
-                ))}
-              </select>
-            </label>
-          ))}
-        </div>
+        <LeagueMatchFields seasons={seasons} players={players} memberships={membershipsData ?? []} initialSeasonId={selectedSeason} today={today} />
 
         <fieldset className="mt-8">
           <legend className="text-sm font-black uppercase tracking-wide">
