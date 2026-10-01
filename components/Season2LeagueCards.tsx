@@ -7,8 +7,8 @@ export default function Season2LeagueCards({ groups, showPlayers = false }: { gr
   return (
     <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
       {groups.map((group) => (
-        <section key={group.id} className="overflow-hidden rounded-2xl border border-[#123f2d]/15 bg-white shadow-sm">
-          <Link href={`/league/${group.slug}`} className="flex items-center justify-between gap-3 px-4 py-4" style={{ backgroundColor: group.color, color: "#ffffff" }}>
+        <section key={group.id} className="glass-card overflow-hidden rounded-2xl border-white/10 backdrop-blur-md">
+          <Link href={`/league/${group.slug}`} className="glass-inset flex items-center justify-between gap-3 px-4 py-4" style={{ backgroundColor: `${group.color}eb`, color: "#ffffff" }}>
             <div>
               <h2 className="text-lg font-black uppercase" style={{ color: "#ffffff" }}>{group.shortTitle}</h2>
               <p className="mt-1 text-xs" style={{ color: "#ffffff" }}>Сезон 2 · {group.participants.length} учасників</p>

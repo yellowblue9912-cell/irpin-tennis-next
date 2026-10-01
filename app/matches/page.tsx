@@ -425,7 +425,7 @@ function MatchCard({ match }: { match: RecentMatch }) {
   }).format(new Date(`${match.date}T12:00:00`));
 
   return (
-    <article className="rounded-[28px] bg-white p-5 shadow-sm sm:p-6">
+    <article className="glass-card rounded-[28px] border-white/10 backdrop-blur-md p-5 sm:p-6">
       <div className="flex flex-wrap items-center justify-between gap-3">
         {match.competitionHref ? (
           <Link

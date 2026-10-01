@@ -16,7 +16,7 @@ export default function PlayerCard({ player, position }: Props) {
   return (
     <Link
       href={`/players/${player.slug}`}
-      className="group grid grid-cols-[42px_54px_minmax(0,1fr)_auto] items-center gap-2.5 rounded-2xl border border-[#123f2d]/10 bg-white p-3 shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-xl md:grid-cols-[70px_82px_1fr_auto_40px] md:gap-4 md:rounded-[26px] md:p-5"
+      className="glass-card group grid grid-cols-[42px_54px_minmax(0,1fr)_auto] items-center gap-2.5 rounded-2xl border-white/10 backdrop-blur-md p-3 transition duration-300 hover:-translate-y-1 md:grid-cols-[70px_82px_1fr_auto_40px] md:gap-4 md:rounded-[26px] md:p-5"
     >
       <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#123f2d] text-xs font-black text-white md:h-14 md:w-14 md:text-base">
         {getPosition(position)}

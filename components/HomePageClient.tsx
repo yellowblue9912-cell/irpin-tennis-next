@@ -169,7 +169,7 @@ export default function HomePage({
       <main className="flex min-h-[calc(100vh-92px)] flex-col overflow-x-hidden bg-[#f4f0e5] text-[#173d2b]">
         {/* Wimbledon main section */}
         <section className="relative flex-1 overflow-hidden">
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,rgba(255,255,255,0.9),transparent_52%)]" />
+          <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_10%_25%,rgba(171,198,146,0.28),transparent_48%),radial-gradient(ellipse_at_85%_60%,rgba(163,137,191,0.18),transparent_48%),radial-gradient(circle_at_50%_0%,rgba(255,255,255,0.9),transparent_52%)]" />
 
           <div className="pointer-events-none absolute -left-28 top-8 h-80 w-80 rounded-full border border-[#173d2b]/7" />
           <div className="pointer-events-none absolute -left-10 top-24 h-56 w-56 rounded-full border border-[#173d2b]/7" />
@@ -223,10 +223,10 @@ export default function HomePage({
 
               {/* League card */}
               <article
-                className={`group relative overflow-hidden rounded-[20px] border p-4 transition-all duration-500 ${
+                className={`glass-card glass-card--dark group relative overflow-hidden rounded-[20px] border-white/10 backdrop-blur-md p-4 transition-all duration-500 ${
                   activeCard === "Ліги"
-                    ? "-translate-y-1 border-[#6f2f91]/40 bg-[#6f2f91] shadow-[0_24px_55px_rgba(74,31,97,0.22)]"
-                    : "border-[#173d2b]/10 bg-[#173d2b]"
+                    ? "glass-card--purple -translate-y-1"
+                    : ""
                 }`}
                 onMouseEnter={() => setActiveCard("Ліги")}
                 onMouseLeave={() => setActiveCard(null)}
@@ -253,7 +253,7 @@ export default function HomePage({
                       <Link
                         key={league.href}
                         href={league.href}
-                        className="group/league grid grid-cols-[minmax(0,1fr)_auto] items-center gap-3 rounded-xl border border-white/10 bg-white/[0.07] px-3.5 py-2 text-left transition hover:border-[#dfff3f]/50 hover:bg-[#dfff3f]"
+                        className="glass-inset group/league grid grid-cols-[minmax(0,1fr)_auto] items-center gap-3 rounded-xl border border-white/10 bg-white/[0.07] px-3.5 py-2 text-left transition hover:bg-[#dfff3f]"
                         data-ball-target
                       >
                         <div className="flex min-w-0 items-center justify-between gap-2">
@@ -508,7 +508,7 @@ function LatestMatches({ matches }: { matches: HomeRecentMatch[] }) {
   return (
     <Link
       href="/matches"
-      className="group relative overflow-hidden rounded-[20px] border border-[#173d2b]/10 bg-white/80 p-4 text-[#173d2b] shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-[#173d2b]/25 hover:bg-white hover:shadow-[0_18px_38px_rgba(24,61,43,0.12)] lg:col-span-3"
+      className="glass-card group relative overflow-hidden rounded-[20px] border-white/10 backdrop-blur-md p-4 text-[#173d2b] transition-all duration-300 hover:-translate-y-1 lg:col-span-3"
       data-ball-target
     >
       <div className="pointer-events-none absolute -right-12 -top-16 h-44 w-44 rounded-full border border-[#173d2b]/7" />
@@ -660,7 +660,7 @@ function PhilosophyItem({
   text: string;
 }) {
   return (
-    <div className="grid grid-cols-[38px_1fr] gap-3 rounded-2xl border border-[#173d2b]/10 bg-[#f4f0e5] p-3.5">
+    <div className="glass-card grid grid-cols-[38px_1fr] gap-3 rounded-2xl border-white/10 backdrop-blur-md p-3.5">
       <span className="flex h-[38px] w-[38px] items-center justify-center rounded-full bg-[#173d2b] text-xs font-black text-[#dfff3f]">
         {icon}
       </span>
@@ -694,26 +694,16 @@ function NavigationCard({
 }: NavigationCardProps) {
   const isActive = activeCard === card.title;
 
-  const activeBackgrounds: Record<string, string> = {
-    green: "bg-[#173d2b]",
-    terracotta: "bg-[#b65b3d]",
-    purple: "bg-[#6f2f91]",
-    blue: "bg-[#08285d]",
-    australian: "bg-[#168ed1]",
-  };
-
   return (
     <Link
       href={card.href}
-      className={`group relative flex min-h-[116px] items-center overflow-hidden rounded-[20px] border p-4 transition-all duration-500 sm:min-h-[132px] ${
-        isActive
-          ? `-translate-y-1 border-transparent ${
-              activeBackgrounds[card.accent]
-            } shadow-[0_24px_55px_rgba(24,61,43,0.18)]`
-          : "border-[#173d2b]/10 bg-white/65 hover:border-[#173d2b]/20"
-      }`}
+      className={`glass-card glass-nav group relative flex min-h-[116px] items-center overflow-hidden rounded-[20px] border-white/10 backdrop-blur-md p-4 transition-all duration-500 sm:min-h-[132px] ${isActive ? "-translate-y-1" : ""}`}
+      data-active={isActive}
+      data-accent={card.accent}
       onMouseEnter={() => setActiveCard(card.title)}
       onMouseLeave={() => setActiveCard(null)}
+      onFocus={() => setActiveCard(card.title)}
+      onBlur={() => setActiveCard(null)}
       data-ball-target
     >
       <div
@@ -746,7 +736,7 @@ function NavigationCard({
 
           <p
             className={`mt-1 text-[11px] font-semibold transition sm:text-xs ${
-              isActive ? "text-white/60" : "text-[#173d2b]/50"
+              isActive ? "text-white/85" : "text-[#173d2b]/75"
             }`}
           >
             {card.description}

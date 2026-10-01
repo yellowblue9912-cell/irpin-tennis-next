@@ -29,7 +29,7 @@ export default function CourtsCatalog({ courts }: CourtsCatalogProps) {
         <Link
           key={court.slug}
           href={`/courts/${court.slug}`}
-          className="group overflow-hidden rounded-[28px] bg-white shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-xl"
+          className="glass-card group overflow-hidden rounded-[28px] border-white/10 backdrop-blur-md transition duration-300 hover:-translate-y-1"
         >
           <div className="relative aspect-[4/3] overflow-hidden bg-slate-200">
             <img

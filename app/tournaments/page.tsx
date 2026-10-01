@@ -316,7 +316,7 @@ export default async function TournamentsPage({
           <>
           <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
             {season2IsVisible && (
-              <Link href="/tournaments/itl-season-2" className="group rounded-[24px] border-2 border-[#d7f34c] bg-white p-5 text-[#123f2d] shadow-sm transition hover:-translate-y-1 hover:shadow-xl sm:p-6" style={{ backgroundColor: "#ffffff", color: "#123f2d" }}>
+              <Link href="/tournaments/itl-season-2" className="glass-card group rounded-[24px] border-white/10 backdrop-blur-md p-5 text-[#123f2d] transition hover:-translate-y-1 sm:p-6">
                 <span className="rounded-full bg-[#d7f34c] px-4 py-2 text-xs font-black uppercase text-[#123f2d]">Активна ліга</span>
                 <p className="mt-6 text-xs font-black uppercase tracking-[0.2em] text-[#ad4529]">Ірпінська тенісна ліга</p>
                 <h2 className="mt-2 text-3xl font-black uppercase leading-tight" style={{ color: "#123f2d" }}>ITL — сезон 2</h2>
@@ -329,7 +329,7 @@ export default async function TournamentsPage({
                 <Link
                   key={`league-${season.id}`}
                   href={getLeagueHref(season.title)}
-                  className="group rounded-[24px] border border-[#123f2d]/15 bg-white p-5 text-[#123f2d] shadow-sm transition duration-300 hover:-translate-y-1 hover:border-[#c9e53f] hover:shadow-xl sm:p-6"
+                  className="glass-card group rounded-[24px] border-white/10 backdrop-blur-md p-5 text-[#123f2d] transition duration-300 hover:-translate-y-1 sm:p-6"
                 >
                   <div className="flex flex-wrap items-start justify-between gap-4">
                     <span className="rounded-full bg-[#d7f34c] px-4 py-2 text-xs font-black uppercase tracking-wide text-[#123f2d]">
@@ -381,7 +381,7 @@ export default async function TournamentsPage({
               <Link
                 key={tournament.id}
                 href={`/tournaments/${tournament.slug}`}
-                className="group rounded-[24px] bg-white p-5 shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-xl sm:p-6"
+                className="glass-card group rounded-[24px] border-white/10 backdrop-blur-md p-5 transition duration-300 hover:-translate-y-1 sm:p-6"
               >
                 <TournamentCardMedia slug={tournament.slug} />
 

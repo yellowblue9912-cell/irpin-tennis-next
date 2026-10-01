@@ -163,7 +163,7 @@ export default function CoachesPage() {
         {coaches.map((coach) => (
           <article
             key={coach.name}
-            className="overflow-hidden rounded-2xl bg-white shadow-sm sm:rounded-[28px]"
+            className="glass-card overflow-hidden rounded-2xl border-white/10 backdrop-blur-md sm:rounded-[28px]"
           >
             <div className="grid grid-cols-[112px_minmax(0,1fr)] sm:block">
               <div className="relative min-h-[168px] sm:aspect-[16/9]">
