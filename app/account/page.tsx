@@ -8,6 +8,7 @@ import RatingMatchDashboard, {
   type RatingMatchPlayer,
 } from "../../components/RatingMatchDashboard";
 import { createClient } from "../../lib/supabase/server";
+import PlayerProfileClaimForm from "../../components/PlayerProfileClaimForm";
 
 export const metadata: Metadata = {
   title: "Особистий кабінет гравця | Irpin Tennis",
@@ -35,16 +36,15 @@ export default async function AccountPage() {
         .maybeSingle()
     : { data: null };
 
-  const [{ data: registeredPlayers }, { data: ratingMatches }] = player
-    ? await Promise.all([
+  const [{ data: registeredPlayers }, { data: ratingMatches }, { data: claims }] =
+    await Promise.all([
         supabase
           .from("players")
-          .select("id, name, slug, rating")
-          .not("user_id", "is", null)
+          .select("id, name, rating")
+          .is("user_id", null)
           .eq("is_active", true)
-          .neq("id", player.id)
           .order("name"),
-        supabase
+        player ? supabase
           .from("rating_matches")
           .select(
             "id, challenger_id, opponent_id, status, submitted_by_player_id, winner_id, player1_set1, player2_set1, player1_set2, player2_set2, player1_set3, player2_set3, played_at, created_at",
@@ -53,9 +53,13 @@ export default async function AccountPage() {
             `challenger_id.eq.${player.id},opponent_id.eq.${player.id}`,
           )
           .order("created_at", { ascending: false })
-          .limit(30),
-      ])
-    : [{ data: [] }, { data: [] }];
+          .limit(30) : Promise.resolve({ data: [] }),
+        player ? Promise.resolve({ data: [] }) : supabase
+          .from("player_profile_claims")
+          .select("id, requested_player_id, requested_name, status, created_at")
+          .order("created_at", { ascending: false })
+          .limit(5),
+      ]);
 
   return (
     <main className="mx-auto min-h-[calc(100vh-64px)] w-full max-w-5xl bg-[#f4efe4] px-3 py-5 text-[#123f2d] sm:px-6 sm:py-8 md:py-12">
@@ -110,20 +114,23 @@ export default async function AccountPage() {
               ✓
             </div>
             <h2 className="mt-5 text-2xl font-black">Акаунт створено</h2>
+            <h2 className="mt-5 text-2xl font-black">Прив’яжіть профіль гравця</h2>
             <p className="mt-3 max-w-2xl leading-7 text-[#123f2d]/60">
-              Ваш акаунт ще не прив’язаний до картки гравця. Надішліть
-              адміністратору email, з яким ви зареєструвалися. Ми створимо
-              нову картку гравця або прив’яжемо акаунт до вашої картки, якщо
-              вона вже є на сайті.
+              Оберіть свою картку зі списку або подайте заявку на нову. Після
+              перевірки адміністратор прив’яже профіль до цього акаунта.
             </p>
-            <a
-              href="https://t.me/prybalski"
-              target="_blank"
-              rel="noreferrer"
-              className="mt-5 inline-flex rounded-full bg-[#229ed9] px-5 py-3 text-sm font-black text-white"
-            >
-              Надіслати email у Telegram — @prybalski
-            </a>
+            {claims?.[0]?.status === "pending" ? (
+              <div className="mt-6 rounded-2xl bg-[#f7f1e7] p-5">
+                <p className="font-black">Заявка очікує перевірки</p>
+                <p className="mt-1 text-sm text-[#123f2d]/60">
+                  {claims[0].requested_name
+                    ? `Новий профіль: ${claims[0].requested_name}`
+                    : "Запит на прив’язку наявної картки гравця"}
+                </p>
+              </div>
+            ) : (
+              <PlayerProfileClaimForm players={registeredPlayers ?? []} />
+            )}
           </section>
         )}
       </div>

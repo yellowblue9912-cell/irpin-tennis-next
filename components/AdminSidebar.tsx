@@ -12,6 +12,11 @@ const navigation = [
     icon: "👥",
   },
   {
+    href: "/admin/players/claims",
+    label: "Заявки гравців",
+    icon: "📩",
+  },
+  {
     href: "/admin/tournaments",
     label: "Турніри",
     icon: "🏆",
