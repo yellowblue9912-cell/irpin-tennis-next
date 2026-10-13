@@ -5,6 +5,7 @@ import { createClient } from "@/lib/supabase/server";
 import ChallengePlayerButton from "../../../components/ChallengePlayerButton";
 import LazyVideo from "../../../components/LazyVideo";
 import PlayerFeedback from "../../../components/PlayerFeedback";
+import PlayerRatingInsights from "../../../components/PlayerRatingInsights";
 import { getPlayerHighlights } from "../../../lib/players/getPlayerHighlights";
 import { decodePlayerSlug } from "../../../lib/players/decodePlayerSlug";
 import {
@@ -196,6 +197,8 @@ export default async function PlayerProfilePage({
         <StatCard label="Титули" value={stats.titles} />
         <StatCard label="Призові місця" value={stats.podiums} />
       </section>
+
+      <PlayerRatingInsights playerId={player.id} />
 
       {highlights.length > 0 && (
         <section className="mt-5 rounded-2xl bg-white p-4 shadow-sm sm:mt-8 sm:rounded-[28px] sm:p-8">
