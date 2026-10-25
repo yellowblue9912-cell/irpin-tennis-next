@@ -1,3 +1,4 @@
+import RatingInactivityHelp from "@/components/RatingInactivityHelp";
 import Link from "next/link";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
@@ -118,8 +119,8 @@ export default async function PlayerProfilePage({
             </h1>
 
             <div className="mt-2 flex flex-wrap gap-1.5 sm:mt-5 sm:gap-3">
-              <span className="rounded-full bg-white px-2.5 py-1 text-xs font-black text-[#123f2d] sm:px-4 sm:py-2 sm:text-base">
-                Поточний рейтинг {formatRating(player.rating)}
+              <span className="inline-flex items-center gap-2 rounded-full bg-white px-2.5 py-1 text-xs font-black text-[#123f2d] sm:px-4 sm:py-2 sm:text-base">
+                Поточний рейтинг {formatRating(player.rating)} <RatingInactivityHelp />
               </span>
 
               <span className="rounded-full border border-white/25 px-2.5 py-1 text-[10px] font-bold text-white/85 sm:px-4 sm:py-2 sm:text-base">

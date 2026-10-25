@@ -1,3 +1,4 @@
+import RatingInactivityHelp from "./RatingInactivityHelp";
 import Link from "next/link";
 import type { Player } from "@/types/player";
 
@@ -14,10 +15,10 @@ export default function PlayerCard({ player, position }: Props) {
   const firstLetter = player.name.charAt(0).toUpperCase();
 
   return (
-    <Link
-      href={`/players/${player.slug}`}
-      className="glass-card group grid grid-cols-[42px_54px_minmax(0,1fr)_auto] items-center gap-2.5 rounded-2xl border-white/10 backdrop-blur-md p-3 transition duration-300 hover:-translate-y-1 md:grid-cols-[70px_82px_1fr_auto_40px] md:gap-4 md:rounded-[26px] md:p-5"
+    <div
+      className="glass-card group relative grid grid-cols-[42px_54px_minmax(0,1fr)_auto] items-center gap-2.5 rounded-2xl border-white/10 backdrop-blur-md p-3 transition duration-300 hover:-translate-y-1 md:grid-cols-[70px_82px_1fr_auto_40px] md:gap-4 md:rounded-[26px] md:p-5"
     >
+      <Link href={`/players/${player.slug}`} aria-label={`Профіль гравця: ${player.name}`} className="absolute inset-0 z-10 rounded-2xl focus-visible:outline-2 focus-visible:outline-offset-2" />
       <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#123f2d] text-xs font-black text-white md:h-14 md:w-14 md:text-base">
         {getPosition(position)}
       </div>
@@ -49,9 +50,9 @@ export default function PlayerCard({ player, position }: Props) {
       </div>
 
       <div className="text-right">
-        <strong className="block text-xl font-black text-[#123f2d] md:text-3xl">
+        <div className="flex items-center justify-end gap-2"><strong className="block text-xl font-black text-[#123f2d] md:text-3xl">
           {player.rating.toFixed(2)}
-        </strong>
+        </strong><RatingInactivityHelp /></div>
 
         <span className="hidden text-xs font-bold uppercase tracking-[0.12em] text-[#123f2d]/40 md:block">
           Рейтинг
@@ -61,6 +62,6 @@ export default function PlayerCard({ player, position }: Props) {
       <div className="hidden text-2xl text-[#123f2d] transition group-hover:translate-x-1 md:block">
         →
       </div>
-    </Link>
+    </div>
   );
 }
