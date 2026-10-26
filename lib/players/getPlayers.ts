@@ -32,7 +32,7 @@ export async function getPlayers(): Promise<Player[]> {
       )
       .order("rating", { ascending: false })
       .order("name", { ascending: true }),
-    supabase.from("player_rating_history").select("player_id"),
+    supabase.rpc("get_rating_eligible_player_ids"),
     supabase.from("league_players").select("player_id"),
     supabase.from("tournament_players").select("player_id"),
   ]);
