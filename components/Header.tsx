@@ -20,6 +20,8 @@ export default function Header() {
   const pathname = usePathname();
   const [menuOpen, setMenuOpen] = useState(false);
 
+  if (pathname.startsWith("/invite/")) return null;
+
   function isActive(href: string) {
     if (href === "/") {
       return pathname === "/";

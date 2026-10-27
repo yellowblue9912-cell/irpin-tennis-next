@@ -17,7 +17,7 @@ export async function EventInvitationPage({ kind, id }: { kind: 'match' | 'tourn
   const noun = kind === 'match' ? 'матч' : 'турнір';
   const appUrl = `irpintennis://${kind === 'match' ? 'scheduled-match' : 'tournament'}/${id}`;
   return <main className="mx-auto w-full max-w-lg px-5 py-10 sm:py-16"><section className="rounded-3xl border border-[#e6e7e3] bg-white p-7 shadow-sm sm:p-10">
-    <p className="mb-3 text-sm font-bold tracking-widest text-[#b65b3b]">TENNIS GO</p>
+    <p className="mb-3 text-sm font-bold tracking-widest text-[#b65b3b]">TENNISGO</p>
     <h1 className="mb-4 text-3xl font-bold">{event?.title || `Запрошення на ${noun}`}</h1>
     {event ? <div className="mb-6 space-y-2 text-[#66756c]">
       <p>{[event.city, event.court].filter(Boolean).join(' · ')}</p>
