@@ -55,7 +55,7 @@ export default function Breadcrumbs() {
     return () => controller.abort();
   }, [pathname, playerNames]);
 
-  if (pathname === "/") return null;
+  if (pathname === "/" || pathname.startsWith("/invite/")) return null;
 
   const segments = pathname.split("/").filter(Boolean);
 
